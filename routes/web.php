@@ -11,30 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-Route::get('/example/{id?}/{d?}', function () {
-    return view('welcome');
-});
-Route::get('/dashboard', function () {
-    return view('welcome');
-});
+Auth::routes();
+Route::get('/{ruta?}', 'HomeController@index')->name('home');
 
-Route::get('/inventario/{id?}/{d?}', function () {
-    return view('welcome');
-});
-Route::get('/clientes', function () {
-    return view('welcome');
-});
-Route::get('/sucursales/{id?}/{d?}', function () {
-    return view('welcome');
-});
-
-Route::get('/bodegas/{id?}/{d?}', function () {
-    return view('welcome');
-});
-
-Route::get('/ventas/{id?}', function () {
-    return view('welcome');
-});

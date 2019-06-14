@@ -7,22 +7,13 @@ use Illuminate\Http\Request;
 
 class ProductosController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {   
         $sucursal=0;
         return $producto=Productos::all();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
 
     public function getProducto(Reqeuest $request,$id)
     {
@@ -31,7 +22,10 @@ class ProductosController extends Controller
     public function create(Request $request)
     {
 
-        $producto=Productos::create($request->all());
+        $producto=new Productos($request->all());
+        $producto->bodega_id=1;
+        $producto->sucursal_id=1;
+        $producto->save();
         return $producto;
     }
 
@@ -41,8 +35,25 @@ class ProductosController extends Controller
         $producto->update($request->all());
         return $producto;
     }
+    public function abastecer(Request $request,$id){
+
+        $data=$request->all();
+
+        for($i=0;count($data['productos']);$i++){
+            $producto=Producto::find($data[$i]['producto']);
+            $producto->cantidad +=$data[$i]['cantidad']; 
+            $producto->save();
+        }
+
+        
+
+    }
+    public function entregar(Request $request){
 
 
+
+
+    }
     public function destroy($id)
     {
         return Productos::destroy($id);

@@ -14,26 +14,22 @@ class CreateBodegaTabla extends Migration
     public function up()
     {
         Schema::create('bodegas', function (Blueprint $table) {
-            $table->bigIncrements('id_bodega');
-            $table->string('nombre',100);
-            $table->string('telefono',100);
+            $table->increments('id')->unique()->unsigned();
+            $table->integer('sucursal_id')->unsigned();
+            $table->integer('encargado_id')->unsigned();
+            $table->string('telefono',30);
             $table->string('direccion',100);
-            $table->interger('encargado');
-            $table->interger('sucursal');
+            $table->integer('municipio_id')->unsigned();
             $table->timestamps();
-            $table->index(['id_bodega']);
+            $table->index(['id']);
+            $table->engine = "InnoDB";
+            
+            
         });
-        Schema::create('productos', function (Blueprint $table) {
-            $table->bigIncrements('id_producto');
-            $table->string('nombre',100)->unique();
-            $table->decimal('precio_costo',10,3);
-            $table->decimal('precio_revendedor',10,3);
-            $table->decimal('comision',10,3);
-            $table->interger('cantidad');
-            $table->interger('bodega');
-            $table->interger('sucursal');
-            $table->timestamps();
-            $table->index(['id_producto']);
+        Schema::table('bodegas', function($table) {
+            $table->foreign('municipio_id')->references('id')->on('municipios')->onDelete('cascade');
+            $table->foreign('sucursal_id')->references('id')->on('sucursales')->onDelete('cascade');
+            $table->foreign('encargado_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

@@ -34,7 +34,7 @@
               <label>Municipio</label>
               <select name="mi" class="form-control" v-model="cliente.municipio">
                   <option value="0">Selecione el minucipio</option>
-                <option v-for="muni in municipios" :key="muni">{{muni.nombre}}</option>
+                <option v-for="(muni,idx) in municipios" :key="idx" :value="idx">{{muni.nombre}}</option>
               </select>
             </div>
             <div class="form-row">

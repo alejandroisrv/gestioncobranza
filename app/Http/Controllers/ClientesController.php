@@ -24,7 +24,12 @@ class ClientesController extends Controller
      */
     public function create(Request $request)
     {
-        $cliente =Cliente::create($request->all());
+        $cliente = new Cliente($request->all());
+        $cliente->sucursal_id=1;
+        $cliente->save();
+
+
+        return $cliente;
 
     }
 

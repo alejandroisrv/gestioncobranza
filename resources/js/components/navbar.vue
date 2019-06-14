@@ -5,11 +5,11 @@
       <router-link to="plugins/index2" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
         <span class="logo-mini">
-          <b>A</b>LT
+          <b>CTG</b>
         </span>
         <!-- logo for regular state and mobile devices -->
         <span class="logo-lg">
-          <b>Admin</b>LTE
+          <b>Gestion de Cobranza</b>
         </span>
       </router-link>
       <!-- Header Navbar: style can be found in header.less -->
@@ -228,8 +228,14 @@
           </li>
           <li>
             <router-link to="/bodegas">
-              <i class="fa fa-warehouse"></i>
+              <i class="fa fa-home"></i>
               <span>Bodegas</span>
+            </router-link>
+          </li>
+                  <li>
+            <router-link to="/sucursales">
+              <i class="fa fa-home"></i>
+              <span>Sucursales</span>
             </router-link>
           </li>
           <li class="treeview">
@@ -249,7 +255,7 @@
             </ul>
           </li>
           <li class="treeview">
-            <router-link to="#">
+            <router-link to="/ventas">
               <i class="fa fa-bar-chart"></i>
               <span>Ventas</span>
               <span class="pull-right-container">
