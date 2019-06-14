@@ -34,7 +34,9 @@
     "dependencies": {
         "admin-lte": "^2.4.10",
         "noty": "^3.2.0-beta",
+        "vue-multiselect": "^2.1.6",
         "vue-select": "^3.1.0",
+        "vue-select2": "^0.2.6",
         "vue-sweetalert2": "^1.6.4",
         "vue2-bootstrap-modal": "^0.1.15",
         "vuejs-noty": "^0.1.3",

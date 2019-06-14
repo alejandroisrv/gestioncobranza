@@ -119,6 +119,8 @@ export default {
       this.urlModal = "/api/cliente/add";
       this.notificacionModal = "Cliente agregado con exito agregado con éxito!";
     },
+
+    
     editarCliente(cliente) {
       this.clienteModal = cliente;
       this.tituloModal = "Editar cliente";

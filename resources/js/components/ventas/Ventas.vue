@@ -15,39 +15,41 @@
           </div>
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Listado de ventas <b v-if="tipo!=''">de {{ tipo }}</b></h3>
+              <h3 class="box-title">
+                Listado de ventas
+                <b v-if="tipo!=''">de {{ tipo }}</b>
+              </h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
               <table
-                v-if=" ventas.length > 0 "
+                v-if="ventas.length>0"
                 id="example1"
                 class="table table-bordered table-striped"
               >
                 <thead>
                   <tr>
-                    <th>Sucursal</th>
-                    <th>Direccion</th>
-                    <th>Telefono</th>
-                    <th>Municipio</th>
+                    <th>Vendedor</th>
+                    <th>Cliente</th>
+                    <th>Tipo de venta</th>
+                    <th>Perido de pago</th>
+                    <th>Total</th>
+                    <th>Fecha</th>
+
                     <th></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="item in ventas" :key="item.id">
-                    <td>{{ }}</td>
-                    <td>{{ }}</td>
-                    <td>{{ }}</td>
-                    <td>{{ }}</td>
+                    <td>{{ item.vendedor.name }}</td>
+                    <td>{{item.persona.nombre}}</td>
+                    <td>{{ item.tipos_ventas.descripcion }}</td>
+                    <td>{{ item.acuerdo_pago.periodo_pago}}</td>
+                    <td>{{item.total}}</td>
+                    <td>{{ item.created_at }}</td>
                     <td>
                       <button class="btn btn-default btn-sm" @click="verVenta(item)">
                         <i class="fa fa-eye"></i>
-                      </button>
-                      <button class="btn btn-primary btn-sm" @click="editarVenta(item)">
-                        <i class="fa fa-edit"></i>
-                      </button>
-                      <button class="btn btn-danger btn-sm" @click="eliminarVenta(item.id)">
-                        <i class="fa fa-trash"></i>
                       </button>
                     </td>
                   </tr>
@@ -61,7 +63,7 @@
           </div>
         </div>
       </div>
-      <modal-venta :productos="productos" :clientes="clientes"></modal-venta>
+      <modal-venta></modal-venta>
     </section>
   </div>
 </template>
@@ -75,64 +77,46 @@ export default {
       urlModal: "",
       ventas: "",
       clientes: "",
-      productos: "",
-      tipo: ""
+      productos: [],
+      tipo: "",
+      venta: ""
     };
   },
   components: {
-    modalVenta
+    modalVenta,
+    "bootstrap-modal": require("vue2-bootstrap-modal")
   },
   created() {
     this.getVentas();
-    this.getProductos();
-    this.getClientes();
     this.eventHub.$on("sendVentas", rs => {
       this.getVentas();
     });
-    this.tipo = this.$route.params.tipo;
   },
   methods: {
     getVentas() {
-      axios
-        .get("/api/ventas")
-        .then(rs => {
-          this.ventas = rs.data;
-          console.log(rs);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      axios.get("/api/ventas").then(rs => {
+        this.ventas = rs.data;
+      });
     },
-    getProductos() {
-      axios
-        .get("/api/productos")
-        .then(rs => {
-          this.productos = rs.data;
-          console.log(rs);
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
-    getClientes() {
-      axios
-        .get("/api/clientes")
-        .then(rs => {
-          this.clientes = rs.data;
-          console.log(rs);
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
+
     nuevaVenta() {
       this.openModal();
+    },
+    verVenta(venta) {
+      this.modalVenta = venta;
+      this.openVenta();
     },
     notificacion(texto) {
       this.$noty.success(texto);
     },
     openModal() {
       this.eventHub.$emit("openModal");
+    },
+    openVenta() {
+      this.$refs.ventaDetalle.open();
+    },
+    closeTheModalVenta() {
+      this.$refs.ventaDetalle.close();
     }
   }
 };

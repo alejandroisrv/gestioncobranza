@@ -29,15 +29,15 @@
             <div class="form-row">
               <div class="form-group col-md-4">
                 <label>Precio de costo</label>
-                <input required v-model="producto.precioCosto" type="text" class="form-control">
+                <input required v-model="producto.precio_costo" type="text" class="form-control">
               </div>
               <div class="form-group col-md-4">
                 <label>Precio de contado</label>
-                <input required v-model="producto.precioContado" type="text" class="form-control">
+                <input required v-model="producto.precio_contado" type="text" class="form-control">
               </div>
               <div class="form-group col-md-4">
                 <label>Precio a credito</label>
-                <input required v-model="producto.precioCredito" type="text" class="form-control">
+                <input required v-model="producto.precio_credito" type="text" class="form-control">
               </div>
             </div>
           </div>
