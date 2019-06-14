@@ -116,7 +116,7 @@ export default {
         email: ""
       };
       this.tituloModal = "Nuevo cliente";
-      this.urlModal = "/api/cliente/";
+      this.urlModal = "/api/cliente/add";
       this.notificacionModal = "Cliente agregado con exito agregado con éxito!";
     },
     editarCliente(cliente) {
