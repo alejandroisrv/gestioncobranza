@@ -13,9 +13,7 @@ Vue.mixin({
     }
 })
 import axios from 'axios';
-let user =  document.head.querySelector();
-localStorage.setItem(JSON.stringify());
-axios.defaults.headers.common['Authorization'] = 'Bearer '+localStorage.getItem('auth-token');
+
 import Multiselect from 'vue-multiselect'
 Vue.component('multiselect', Multiselect);
 import 'vue-multiselect/dist/vue-multiselect.min.css';
