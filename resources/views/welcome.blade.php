@@ -52,7 +52,7 @@
 <script src="plugins/fastclick/lib/fastclick.js"></script>
 
 <script src="plugins/dist/js/adminlte.min.js"></script>
-<script src="{{mix('js/app.js')}}"></script>
+<script src="{{asset('js/app.js')}}"></script>
 
 </body>
 </html>
