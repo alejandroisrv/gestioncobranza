@@ -34,6 +34,7 @@
     "dependencies": {
         "admin-lte": "^2.4.10",
         "noty": "^3.2.0-beta",
+        "v-select2-component": "^0.3.8",
         "vue-multiselect": "^2.1.6",
         "vue-select": "^3.1.0",
         "vue-select2": "^0.2.6",
@@ -42,6 +43,7 @@
         "vuejs-noty": "^0.1.3",
         "vuetable": "^1.5.12",
         "vuetify": "^1.5.14",
-        "vuetify-confirm": "^0.2.6"
+        "vuetify-confirm": "^0.2.6",
+        "vuex": "^3.1.1"
     }
 }

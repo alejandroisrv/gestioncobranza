@@ -69,8 +69,8 @@ export default {
   methods: {
     send() {
       axios.post(this.url, this.producto).then(rs => {
+        this.eventHub.$emit("initProductos");
         this.closeTheModal();
-        this.eventHub.$emit("sendProducto");
         this.$noty.success(this.notificacion);
       });
     },
@@ -92,4 +92,3 @@ export default {
   padding: 10px !important;
 }
 </style>
-

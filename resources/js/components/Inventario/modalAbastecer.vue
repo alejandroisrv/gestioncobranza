@@ -4,65 +4,76 @@
       ref="abastecerModal"
       :need-header="true"
       :need-footer="true"
-      :size="'large'"
-      :opened="myOpenFunc"
+      :size="'medium'"
     >
       <div slot="title">Abastecer inventario</div>
 
       <div slot="body">
-        <form @submit.prevent="send">
           <div class="box-body">
-            <button @click="addCuadro" class="btn btn-primary fl-right">Añadir Producto</button>
-            <div class="mt-4" id="cuadros" v-for="(new_item,idx) in new_items" :key="idx+'item'">
               <div class="row">
-                <div class="col-md-6">
-                  <multiselect
-                    v-model="new_item.producto"
-                    :options="productoList"
-                    :custom-label="nameWithLang"
-                    placeholder="Seleciona un producto"
-                    label="nombre"
-                    track-by="nombre"
-                  ></multiselect>
+                <div class="col-md-12 col-xs-12"><p>Selecciona la bodega para cargar sus productos y vendedores</p></div>
+              </div>
+              <div class="row justify-content-between">
+                <div class="col-md-6 col-xs-6">
+                  <v-select v-model="item.producto" :options="productoList" placeholder="Selecciona el producto"></v-select>
                 </div>
-                <div class="col-md-6">
-                  <input
-                    type="text"
-                    v-model="new_item.cantidad"
-                    id="cantidad"
-                    placeholder="Cantidad"
-                    class="form-control"
-                  >
+                <div class="col-md-4 col-xs-4">
+                  <input type="text" @keyup.enter="addCuadro" v-model.number="item.cantidad" id="cantidad" placeholder="Cantidad" class="form-control">
+                </div>
+                <div class="col-md-2 col-xs-2">
+                  <button @click="addCuadro" class="btn btn-primary"><i class="fa fa-plus"></i></button>
                 </div>
               </div>
-            </div>
+              <div class="row" v-if="new_items.length>0">
+                  <div class="col-md-12 col-xs-12 mt-4">
+                    <table class="table table-condensed ">
+                      <thead>
+                        <tr>
+                          <th>Producto</th>
+                          <th>Cantidad</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="(item,idx) in new_items" :key="idx+'a'">
+                          <td>{{ item.producto.label }}</td>
+                          <td>{{ item.cantidad }}</td>
+                          <td> <i class="fa fa-times" @click="quitCuadro(idx)"></i> </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+              </div>
           </div>
-        </form>
       </div>
       <div slot="footer">
         <button type="button" class="btn btn-default" @click="closeAbastecer">Cancelar</button>
-        <button type="submit" class="btn btn-primary" @click="send">Guardar</button>
+        <button type="button" class="btn btn-primary" @click="send">Guardar</button>
       </div>
     </bootstrap-modal>
   </div>
 </template>
 <script>
 import axios from "axios";
-import Multiselect from "vue-multiselect";
-import { log } from "util";
+import ProductoService from '../../services/productos.js';
+import {mapGetters,mapActions} from 'vuex';
 
-import { totalmem } from "os";
 
 export default {
-  props: ["productoList"],
   components: {
-    "bootstrap-modal": require("vue2-bootstrap-modal"),
-    Multiselect
+    "bootstrap-modal": require("vue2-bootstrap-modal")
   },
   data() {
     return {
-      new_items: [{ producto: 0, cantidad: 0 }]
+      item: { producto:'',cantidad:'',total:0},
+      new_items: []
     };
+  },
+  computed:{
+    ...mapGetters({
+      productoList:'productos/productosFormat'
+    }),
+
   },
   created() {
     this.eventHub.$on("openAbastercer", () => {
@@ -71,25 +82,34 @@ export default {
   },
   methods: {
     send() {
-      axios.post(this.url, this.VentaGeneral).then(rs => {
-        this.closeTheModal();
-        this.eventHub.$emit("sendProducto");
-        this.$noty.success("NuopenAbastecereva venta realizad con exito");
-      });
+      const e = ProductoService.abastecerProductos(this.new_items);
+      this.closeAbastecer();
+      this.$noty.success("Abastecer producto con exito");
+      this.eventHub.$emit("initProductos");
+      this.item={};
+      this.new_items=[];
+
+    },
+    quitCuadro(idx){
+        this.new_items.splice(idx, 1)
     },
     addCuadro() {
-      console.log(this.productosList);
-      this.new_items.push( { producto: 0, cantidad: 0 });
-    },
-    deleteProductoVendido(idx) {
-      this.productosVendidos.splice(idx, 1);
-    },
-    nameWithLang({ nombre, cantidad }) {
-      return `${nombre} disponible(s) ${cantidad}`;
+      if(!Number.isInteger(this.item.cantidad)) return this.$noty.error('Cantidad no válida');
+      this.new_items.forEach(e=>{
+        if(e.producto.id==this.item.producto.id){
+            e.cantidad=e.cantidad+this.item.cantidad
+            this.item = { producto: '', cantidad: '',total:0 };
+        }
+
+      });
+      if(this.item == {producto: '', cantidad: ''}) return false;
+      if(this.item.cantidad==0) return this.$noty.error('La cantidad debe ser mayor a 0');
+      if(this.item.producto=='') return this.$noty.error('Selecciona un producto');
+      this.new_items.push(this.item);
+      this.item = { producto: '', cantidad: '' };
     },
     myOpenFunc() {},
     openAbastercer() {
-      console.log("assdsadasdsad");
       this.$refs.abastecerModal.open();
     },
     closeAbastecer() {
@@ -99,8 +119,7 @@ export default {
 };
 </script>
 <style>
-.form-control {
-  height: 42px !important;
+.title{
+  font-size:16px;
 }
 </style>
-

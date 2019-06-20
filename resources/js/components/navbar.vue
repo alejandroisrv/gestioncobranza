@@ -129,7 +129,7 @@
             <li class="dropdown user user-menu">
               <router-link to="#" class="dropdown-toggle" data-toggle="dropdown">
                 <img src="plugins/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-                <span class="hidden-xs">Alexander Pierce</span>
+                <span class="hidden-xs">{{ user.name }}</span>
               </router-link>
               <ul class="dropdown-menu">
                 <!-- User image -->
@@ -137,39 +137,21 @@
                   <img src="plugins/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                   <p>
-                    Alexander Pierce - Web Developer
-                    <small>Member since Nov. 2012</small>
+                    {{ user.name }}
+                    <small> {{user.email}} </small>
                   </p>
-                </li>
-                <!-- Menu Body -->
-                <li class="user-body">
-                  <div class="row">
-                    <div class="col-xs-4 text-center">
-                      <router-link to="#">Followers</router-link>
-                    </div>
-                    <div class="col-xs-4 text-center">
-                      <router-link to="#">Sales</router-link>
-                    </div>
-                    <div class="col-xs-4 text-center">
-                      <router-link to="#">Friends</router-link>
-                    </div>
-                  </div>
-                  <!-- /.row -->
                 </li>
                 <!-- Menu Footer-->
                 <li class="user-footer">
-                  <div class="pull-left">
-                    <router-link to="#" class="btn btn-default btn-flat">Profile</router-link>
-                  </div>
                   <div class="pull-right">
-                    <router-link to="#" class="btn btn-default btn-flat">Sign out</router-link>
+                    <a href="/auth/logout" class="btn btn-default btn-flat">Sign out</a>
                   </div>
                 </li>
               </ul>
             </li>
             <!-- Control Sidebar Toggle Button -->
             <li>
-              <router-link to="#" data-toggle="control-sidebar">
+              <router-link to="/configuracion" data-toggle="control-sidebar">
                 <i class="fa fa-gears"></i>
               </router-link>
             </li>
@@ -190,7 +172,7 @@
             <img src="plugins/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
           </div>
           <div class="pull-left info">
-            <p>Alexander Pierce</p>
+            <p>{{ user.name}}</p>
             <router-link to="#">
               <i class="fa fa-circle text-success"></i> Online
             </router-link>
@@ -329,14 +311,14 @@
           </li>
           <li>
             <router-link to="/rutas">
-              <i class="fa fa-house"></i>
+              <i class="fa fa-map-o"></i>
               <span>Rutas</span>
             </router-link>
           </li>
           <li>
-            <router-link to="https://adminlte.io/docs">
-              <i class="fa fa-book"></i>
-              <span>Documentation</span>
+            <router-link to="/contabilidad">
+              <i class="fa fa-pie-chart"></i>
+              <span>Contabilidad</span>
             </router-link>
           </li>
         </ul>
@@ -349,8 +331,13 @@
 export default {
   data() {
     return {
-      user: "25"
-    };
+      user: ''
+    }
+  },
+  created(){
+
+    this.user = (localStorage.getItem('auth')) ? JSON.parse(localStorage.getItem('auth')) : {}
+
   }
 };
 </script>
