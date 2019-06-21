@@ -13,10 +13,14 @@ Vue.mixin({
     }
 })
 import axios from 'axios';
-axios.defaults.headers.common['Authorization'] = 'Bearer '+localStorage.getItem('auth-token');
-import Multiselect from 'vue-multiselect'
-Vue.component('multiselect', Multiselect);
-import 'vue-multiselect/dist/vue-multiselect.min.css';
+const auth = JSON.parse(document.querySelector('meta[name="user"]').getAttribute('content'));
+localStorage.setItem('auth',JSON.stringify(auth));
+axios.defaults.headers.common['Authorization'] = 'Bearer '+ auth.api_token;
+import store from './store';
+import vSelect from 'vue-select'
+Vue.component('v-select', vSelect)
+import 'vue-select/dist/vue-select.css';
+
 import Vuetify from 'vuetify'
 import VueNoty from 'vuejs-noty'
 import 'vuetify/src/stylus/app.styl';
@@ -32,11 +36,13 @@ Vue.use(VueNoty, {
 Vue.use(VuetifyConfirm)
 const app = new Vue({
     el: '#app',
+    store,
     router: routes,
     render: (h) => h(main)
 })
 const nav = new Vue({
     el: '#nav',
+    store,
     router: routes,
     render: (h) => h(navbar)
 })

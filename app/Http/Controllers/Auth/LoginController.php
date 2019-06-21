@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -36,4 +38,28 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+    public function login(Request $request){
+      $credentials= $this->validate(request(), [
+        'email' => 'required|string',
+        'password'=> 'required|string'
+
+      ]);
+      if (auth()->attempt($credentials)) {
+      // Authentication passed...
+      $user = auth()->user();
+      $user->api_token = str_random(60);
+      $user->save();
+      return redirect('/');
+    }
+
+      return back()->withErrors(['email'=> 'Ha ocurrido un error, el usuario o la contraseña son incorrectos']);
+    }
+
+
+
+    public function logout(Request $request){
+      auth()->logout();
+      return redirect('/login');
+    }
+
 }

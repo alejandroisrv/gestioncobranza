@@ -19,14 +19,9 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table
-                v-if=" sucursales.length > 0 "
-                id="example1"
-                class="table table-bordered table-striped"
-              >
+              <table v-if=" sucursales.length > 0 " class="table table-bordered table-striped" >
                 <thead>
                   <tr>
-                    <th>Sucursal</th>
                     <th>Direccion</th>
                     <th>Telefono</th>
                     <th>Municipio</th>
@@ -34,8 +29,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in sucursales" :key="item.id">
-                    <td>{{    }}</td>
+                  <tr v-for="item in sucursales" :key="item.id+'a'">
                     <td>{{ item.direccion }}</td>
                     <td>{{ item.telefono}}</td>
                     <td>{{ item.municipio }}</td>
@@ -61,12 +55,7 @@
           </div>
         </div>
       </div>
-      <modal-sucursal
-        :sucursal="sucursalModal"
-        :titulo="tituloModal"
-        :url="urlModal"
-        :notificacion="notificacionModal"
-      ></modal-sucursal>
+      <modal-sucursal :sucursal="sucursalModal" :titulo="tituloModal" :url="urlModal" :notificacion="notificacionModal"></modal-sucursal>
     </section>
   </div>
 </template>

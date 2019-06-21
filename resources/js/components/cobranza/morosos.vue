@@ -77,10 +77,10 @@ export default {
     modalCliente
   },
   computed:{
-      ...mapGetters({
-          clientes:'clientes/clientes',
-          clientesFormat:'clientes/clientesFormat'
-      }),
+    ...mapGetters({
+        clientes:'clientes/clientes',
+        clientesFormat:'clientes/clientesFormat'
+    }),
   },
   created() {
     this.initClientes();
@@ -101,7 +101,7 @@ export default {
         res => {
           if (res) {
             axios.get(`/api/cliente/suspender/${id}`);
-            this.getClientes();
+            ClienteService.suspend();
             this.notificacion("Cliente suspendido");
           }
         }

@@ -35,7 +35,7 @@
                 </thead>
                 <tbody>
                   <tr v-for="item in bodegas" :key="item.id">
-                    <td>{{    }}</td>
+                    <td>{{ item.sucursal.direccion  }}</td>
                     <td>{{ item.direccion }}</td>
                     <td>{{ item.telefono}}</td>
                     <td>{{ item.municipio }}</td>
@@ -61,17 +61,13 @@
           </div>
         </div>
       </div>
-      <modal-bodega
-        :bodega="bodegaModal"
-        :titulo="tituloModal"
-        :url="urlModal"
-        :notificacion="notificacionModal"
-      ></modal-bodega>
+      <modal-bodega :bodega="bodegaModal" :titulo="tituloModal" :url="urlModal" :notificacion="notificacionModal"></modal-bodega>
     </section>
   </div>
 </template>
 <script>
 import modalBodega from "./modalBodegas";
+import BodegaService from '../../services/bodegas';
 import { log } from "util";
 export default {
   data() {
@@ -93,21 +89,14 @@ export default {
     });
   },
   methods: {
-    getBodegas() {
-      axios
-        .get("/api/bodegas")
-        .then(rs => {
-          this.bodegas = rs.data;
-          console.log(rs);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+    async getBodegas() {
+        const rs = await BodegaService.getAll();
+        this.bodegas= rs.data.data;
     },
     nuevoBodega() {
       this.openModal();
       this.bodegaModal = {
-        administrador: "",
+        encargado_id: "",
         direccion: "",
         minicipio: "",
         telefono: ""

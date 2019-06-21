@@ -32,7 +32,7 @@
             </div>
             <div class="form-group col-md-4">
               <label>Municipio</label>
-              <select name="mi" class="form-control" v-model="cliente.municipio">
+              <select name="mi" class="form-control" v-model="cliente.municipio_id">
                   <option value="0">Selecione el minucipio</option>
                 <option v-for="(muni,idx) in municipios" :key="idx" :value="idx">{{muni.nombre}}</option>
               </select>
@@ -102,4 +102,3 @@ export default {
   padding: 10px !important;
 }
 </style>
-

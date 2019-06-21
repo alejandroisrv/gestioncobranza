@@ -11,11 +11,11 @@ class SucursalController extends Controller
         return Sucursal::with('municipio')->get();
     }
     public function create(Request $request){
-        $sucursal= new Sucursal($request->all());
-        $sucursal->encargado_id=1;
-        $sucursal->municipio_id=1;
+        $data=$request->all();
+        $sucursal= new Sucursal($data);
+        $sucursal->encargado_id=$data['encargado']['id'];
         $sucursal->save();
+        return $sucursal;
+    }
 
-    }   
-    
 }

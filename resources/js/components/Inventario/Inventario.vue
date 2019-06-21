@@ -1,4 +1,5 @@
 <template>
+
   <div>
     <section class="content-header">
       <h1>Inventario</h1>
@@ -9,13 +10,13 @@
           <div class="box box-default">
             <div class="box-body text-right">
               <button class="btn btn-default" @click="openEntregar">
-                <i class="fa fa-truck mr-2"></i>
-                Entregar productos
-              </button>
+                    <i class="fa fa-truck mr-2"></i>
+                    Entregar productos
+                  </button>
               <button class="btn btn-default" @click="openAbastercer">Abastecer inventario</button>
               <button class="btn btn-primary" @click="nuevoProducto">
-                <i class="fa fa-plus mr-2"></i> Nuevo Producto
-              </button>
+                    <i class="fa fa-plus"></i>
+                  </button>
             </div>
           </div>
           <div class="box">
@@ -24,11 +25,11 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table
-                v-if=" productos.length > 0 "
-                id="example1"
-                class="table table-bordered table-striped"
-              >
+              <div class="col-md-12" v-if="loading"><i class="fa fa-spinner fa-spin loading-spinner"></i></div>
+              <template v-else>
+              <table v-if="productos && productos.length > 0 "
+                     id="example1"
+                     class="table table-bordered table-striped">
                 <thead>
                   <tr>
                     <th>Nombre</th>
@@ -39,21 +40,21 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in productos" :key="item.id">
+                  <tr v-for="item in productos" :key="item.id" >
                     <td>{{ item.nombre }}</td>
-                    <td>{{item.cantidad}}</td>
+                    <td :class="item.cantidad == 0 ? 'text-danger' : ''" >{{item.cantidad}}</td>
                     <td>{{ item.precio_contado}}</td>
                     <td>{{ item.precio_credito }}</td>
                     <td>
                       <button class="btn btn-default btn-sm" @click="verProducto(item)">
-                        <i class="fa fa-eye"></i>
-                      </button>
+                            <i class="fa fa-eye"></i>
+                          </button>
                       <button class="btn btn-primary btn-sm" @click="editarProducto(item)">
-                        <i class="fa fa-edit"></i>
-                      </button>
+                            <i class="fa fa-edit"></i>
+                          </button>
                       <button class="btn btn-danger btn-sm" @click="eliminarProducto(item.id)">
-                        <i class="fa fa-trash"></i>
-                      </button>
+                            <i class="fa fa-trash"></i>
+                          </button>
                     </td>
                   </tr>
                 </tbody>
@@ -61,114 +62,112 @@
               <div v-else>
                 <p class="py-4">No se han encontrado productos</p>
               </div>
+            </template>
             </div>
             <!-- /.box-body -->
           </div>
         </div>
       </div>
-      <modal-producto
-        :producto="productoModal"
-        :titulo="tituloModal"
-        :url="urlModal"
-        :notificacion="notificacionModal"
-      ></modal-producto>
-
-      <modal-entregar :productoList="productList"></modal-entregar>
+      <modal-producto :producto="productoModal"
+                      :titulo="tituloModal"
+                      :url="urlModal"
+                      :notificacion="notificacionModal"></modal-producto>
+      <modal-entregar></modal-entregar>
       <modal-abastecer :productoList="productList"></modal-abastecer>
+      <producto :producto="productoDetalle"></producto>
       <div></div>
     </section>
   </div>
+
 </template>
 <script>
-import modalProducto from "./modalProducto";
-import modalAbastecer from "./modalAbastecer";
-import modalEntregar from "./modalEntregar";
-import { log } from "util";
-export default {
-  data() {
-    return {
-      productoModal: "",
-      productList: [],
-      tituloModal: "",
-      urlModal: "",
-      productos: "",
-      notificacionModal: ""
-    };
-  },
-  components: {
-    modalProducto,
-    modalAbastecer,
-    modalEntregar
-  },
-  created() {
-    this.getProductos();
-    this.eventHub.$on("sendProducto", rs => {
-      this.getProductos();
-    });
-  },
-  methods: {
-    getProductos() {
-      axios.get("/api/productos").then(rs => {
-        rs.data.forEach(element => {
-          this.productos = rs.data;
-          this.productList.push({
-            id: element.id,
-            nombre: element.nombre,
-            cantidad: parseInt(element.cantidad),
-            precio_contado: parseInt(element.precio_costo),
-            precio_credito: parseInt(element.precio_credito)
-          });
-        });
-      });
-    },
-    nuevoProducto() {
-      this.openModal();
-      this.productoModal = {
-        nombre: "",
-        descripcion: "",
-        precioContado: "",
-        precioCredito: "",
-        precioCosto: "",
-        comision: ""
-      };
-      this.tituloModal = "Nuevo producto";
-      this.urlModal = "/api/producto/";
-      this.notificacionModal = "Producto agregado con éxito!";
-    },
-    editarProducto(producto) {
-      this.productoModal = producto;
-      this.tituloModal = "Editar producto";
-      this.urlModal = "/api/producto/update/" + producto.id;
-      this.openModal();
-      this.notificacionModal = "El producto ha sido editado!";
-    },
-    verProducto(producto) {},
-    eliminarProducto(id) {
-      this.$confirm("¿Estas seguro que deseas eliminar el producto?").then(
-        res => {
-          if (res) {
-            axios.get(`/api/producto/delete/${id}`);
-            this.getProductos();
-            this.notificacion("Producto Eliminado");
-          }
-        }
-      );
-    },
-    notificacion(texto) {
-      this.$noty.success(texto);
-    },
-    openModal() {
-      this.eventHub.$emit("openModal");
-    },
-    openAbastercer() {
 
-      console.log("dytfygjh");
-      
-      this.eventHub.$emit("openAbastercer");
+  import modalProducto from './modalProducto'
+  import modalAbastecer from './modalAbastecer'
+  import modalEntregar from './modalEntregar'
+  import producto from './producto'
+  import ProductoService from '../../services/productos.js'
+  import {mapGetters, mapActions} from 'vuex';
+
+  import { log } from 'util'
+  export default {
+    data() {
+      return {
+        productoModal: '',
+        productList: [{id:'all', label:'Selecciona un producto'}],
+        tituloModal: '',
+        urlModal: '',
+        notificacionModal: '',
+        productoDetalle:{}
+      }
     },
-    openEntregar() {
-      this.eventHub.$emit("openEntregar");
+    components: {
+      modalProducto,
+      modalAbastecer,
+      modalEntregar,
+      producto
+    },
+    created() {
+      this.eventHub.$on('initProductos', ()=>{
+        this.initProductos();
+      });
+      this.initProductos();
+    },
+    computed: {
+     ...mapGetters({
+       productos:'productos/productos',
+       loading:'productos/loading'
+      }),
+
+    },
+    methods: {
+    ...mapActions({
+      initProductos:'productos/initProduct',
+    }),
+      nuevoProducto() {
+        this.openModal()
+        this.productoModal = { nombre: '', descripcion: '', precioContado: '', precioCredito: '', precioCosto: '', comision: ''}
+        this.tituloModal = 'Nuevo producto'
+        this.urlModal = '/api/producto/'
+        this.notificacionModal = 'Producto agregado con éxito!'
+      },
+      editarProducto(producto) {
+        this.productoModal = producto
+        this.tituloModal = 'Editar producto'
+        this.urlModal = '/api/producto/update/' + producto.id
+        this.openModal()
+        this.notificacionModal = 'El producto ha sido editado!'
+      },
+      verProducto(producto) {
+        this.productoDetalle=producto;
+        this.eventHub.$emit('detalleProducto')
+
+      },
+      async eliminarProducto(id) {
+      let borrar = await this.$confirm('¿Estas seguro que deseas eliminar el producto?');
+        if (borrar) {
+          ProductoService.deleteProducto(id);
+          this.notificacion('Producto Eliminado')
+          this.initProductos();
+        }
+
+      },
+      notificacion(texto) {
+        this.$noty.success(texto)
+      },
+      openModal() {
+        this.eventHub.$emit('openModal')
+      },
+      openAbastercer() {
+        this.eventHub.$emit('openAbastercer')
+      },
+      openEntregar() {
+        this.eventHub.$emit('openEntregar')
+      }
     }
   }
-};
+
 </script>
+<style>
+.loading-spinner{font-size: 2.5rem;text-align: center;display: block;margin: 20px 0px;}
+</style>
