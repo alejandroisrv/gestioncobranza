@@ -12,9 +12,14 @@ class ClientesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        return Cliente::all();
+    public function index(Request $request)
+    {   $sucursal= isset($request->user()->sucursal_id) ? $request->user()->sucursal_id : null ;
+        $clientes = Cliente::with('sucursal','acuerdos_pagos','venta')
+        ->where('sucursal_id',$sucursal)->paginate(25);
+
+        
+
+        return response()->json(['body'=>$clientes]);
     }
 
     /**

@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Venta;
 use App\TipoVenta;
 use App\AcuerdoPago;
@@ -17,12 +16,33 @@ class VentasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $ventas= Venta::with('tipos_ventas','vendedor','acuerdo_pago','persona','productos_venta')->whereHas('vendedor', function($q){
-            $q->where('sucursal_id',1);
-        })->get();
-        return $ventas;
+    public function index(Request $request)
+    {   
+        $data=$request->all();
+        $sucursal=(isset($data['sucursal'])) ? $data['sucursal']: $request->user()->sucursal_id ;
+        
+        $tipoventa = (isset($data['tipoventa'])) ? $data['tipoventa'] : null ;
+        $acuerdoPago = (isset($data['acuerdo_pago'])) ? $data['acuerdo_pago'] : null ;
+        $cliente=(isset($data['cliente'])) ?  $data['cliente'] : null ; 
+        $vendedor = (isset($data['vendedor'])) ? $data['vendedor'] : null  ;
+        $desde = (isset($data['desde'])) ? $data['desde'] : null ;
+        $hasta = (isset($data['hasta'])) ? $data['hasta'] : null ;
+
+
+        $ventas= Venta::with('tipos_ventas','vendedor','acuerdo_pago','persona','productos_venta')
+        ->whereHas('sucursal', function($q){
+            $q->where('id',$sucursal);
+        })->whereHas('acuerdo_pago', function($q) use($acuerdoPago){
+            return ($acuerdoPago!=null) ? $q->where('id',$acuerdoPago) : $q ; 
+        })->where(function($q)use($cliente){
+            return ($cliente!=null) ? $q->where('cliente_id',$cliente) : $q ; 
+        })->where(function($q) use ($tipoventa){
+            return ($tipoventa!=null) ? $q->where('tipo_venta',$tipoventa) : $q ;
+
+        })->paginate(20);
+        
+        
+        return response()->json(['body'=>$ventas]);
     }
 
     public function create(Request $request)

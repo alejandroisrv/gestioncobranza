@@ -7,6 +7,7 @@ import Inventario from './components/Inventario/Inventario.vue'
 import Bodegas from './components/bodegas/Bodegas';
 import Ventas from './components/ventas/Ventas'
 import Sucursales from './components/sucursales/Sucursales'
+import Morosos from './components/cobranza/morosos';
 
 Vue.use(VueRouter)
 
@@ -42,6 +43,11 @@ export default new VueRouter({
             path: '/sucursales',
             name: 'sucursales',
             component: Sucursales
+        },
+        {
+            path: '/morosos',
+            name: 'Morosos',
+            component: Morosos
         },
 
 

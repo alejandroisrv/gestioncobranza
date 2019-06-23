@@ -32,7 +32,7 @@
                 <thead>
                   <tr>
                     <th>Nombre</th>
-                    <th>Cantidad</th>
+                    <th></th>
                     <th>Precio de contado</th>
                     <th>Precio a credito</th>
                     <th></th>
@@ -41,18 +41,12 @@
                 <tbody>
                   <tr v-for="item in productos" :key="item.id">
                     <td>{{ item.nombre }}</td>
-                    <td>{{item.cantidad}}</td>
+                    <td>{{ item.cantidad}}</td>
                     <td>{{ item.precio_contado}}</td>
                     <td>{{ item.precio_credito }}</td>
                     <td>
                       <button class="btn btn-default btn-sm" @click="verProducto(item)">
                         <i class="fa fa-eye"></i>
-                      </button>
-                      <button class="btn btn-primary btn-sm" @click="editarProducto(item)">
-                        <i class="fa fa-edit"></i>
-                      </button>
-                      <button class="btn btn-danger btn-sm" @click="eliminarProducto(item.id)">
-                        <i class="fa fa-trash"></i>
                       </button>
                     </td>
                   </tr>
@@ -66,24 +60,12 @@
           </div>
         </div>
       </div>
-      <modal-producto
-        :producto="productoModal"
-        :titulo="tituloModal"
-        :url="urlModal"
-        :notificacion="notificacionModal"
-      ></modal-producto>
-
-      <modal-entregar :productoList="productList"></modal-entregar>
-      <modal-abastecer :productoList="productList"></modal-abastecer>
-      <div></div>
+      <modal-producto producto="productoModal"></modal-producto>
     </section>
   </div>
 </template>
 <script>
 import modalProducto from "./modalProducto";
-import modalAbastecer from "./modalAbastecer";
-import modalEntregar from "./modalEntregar";
-import { log } from "util";
 export default {
   data() {
     return {
@@ -121,54 +103,13 @@ export default {
         });
       });
     },
-    nuevoProducto() {
-      this.openModal();
-      this.productoModal = {
-        nombre: "",
-        descripcion: "",
-        precioContado: "",
-        precioCredito: "",
-        precioCosto: "",
-        comision: ""
-      };
-      this.tituloModal = "Nuevo producto";
-      this.urlModal = "/api/producto/";
-      this.notificacionModal = "Producto agregado con éxito!";
-    },
-    editarProducto(producto) {
-      this.productoModal = producto;
-      this.tituloModal = "Editar producto";
-      this.urlModal = "/api/producto/update/" + producto.id;
-      this.openModal();
-      this.notificacionModal = "El producto ha sido editado!";
-    },
     verProducto(producto) {},
-    eliminarProducto(id) {
-      this.$confirm("¿Estas seguro que deseas eliminar el producto?").then(
-        res => {
-          if (res) {
-            axios.get(`/api/producto/delete/${id}`);
-            this.getProductos();
-            this.notificacion("Producto Eliminado");
-          }
-        }
-      );
-    },
     notificacion(texto) {
       this.$noty.success(texto);
     },
     openModal() {
       this.eventHub.$emit("openModal");
     },
-    openAbastercer() {
-
-      console.log("dytfygjh");
-      
-      this.eventHub.$emit("openAbastercer");
-    },
-    openEntregar() {
-      this.eventHub.$emit("openEntregar");
-    }
   }
 };
 </script>

@@ -53,6 +53,9 @@ Route::group(['middleware' => 'auth:api'], function () {
   Route::post('/sucursales/update/{id}','SucursalController@update');
   Route::get('/sucursal/delete/{id}','SucursalController@destroy');
 
+
+  Route::get('/municipios','MunicipioController@index');
+
   Route::get('users/all', 'UsersController@getUsers');
 
 });

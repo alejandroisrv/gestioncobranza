@@ -12,7 +12,9 @@ class Cliente extends Model
     public function venta() {
         return $this->hasMany('App\Venta');
     }
-
+    public function acuerdos_pagos(){
+      return $this->hasMany('App\AcuerdoPago');
+    }
     public function sucursal(){
       return $this->belongsTo('App\Sucursal');
     }

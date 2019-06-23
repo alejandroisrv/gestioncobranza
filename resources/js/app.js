@@ -38,11 +38,14 @@ const app = new Vue({
     el: '#app',
     store,
     router: routes,
-    render: (h) => h(main)
+    render: (h) => h(main),
+    beforeCreate() {
+		store.dispatch('initStore');
+    }
 })
 const nav = new Vue({
     el: '#nav',
     store,
     router: routes,
-    render: (h) => h(navbar)
+    render: (h) => h(navbar),
 })

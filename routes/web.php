@@ -22,5 +22,6 @@ Route::get('/sucursales', 'HomeController@index')->name('home')->middleware('aut
 Route::get('/contabilidad', 'HomeController@index')->name('home')->middleware('auth');
 Route::get('/cobranza', 'HomeController@index')->name('home')->middleware('auth');
 Route::get('/rutas', 'HomeController@index')->name('home')->middleware('auth');
+Route::get('/morosos', 'HomeController@index')->name('home')->middleware('auth');
 
 Route::get('/auth/logout', 'Auth\LoginController@logout')->name('logout')->middleware('guest');

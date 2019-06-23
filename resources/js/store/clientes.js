@@ -1,11 +1,11 @@
 export const STORAGE_KEY = 'CLIENTES'
 import ClienteService from '../services/clientes';
-import moment from 'moment';
+
 
 const state = {
-    clientes: [{}],
+    clientes: {data:[{}]},
     loading: true,
-    clientesFormat:[],
+    clientesFormat:[{}],
 }
 
 const getters = {
@@ -30,26 +30,29 @@ const mutations = {
     SET_LOADING_STATUS (state, value) {
         state.loading = value
     },
+
 }
 
 const actions = {
   async initClientes({commit,dispatch}){
       commit('SET_LOADING_STATUS',true)
       const rs= await ClienteService.getAll();
-      dispatch('getProductoFormat');
-      commit('SET_CLIENTES',rs.data.data);
+      dispatch('getClientesFormat');
+      commit('SET_CLIENTES',rs.data.body);
+      console.log(rs);
+      
       commit('SET_LOADING_STATUS',false)
   },
   async getClientesAll({commit}, query){
       commit('SET_LOADING_STATUS',true)
       const rs= await ClienteService.getAll(query);
-      commit('SET_CLIENTES',rs.data.data);
+      commit('SET_CLIENTES',rs.data.body);
       commit('SET_LOADING_STATUS',false)
   },
   async getClientesFormat({commit,state},query){
     commit('SET_LOADING_STATUS',true);
-    const rs= await ClientesService.getAll(query);
-    let datos = rs.data.data;
+    const rs= await ClienteService.getAll(query);
+    let datos = rs.data.body.data;
     let clientes=[];
     for (let i = 0; i < datos.length; i++) {
       clientes.push({id:datos[i].id,

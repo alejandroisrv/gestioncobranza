@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\municipio;
+use App\Municipio;
 use Illuminate\Http\Request;
 
 class MunicipioController extends Controller
@@ -12,9 +12,10 @@ class MunicipioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
+    public function index(Request $request)
+    {   $sucursal = isset($request->user()->sucursal_id) ? $request->user()->sucursal_id : null ;
+        $municipios= Municipio::where('sucursal_id',$sucursal)->get();
+        return response()->json(['body'=>$municipios]);
     }
 
     /**

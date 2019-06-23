@@ -303,7 +303,7 @@
                 </router-link>
               </li>
               <li>
-                <router-link to="morosos">
+                <router-link to="/morosos">
                   <i class="fa fa-circle-o"></i> Morosos
                 </router-link>
               </li>

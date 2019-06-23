@@ -15,5 +15,8 @@ export default {
     delete(id){
         return api().get('/cliente/delete/'+ id);
     },
+    suspend(id){
+        return api().get('/clientes/suspend?id='+id);
+    }
 
 }
