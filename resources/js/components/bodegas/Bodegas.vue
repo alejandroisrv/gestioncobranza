@@ -19,11 +19,9 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table
-                v-if=" bodegas.length > 0 "
-                id="example1"
-                class="table table-bordered table-striped"
-              >
+              <div class="col-md-12" v-if="loading"><i class="fa fa-spinner fa-spin loading-spinner"></i></div>
+              <template v-else>
+                <table  v-if="bodegas.data && bodegas.data.length > 0 " class="table table-bordered table-striped">
                 <thead>
                   <tr>
                     <th>Sucursal</th>
@@ -34,11 +32,11 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in bodegas" :key="item.id">
+                  <tr v-for="item in bodegas.data" :key="item.id+'a'">
                     <td>{{ item.sucursal.direccion  }}</td>
                     <td>{{ item.direccion }}</td>
                     <td>{{ item.telefono}}</td>
-                    <td>{{ item.municipio }}</td>
+                    <td>{{ item.municipio.municipio }}</td>
                     <td>
                       <button class="btn btn-default btn-sm" @click="verBodega(item)">
                         <i class="fa fa-eye"></i>
@@ -56,12 +54,15 @@
               <div v-else>
                 <p class="py-4">No se han encontrado bodegass</p>
               </div>
+              </template>
+   
+          
             </div>
             <!-- /.box-body -->
           </div>
         </div>
       </div>
-      <modal-bodega :bodega="bodegaModal" :titulo="tituloModal" :url="urlModal" :notificacion="notificacionModal"></modal-bodega>
+    <modal-bodega :bodega="bodegaModal" :titulo="tituloModal" :url="urlModal" :notificacion="notificacionModal"></modal-bodega>
     </section>
   </div>
 </template>
@@ -76,7 +77,8 @@ export default {
       tituloModal: "",
       urlModal: "",
       bodegas: "",
-      notificacionModal: ""
+      notificacionModal: "",
+      loading:true
     };
   },
   components: {
@@ -90,8 +92,10 @@ export default {
   },
   methods: {
     async getBodegas() {
+        this.loading=true;
         const rs = await BodegaService.getAll();
-        this.bodegas= rs.data.data;
+        this.bodegas= rs.data.body;
+        this.loading=false;
     },
     nuevoBodega() {
       this.openModal();

@@ -23,7 +23,7 @@
               <label>Municipio</label>
               <select name="mi" class="form-control" v-model="bodega.municipio_id">
                 <option value="0">Selecione el minucipio</option>
-                <option v-for="muni in municipios" :key="muni" :value="muni.id">{{muni.nombre}}</option>
+                <option v-for="muni in municipios" :key="muni.id" :value="muni.id">{{muni.municipio}}</option>
               </select>
             </div>
           </div>
@@ -44,14 +44,14 @@ export default {
   props: ["bodega", "titulo", "url", "notificacion"],
   data() {
     return {
-      municipios: [{ id: 0, nombre: "Bogota" }],
+      //municipios: [{ id: 0, nombre: "Bogota" }],
     };
   },
   components: {
     "bootstrap-modal": require("vue2-bootstrap-modal")
   },
   computed:{
-    ...mapGetters({encargados:'users/usersFormat'})
+    ...mapGetters({encargados:'users/usersFormat',municipios:'municipios/municipios'})
   },
   created() {
     this.getEncargados();

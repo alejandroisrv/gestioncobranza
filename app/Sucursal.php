@@ -19,6 +19,6 @@ class Sucursal extends Model
         return $this->hasMany('App\Cliente');
     }
     public function municipio(){
-        return $this->belongsTo('App\municipio');
+        return $this->belongsTo('App\Municipio');
     }
 }

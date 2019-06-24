@@ -19,11 +19,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table
-                v-if=" clientes.length > 0 "
-                id="example1"
-                class="table table-bordered table-striped"
-              >
+              <table v-if=" clientes.data.length > 0 " class="table table-bordered table-striped">
                 <thead>
                   <tr>
                     <th>Nombre</th>
@@ -34,7 +30,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in clientes" :key="item.id">
+                  <tr v-for="item in clientes.data" :key="item.id">
                     <td>{{ item.nombre }}</td>
                     <td>{{ item.direccion }}</td>
                     <td>{{ item.telefono}}</td>
@@ -51,7 +47,7 @@
                       </button>
                     </td>
                   </tr>
-                </tbody>
+                </tbody>d
               </table>
               <div v-else>
                 <p class="py-4">No se han encontrado clientes</p>
@@ -97,11 +93,11 @@ export default {
       axios
         .get("/api/clientes")
         .then(rs => {
-          this.clientes = rs.data;
+          this.clientes = rs.data.body;
           console.log(rs);
         })
         .catch(err => {
-          console.log(err);
+          this.$noty.error("Ha ocurrido un error al intentar agregar al cliente "+err.response.data.message);
         });
     },
     nuevoCliente() {

@@ -17,16 +17,11 @@
             <div class="box-header">
               <h3 class="box-title">
                 Listado de ventas
-                <b v-if="tipo!=''">de {{ tipo }}</b>
               </h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table
-                v-if="ventas.length>0"
-                id="example1"
-                class="table table-bordered table-striped"
-              >
+              <table v-if="ventas.data && ventas.total > 0" class="table table-bordered table-striped" >
                 <thead>
                   <tr>
                     <th>Vendedor</th>
@@ -40,7 +35,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in ventas" :key="item.id">
+                  <tr v-for="item in ventas.data" :key="item.id">
                     <td>{{ item.vendedor.name }}</td>
                     <td>{{item.persona.nombre}}</td>
                     <td>{{ item.tipos_ventas.descripcion }}</td>
@@ -64,60 +59,55 @@
         </div>
       </div>
       <modal-venta></modal-venta>
+      <venta :venta="ventaDetalle"></venta>
     </section>
   </div>
 </template>
 
 <script>
 import modalVenta from "./modalVentas";
-import { log } from "util";
+import venta from './Venta';
+import { mapActions, mapGetters } from 'vuex';
 export default {
   data() {
     return {
-      urlModal: "",
-      ventas: "",
-      clientes: "",
-      productos: [],
-      tipo: "",
-      venta: ""
+      ventaDetalle: ""
     };
+  },
+  computed:{
+    ...mapGetters({
+      ventas:'ventas/ventas',
+      loading:'ventas/loading',
+      tipos:'tipos/tiposVenta'
+    }),
   },
   components: {
     modalVenta,
+    venta,
     "bootstrap-modal": require("vue2-bootstrap-modal")
   },
   created() {
-    this.getVentas();
+    this.initVentas();
     this.eventHub.$on("sendVentas", rs => {
-      this.getVentas();
+      this.initVentas();
     });
   },
   methods: {
-    getVentas() {
-      axios.get("/api/ventas").then(rs => {
-        this.ventas = rs.data;
-      });
-    },
-
+    ...mapActions({
+      initVentas:'ventas/initVentas'
+    }),
     nuevaVenta() {
       this.openModal();
     },
     verVenta(venta) {
-      this.modalVenta = venta;
-      this.openVenta();
-    },
-    notificacion(texto) {
-      this.$noty.success(texto);
+      this.openVenta(venta);
     },
     openModal() {
       this.eventHub.$emit("openModal");
     },
-    openVenta() {
-      this.$refs.ventaDetalle.open();
+    openVenta(venta) {
+      this.eventHub.$emit('openDetalle',venta);
     },
-    closeTheModalVenta() {
-      this.$refs.ventaDetalle.close();
-    }
   }
 };
 </script>

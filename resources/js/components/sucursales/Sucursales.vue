@@ -15,14 +15,14 @@
           </div>
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Listado de Sucursals</h3>
+              <h3 class="box-title">Listado de Sucursales</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
               <table v-if=" sucursales.length > 0 " class="table table-bordered table-striped" >
                 <thead>
                   <tr>
-                    <th>Direccion</th>
+                    <th>Dirección</th>
                     <th>Telefono</th>
                     <th>Municipio</th>
                     <th></th>
@@ -32,7 +32,7 @@
                   <tr v-for="item in sucursales" :key="item.id+'a'">
                     <td>{{ item.direccion }}</td>
                     <td>{{ item.telefono}}</td>
-                    <td>{{ item.municipio }}</td>
+                    <td>{{ item.municipio.municipio }}</td>
                     <td>
                       <button class="btn btn-default btn-sm" @click="verSucursal(item)">
                         <i class="fa fa-eye"></i>

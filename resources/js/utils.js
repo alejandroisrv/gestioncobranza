@@ -5,7 +5,7 @@ export default {
         let query = ''
         if(object===undefined || object===null) return query;
         let arr = Object.entries(object)
-        if(arr.length > 0) {
+        if(arr && arr.length > 0) {
 
             if(arr[0][1] !== '' && arr[0][1] !== null && arr[0][1]!==undefined ){
                 query += `?${arr[0][0]}=${arr[0][1]}`

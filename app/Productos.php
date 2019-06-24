@@ -21,4 +21,8 @@ class Productos extends Model
         return $this->belongsTo('App\Sucursal');
 
     }
+    public function productos_venta(){
+
+        return $this->hasMany('App\ProductosVenta');
+    }
 }

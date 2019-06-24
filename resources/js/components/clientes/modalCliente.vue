@@ -82,6 +82,8 @@ export default {
         this.closeTheModal();
         this.eventHub.$emit("sendCliente");
         this.$noty.success(this.notificacion);
+      }).catch(err => {      
+        this.$noty.error("Ha ocurrido un error al intentar agregar al cliente "+err.response.data.message);
       });
     },
     openTheModal() {

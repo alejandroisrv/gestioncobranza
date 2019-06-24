@@ -13,6 +13,10 @@ class AcuerdoPago extends Model
                 return $this->belongsTo('App\Venta');
         }
 
+        public function productos(){
+                return $this->hasMany('App\Productos');
+        }
+
         public function cliente(){
                 return $this->belongsTo('App\Cliente');
         }

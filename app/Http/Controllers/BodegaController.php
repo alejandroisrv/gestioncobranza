@@ -23,9 +23,9 @@ class BodegaController extends Controller
 
 
 
-        $bodegas=Bodega::find($request->user()->bodega_id)->with('sucursal')->paginate(20);
+        $bodegas=Bodega::find($request->user()->bodega_id)->with(['sucursal','municipio'])->paginate(20);
 
-        return response()->json($bodegas);
+        return response()->json(['body'=> $bodegas]);
 
     }
 

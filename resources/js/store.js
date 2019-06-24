@@ -5,14 +5,16 @@ import productos from './store/productos.js';
 import bodegas from './store/bodegas.js';
 import municipios from './store/municipios.js'
 import clientes from './store/clientes';
+import ventas from './store/ventas'
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state: {
-        items: []
+        items: [],
+        perfilActual:JSON.parse(localStorage.getItem('auth'))
     },
     modules: {
-        users, bodegas, productos,municipios,clientes
+        users, bodegas, productos,municipios,clientes,ventas
     },
     mutations: {
         INIT_STORE(state,value) {

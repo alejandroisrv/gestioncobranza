@@ -55,7 +55,8 @@ const actions = {
     for (let i = 0; i < datos.length; i++) {
       productos.push({id:datos[i].id,
         label:`${datos[i].nombre} disponibles ${datos[i].cantidad}`,
-        cantidad:datos[i].cantidad,
+        cantidad:parseInt(datos[i].cantidad),
+        nombre:datos[i].nombre,
         precioCredito:datos[i].precio_credito,
         precioContado:datos[i].precio_contado
       })

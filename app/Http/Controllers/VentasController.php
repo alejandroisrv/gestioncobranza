@@ -29,10 +29,8 @@ class VentasController extends Controller
         $hasta = (isset($data['hasta'])) ? $data['hasta'] : null ;
 
 
-        $ventas= Venta::with('tipos_ventas','vendedor','acuerdo_pago','persona','productos_venta')
-        ->whereHas('sucursal', function($q){
-            $q->where('id',$sucursal);
-        })->whereHas('acuerdo_pago', function($q) use($acuerdoPago){
+        $ventas = Venta::with('tipos_ventas','vendedor','acuerdo_pago','persona','productos_venta')
+        ->whereHas('acuerdo_pago', function($q) use($acuerdoPago){
             return ($acuerdoPago!=null) ? $q->where('id',$acuerdoPago) : $q ; 
         })->where(function($q)use($cliente){
             return ($cliente!=null) ? $q->where('cliente_id',$cliente) : $q ; 
@@ -40,8 +38,7 @@ class VentasController extends Controller
             return ($tipoventa!=null) ? $q->where('tipo_venta',$tipoventa) : $q ;
 
         })->paginate(20);
-        
-        
+
         return response()->json(['body'=>$ventas]);
     }
 
@@ -49,9 +46,15 @@ class VentasController extends Controller
     {
 
         $data=$request->all();
-        $vendedor=1;
+        $vendedor=$request->user()->id;
         $total=0;
-        $venta= new Venta(['cliente_id'=> $data['cliente']['id'], 'vendedor_id'=>$vendedor,'tipo_venta'=>$data['tipo'],'total'=> $total]);
+        $venta = [
+                    'cliente_id'=> $data['cliente']['id'],
+                    'user_id'=>$vendedor,
+                    'tipo_venta'=>$data['tipo']['id'],
+                    'total'=> $total
+        ];
+        $venta = new Venta($venta);
         $acuerdoPago=new AcuerdoPago(['cuotas'=> $data['cuotas'], 'periodo_pago'=>$data['periodo']]);
         $venta->save();
         $acuerdoPago->venta_id=$venta->id;
@@ -59,18 +62,21 @@ class VentasController extends Controller
       
         for($i=0; $i<count($data['productosVendidos']);$i++){
             $data['productosVendidos'][$i]['venta_id']=$venta->id;
-            
             $producto=Productos::findOrFail($data['productosVendidos'][$i]['producto']['id']);
             $comision=$producto->comision*$data['productosVendidos'][$i]['cantidad'];
+            $precio = ($venta->id == 1 ) ? $producto->precio_costo : $producto->precio_contado ;
+            $total+=$data['productosVendidos'][$i]['cantidad']*$precio;
             ComisionVenta::create(['venta_id'=> $venta->id, 'vendedor_id'=> $vendedor, 'monto'=>$comision, 'estado'=> 0 ]);
-            $productoVenta=['producto_id'=> $data['productosVendidos'][$i]['producto']['id'],
-                            'producto'=> $data['productosVendidos'][$i]['producto']['nombre'],
-                            'cantidad'=> $data['productosVendidos'][$i]['cantidad'],
-                            'venta_id' => $venta->id ];
+            $productoVenta=['venta_id' => $venta->id,
+                            'producto_id'=> $data['productosVendidos'][$i]['producto']['id'],
+                            'producto' => $data['productosVendidos'][$i]['producto']['nombre'],
+                            'cantidad'=> $data['productosVendidos'][$i]['cantidad']
+                        ];
             ProductosVenta::create($productoVenta);
         }
-
-        return $acuerdoPago;
+        $venta->total=$total;
+        $venta->save();
+        return $productoVenta;
        
     }
 

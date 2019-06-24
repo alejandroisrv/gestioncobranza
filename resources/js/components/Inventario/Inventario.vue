@@ -27,9 +27,7 @@
             <div class="box-body">
               <div class="col-md-12" v-if="loading"><i class="fa fa-spinner fa-spin loading-spinner"></i></div>
               <template v-else>
-              <table v-if="productos && productos.length > 0 "
-                     id="example1"
-                     class="table table-bordered table-striped">
+              <table v-if="productos && productos.length > 0 " id="example1" class="table table-bordered table-striped">
                 <thead>
                   <tr>
                     <th>Nombre</th>
