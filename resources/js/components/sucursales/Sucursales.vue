@@ -34,9 +34,6 @@
                     <td>{{ item.telefono}}</td>
                     <td>{{ item.municipio.municipio }}</td>
                     <td>
-                      <button class="btn btn-default btn-sm" @click="verSucursal(item)">
-                        <i class="fa fa-eye"></i>
-                      </button>
                       <button class="btn btn-primary btn-sm" @click="editarSucursal(item)">
                         <i class="fa fa-edit"></i>
                       </button>

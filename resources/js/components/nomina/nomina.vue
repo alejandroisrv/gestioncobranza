@@ -9,6 +9,9 @@
         <div class="col-xs-12">
           <div class="box box-default">
             <div class="box-body text-right">
+              <button class="btn btn-default btn-sm" @click="addTrabajador()">
+                Nuevo Trabajador
+              </button>
             </div>
           </div>
           <div class="box">
@@ -19,9 +22,7 @@
             <div class="box-body">
               <div class="col-md-12" v-if="loading"><i class="fa fa-spinner fa-spin loading-spinner"></i></div>
               <template v-else>
-              <table v-if="productos && productos.length > 0 "
-                     id="example1"
-                     class="table table-bordered table-striped">
+              <table v-if="nomina.data && nomina.data.length > 0 " class="table table-bordered table-striped">
                 <thead>
                   <tr>
                     <th>Usuario</th>
@@ -32,27 +33,22 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in nomina" :key="item.id" >
-                    <td>{{ item.nombre }}</td>
-                    <td :class="item.cantidad == 0 ? 'text-danger' : ''" >{{item.cantidad}}</td>
-                    <td>{{ item.precio_contado}}</td>
-                    <td>{{ item.precio_credito }}</td>
+                  <tr v-for="item in nomina.data" :key="item.id" >
+                    <td>{{ item.email }}</td>
+                    <td>{{ item.name}}</td>
+                    <td>{{ item.telefono }}</td>
+                    <td>{{ item.direccion }}</td>
+                    <td>{{ item.roles.name }}</td>
                     <td>
                       <button class="btn btn-default btn-sm" @click="verProducto(item)">
                             <i class="fa fa-eye"></i>
-                          </button>
-                      <button class="btn btn-primary btn-sm" @click="editarProducto(item)">
-                            <i class="fa fa-edit"></i>
-                          </button>
-                      <button class="btn btn-danger btn-sm" @click="eliminarProducto(item.id)">
-                            <i class="fa fa-trash"></i>
-                          </button>
+                      </button>
                     </td>
                   </tr>
                 </tbody>
               </table>
               <div v-else>
-                <p class="py-4">No se han encontrado productos</p>
+                <p class="py-4">No se han encontrado trabajadores</p>
               </div>
             </template>
             </div>
@@ -62,22 +58,35 @@
       </div>
 
     </section>
+    <modal-nomina></modal-nomina>
   </div>
-
 </template>
 <script>
-export default{
-
+import modalNomina from './modalNomina';
+import NominaService from '../../services/nomina';
+export default {
   data(){
     return {
-
-
+      nomina:[],
+      loading:true,
     }
 
+
   },
+  components:{modalNomina},
   created(){
+    this.getNomina();
 
-
+  },
+  methods:{
+    async getNomina(){
+        const rs = await NominaService.getAll();
+        this.nomina = rs.data.body;
+        this.loading=false;
+    },
+    addTrabajador(){
+     this.eventHub.$emit('addTrabajador');
+    }
   }
 }
 </script>

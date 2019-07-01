@@ -54,6 +54,23 @@ Route::group(['middleware' => 'auth:api'], function () {
   Route::get('/sucursal/delete/{id}','SucursalController@destroy');
 
 
+  Route::get('/acuerdos_pagos','AcuerdosPagoController@index');
+  Route::post('/acuerdos_pagos','AcuerdosPagoController@create');
+  Route::get('/acuerdo_pago/{id}','AcuerdosPagoController@get');
+
+  Route::post('/pagos_clientes','PagoClienteController@index');
+  Route::post('/pagos_clientes','PagoClienteController@create');
+ 
+  Route::get('/nomina/all','NominaController@index');
+  Route::get('/nomina/roles/all','NominaController@roles');
+  Route::post('/nomina/add','NominaController@create');
+  Route::post('/nomina/edit','NominaController@edit');
+  Route::post('/nomina/delete/{id}','NominaController@delete');
+
+  Route::get('/comisiones','ComisionVentaController@index');
+  Route::get('/comisiones/pagar','ComisionVentaController@pagar');
+
+  
   Route::get('/municipios','MunicipioController@index');
 
   Route::get('users/all', 'UsersController@getUsers');

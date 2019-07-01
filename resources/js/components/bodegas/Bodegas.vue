@@ -38,9 +38,6 @@
                     <td>{{ item.telefono}}</td>
                     <td>{{ item.municipio.municipio }}</td>
                     <td>
-                      <button class="btn btn-default btn-sm" @click="verBodega(item)">
-                        <i class="fa fa-eye"></i>
-                      </button>
                       <button class="btn btn-primary btn-sm" @click="editarBodega(item)">
                         <i class="fa fa-edit"></i>
                       </button>
@@ -52,7 +49,7 @@
                 </tbody>
               </table>
               <div v-else>
-                <p class="py-4">No se han encontrado bodegass</p>
+                <p class="py-4">No se han encontrado bodegas</p>
               </div>
               </template>
    

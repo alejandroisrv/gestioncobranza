@@ -14,13 +14,13 @@ class ClientesController extends Controller
      */
     public function index(Request $request)
     {   $sucursal= isset($request->user()->sucursal_id) ? $request->user()->sucursal_id : null ;
-        $clientes = Cliente::with('sucursal','acuerdos_pagos','venta')
+        $clientes = Cliente::with('sucursal','acuerdos_pagos','pagos_clientes')
         ->where('sucursal_id',$sucursal)->paginate(25);
-
-        
 
         return response()->json(['body'=>$clientes]);
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -44,7 +44,7 @@ class ClientesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function pagos_clientes(Request $request)
     {
         //
     }

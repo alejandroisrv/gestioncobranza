@@ -29,7 +29,9 @@ class Venta extends Model
 
         return $this->belongsTo('App\TipoVenta','tipo_venta','id');
     }
-
+    public function comisiones(){
+        return $this->hasMany('App\ComisionVenta');
+    }
     public function persona(){
         return $this->belongsTo('App\Cliente','cliente_id','id');
     }

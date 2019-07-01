@@ -18,7 +18,7 @@
                 <label>Cliente</label>
                 <v-select v-model="VentaGeneral.cliente" :options="clientes" placeholder="Seleciona un cliente"></v-select>
               </div>
-              <div class="form-group col-md-3">
+              <div class="form-group col-md-6">
                 <label>Tipo de venta</label>
                 <v-select v-model="VentaGeneral.tipo" :options="tiposVenta" placeholder="Seleciona un tipo de venta"></v-select>
               </div>

@@ -8,44 +8,49 @@
       <div class="row">
         <div class="col-xs-12">
           <div class="box box-default">
-            <div class="box-body text-right">
+            <div class="box-body text-left">
+              Filtrar: 
             </div>
           </div>
           <div class="box">
             <div class="box-header">
               <h3 class="box-title">Listado de comisiones generadas</h3>
+              <div class="box-tools">
+                <div class="input-group input-group-sm mt-2" style="width: 250px;">
+                  <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+
+                  <div class="input-group-btn">
+                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                  </div>
+                </div>
+              </div>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
               <div class="col-md-12" v-if="loading"><i class="fa fa-spinner fa-spin loading-spinner"></i></div>
               <template v-else>
-              <table v-if="productos && productos.length > 0 "
-                     id="example1"
-                     class="table table-bordered table-striped">
+              <table v-if="comisiones.data && comisiones.data.length > 0 " class="table table-bordered table-striped">
                 <thead>
                   <tr>
-                    <th>Nombre</th>
-                    <th>Telefono</th>
-                    <th>Dirección</th>
-                    <th>Rol</th>
+                    <th>Vendedor</th>
+                    <th>Venta</th>
+                    <th>Monto</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in nomina" :key="item.id" >
-                    <td>{{ item.nombre }}</td>
-                    <td :class="item.cantidad == 0 ? 'text-danger' : ''" >{{item.cantidad}}</td>
-                    <td>{{ item.precio_contado}}</td>
-                    <td>{{ item.precio_credito }}</td>
+                  <tr v-for="item in comisiones.data" :key="item.id" >
+                    <td v-if="item.vendedor!=null">{{ item.vendedor.name }}</td>
+                    <td>{{ item.venta.id }}</td>
+                    <td>{{ item.monto}}</td>
+                    <td>{{ item.estado }} </td>
+                    <td>{{ item.created_at }}</td>
                     <td>
                       <button class="btn btn-default btn-sm" @click="verProducto(item)">
                             <i class="fa fa-eye"></i>
-                          </button>
-                      <button class="btn btn-primary btn-sm" @click="editarProducto(item)">
-                            <i class="fa fa-edit"></i>
-                          </button>
-                      <button class="btn btn-danger btn-sm" @click="eliminarProducto(item.id)">
-                            <i class="fa fa-trash"></i>
-                          </button>
+                      </button>
                     </td>
                   </tr>
                 </tbody>
@@ -65,18 +70,32 @@
 
 </template>
 <script>
-export default{
+import ComisionService from '../../services/comisiones'
+export default {
 
   data(){
     return {
-
-
+      comisiones:[],
+      loading:true,
     }
 
   },
   created(){
+    this.getComisiones();
+
+  },
+  methods:{
+
+    async getComisiones(){
+      const rs = await ComisionService.getAll();
+      this.comisiones =rs.data.body;
+      this.loading=false;
+    },
+    async pagarComision(item){
+      const rs = await ComisionService.pay(item.id);
 
 
+    }
   }
 }
 </script>

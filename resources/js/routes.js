@@ -8,6 +8,8 @@ import Bodegas from './components/bodegas/Bodegas';
 import Ventas from './components/ventas/Ventas'
 import Sucursales from './components/sucursales/Sucursales'
 import Morosos from './components/cobranza/morosos';
+import Nomina from './components/nomina/nomina';
+import Comisiones from './components/nomina/comisiones'
 
 Vue.use(VueRouter)
 
@@ -49,7 +51,16 @@ export default new VueRouter({
             name: 'Morosos',
             component: Morosos
         },
-
+        {
+            path: '/nomina',
+            name: 'Nomina',
+            component: Nomina
+        },
+        {
+            path: '/comisiones',
+            name: 'Comisiones',
+            component: Comisiones
+        },
 
     ]
 })

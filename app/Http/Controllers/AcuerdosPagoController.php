@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\AcuerdoPago;
 
 use Illuminate\Http\Request;
 
@@ -11,9 +12,19 @@ class AcuerdosPagoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
+    public function index(Request $request)
+    {   
+        $data= $request->all();
+        $cliente = (isset($data['cliente'])) ? $data['cliente']: null ;
+        $venta = (isset($data['venta'])) ? $data['venta']: null ;
+        $limite = (isset($data['limite'])) ? $data['limite'] : 20 ;
+        $acuerdos_pagos= AcuerdoPago::with(['clientes','ventas','pagos_clientes'])
+        ->where(function($q) use ($cliente) {
+            return ($cliente!=null) ? $q->where('cliente_id',$cliente): $q; 
+        })
+        ->where(function($q) use ($venta) {
+            return ($venta!=null) ? $q->where('venta_id',$venta): $q; 
+        })->paginate($limite);
     }
 
     /**
@@ -21,9 +32,18 @@ class AcuerdosPagoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        
+
+
+    }
+
+    public function get(Request $request,$id)
+    {
+        
+        
+
     }
 
     /**

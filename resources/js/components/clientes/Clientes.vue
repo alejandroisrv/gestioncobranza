@@ -1,7 +1,7 @@
 <template>
   <div>
     <section class="content-header">
-      <h1>Inventario</h1>
+      <h1>Clientes</h1>
     </section>
     <section class="content">
       <div class="row">
@@ -19,7 +19,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table v-if=" clientes.data.length > 0 " class="table table-bordered table-striped">
+              <table v-if=" clientes.data && clientes.data.length > 0 " class="table table-bordered table-striped">
                 <thead>
                   <tr>
                     <th>Nombre</th>
@@ -47,7 +47,7 @@
                       </button>
                     </td>
                   </tr>
-                </tbody>d
+                </tbody>
               </table>
               <div v-else>
                 <p class="py-4">No se han encontrado clientes</p>
@@ -57,17 +57,14 @@
           </div>
         </div>
       </div>
-      <modal-cliente
-        :cliente="clienteModal"
-        :titulo="tituloModal"
-        :url="urlModal"
-        :notificacion="notificacionModal"
-      ></modal-cliente>
+      <modal-cliente cliente="clienteModal" :titulo="tituloModal" :url="urlModal" :notificacion="notificacionModal"></modal-cliente>
+      <cliente></cliente>
     </section>
   </div>
 </template>
 <script>
 import modalCliente from "./modalCliente";
+import cliente from "./Cliente";
 import { log } from "util";
 export default {
   data() {
@@ -80,7 +77,7 @@ export default {
     };
   },
   components: {
-    modalCliente
+    modalCliente,cliente
   },
   created() {
     this.getClientes();
@@ -90,13 +87,9 @@ export default {
   },
   methods: {
     getClientes() {
-      axios
-        .get("/api/clientes")
-        .then(rs => {
+      axios.get("/api/clientes").then(rs => {
           this.clientes = rs.data.body;
-          console.log(rs);
-        })
-        .catch(err => {
+        }).catch(err => {
           this.$noty.error("Ha ocurrido un error al intentar agregar al cliente "+err.response.data.message);
         });
     },
@@ -124,7 +117,9 @@ export default {
       this.openModal();
       this.notificacionModal = "El cliente ha sido editado!";
     },
-    verCliente(cliente) {},
+    verCliente(cliente) {
+      this.eventHub.$emit('verCliente',cliente);
+    },
     eliminarCliente(id) {
       this.$confirm("¿Estas seguro que deseas eliminar el cliente?").then(
         res => {
@@ -145,3 +140,4 @@ export default {
   }
 };
 </script>
+

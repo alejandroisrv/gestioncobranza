@@ -7,8 +7,15 @@
       <div class="row">
         <div class="col-xs-12">
           <div class="box box-default">
-            <div class="box-body text-right">
-                <label for="">Filtrar por municipios</label><v-select v-model="municipio" :options="municipiosFormat" placeholder="Selecciona el municipio"></v-select>
+            <div class="box-body text-left align-items-center">
+              <div class="col-md-2">Filtrar por municipios</div>
+              <div class="col-md-4">
+                <v-select
+                  v-model="municipio"
+                  :options="municipiosFormat"
+                  placeholder="Selecciona el municipio"
+                ></v-select>
+              </div>
             </div>
           </div>
           <div class="box">
@@ -54,27 +61,26 @@
 </template>
 <script>
 import modalCliente from "../clientes/Cliente";
-import {mapGetters, mapActions } from 'vuex';
-import { log } from 'util'
+import { mapGetters, mapActions } from "vuex";
+import { log } from "util";
 
 export default {
   data() {
     return {
       clienteModal: "",
       notificacionModal: "",
-      municipio:''
+      municipio: ""
     };
   },
   components: {
     modalCliente
   },
-  computed:{
+  computed: {
     ...mapGetters({
-        clientes:'clientes/clientes',
-        clientesFormat:'clientes/clientesFormat',
-        municipiosFormat:'municipios/municipiosFormat'
-
-    }),
+      clientes: "clientes/clientes",
+      clientesFormat: "clientes/clientesFormat",
+      municipiosFormat: "municipios/municipiosFormat"
+    })
   },
   created() {
     this.initClientes();
@@ -83,19 +89,19 @@ export default {
     });
   },
   methods: {
-      ...mapActions({
-          initClientes:'clientes/initClientes',
-      }),
+    ...mapActions({
+      initClientes: "clientes/initClientes"
+    }),
     verCliente(cliente) {
-        this.clienteModal=cliente;
-        this.openModal();
+      this.clienteModal = cliente;
+      this.openModal();
     },
     suspenderCliente(id) {
       this.$confirm("¿Estas seguro que deseas suspender este cliente?").then(
         res => {
           if (res) {
             const rs = ClienteService.suspend(id);
-            if(rs) this.notificacion("Cliente suspendido");
+            if (rs) this.notificacion("Cliente suspendido");
             else this.$noty.error("Error al intentar suspender cliente");
           }
         }

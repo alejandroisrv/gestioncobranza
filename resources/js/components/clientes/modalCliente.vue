@@ -1,14 +1,7 @@
 <template>
   <div>
-    <bootstrap-modal
-      ref="theModal"
-      :need-header="true"
-      :need-footer="true"
-      :size="'large'"
-      :opened="myOpenFunc"
-    >
+    <bootstrap-modal ref="theModal" :need-header="true" :need-footer="true" :size="'large'" :opened="myOpenFunc">
       <div slot="title">{{ titulo }}</div>
-
       <div slot="body">
         <form @submit.prevent="send">
           <div class="box-body">

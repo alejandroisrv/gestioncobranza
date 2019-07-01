@@ -1,38 +1,43 @@
 
 <template>
-  <bootstrap-modal ref="clienteModal" :need-header="false" :need-footer="true" :size="'large'">
+  <bootstrap-modal ref="detalleCliente" :need-header="true" :need-footer="true" :size="'large'">
     <div slot="title">Cliente</div>
     <div slot="body"> 
-      <div v-if="cliente">
-           <div class="row">
-        <div class="col-4">
+      <div class="box-body" v-if="cliente!=''">
+        <div class="row">
+          <div class="col-md-12">
+            <h4>Datos del Cliente</h4>
+          </div>
+        </div>
+        <div class="row">
+        <div class="col-md-4 col-lg-4">
           <p>{{ cliente.nombre}} {{cliente.apellido}}</p>
         </div>
-        <div class="col-4">{{ cliente.cedula }}</div>
+        <div class="col-md-4 col-lg-4">C.I {{ cliente.cedula }}</div>
       </div>
       <div class="row">
-        <div class="col-12">
-          <p>Dirección:{{ cliente.direccion}}</p>
+        <div class="col-md-4 col-lg-4">
+          <p>Dirección: {{ cliente.direccion}}</p>
         </div>
       </div>
       <div class="row">
-        <div class="col-4">
-          <p>Email:{{ cliente.email}}</p>
+        <div class="col-md-4 col-lg-4">
+          <p>E-mail: {{ cliente.email}}</p>
         </div>
-        <div class="col-4">Telf:{{ cliente.telefono }}</div>
+        <div class="col-md-4 col-lg-4">Teléfono: {{ cliente.telefono }}</div>
       </div>
       <div class="row">
-        <div class="col-4">
+        <div class="col-md-4 col-lg-4">
           <p>Deuda actual :{{ cliente.acuerdos_pagos.monto}}</p>
         </div>
-        <div class="col-4">Próximo pago: {{ cliente.proximo_pago }}</div>
-        <div class="col-4">Cliente desde {{ cliente.fecha }}</div>
-        <div class="col-4">{{ cliente.fecha }}</div>
+        <div class="col-md-4 col-lg-4">Próximo pago: {{ cliente.proximo_pago }}</div>
+        <div class="col-md-4 col-lg-4">Cliente desde {{ cliente.created_at}}</div>
+        <div class="col-md-4 col-lg-4">{{ cliente.fecha }}</div>
       </div>
       <div class="row">
-        <div class="col-12">
-          <p>Últimas compras</p>
-          <table>
+        <div class="col-md-12 col-lg-12" v-if="ventas.data && ventas.data.length > 0">
+          <h4>Últimas compras</h4>
+          <table class="table table-condensed ">
             <thead>
               <tr>
                 <th>Vendedor</th>
@@ -43,15 +48,15 @@
                 <th></th>
               </tr>
             </thead>
-            <tbody v-if="ventas && ventas.length > 0">
-              <tr v-for="item in ventas" :key="item.id">
+            <tbody>
+              <tr v-for="item in ventas.data" :key="item.id">
                 <td>{{ item.vendedor.name }}</td>
                 <td>{{ item.tipos_ventas.descripcion }}</td>
                 <td>{{ item.acuerdo_pago.periodo_pago}}</td>
                 <td>{{ item.total }}</td>
                 <td>{{ item.created_at }}</td>
                 <td>
-                  <button class="btn btn-default">Detalle</button>
+                  <button class="btn btn-default">V</button>
                 </td>
               </tr>
             </tbody>
@@ -71,16 +76,20 @@
 import { mapGetters, mapActions } from "vuex";
 import VentaService from "../../services/ventas";
 export default {
-  props: ["cliente"],
   data() {
     return {
+      cliente:'',
       ventas: [{}],
       loading: true
     };
   },
   created() {
     //ABRIR
-    this.eventHub.$on("detalleCliente", () => {  this.open(); });
+    this.eventHub.$on("verCliente", (cliente) => { 
+      console.log(cliente);
+      this.cliente=cliente;
+      this.open(); 
+    });
   },
   components: {
     "bootstrap-modal": require("vue2-bootstrap-modal")
@@ -90,14 +99,15 @@ export default {
     async getVenta(id) {
       let query = { cliente: id };
       const rs = await VentaService.getAll(query);
-      this.ventas = rs.data;
+      this.ventas = rs.data.body;
       this.loading = false;
+      
     },
     open() {
-      this.$refs.clienteModal.open();
+      this.$refs.detalleCliente.open();
     },
     close() {
-      this.$refs.clienteModal.close();
+      this.$refs.detalleCliente.close();
     }
   },
   watch:{

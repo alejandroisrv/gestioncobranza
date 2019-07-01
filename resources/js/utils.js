@@ -30,7 +30,7 @@ export default {
         return query;
     },
     select2Fortmat(datos){
-      if(datos==undefined && datos.length==0) return []
+      if(datos && datos==undefined && datos.length==0) return []
       try {
         let format=[];
         for(let i=0;i < datos.length; i++){

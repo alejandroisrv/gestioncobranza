@@ -14,3 +14,10 @@ export default {
   }
 };
 </script>
+<style>
+.vs--searchable .vs__dropdown-toggle{
+  border-radius: 0px !important;
+  height: 34px !important;
+  line-height: 34px !important;
+}
+</style>

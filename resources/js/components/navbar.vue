@@ -138,7 +138,7 @@
 
                   <p>
                     {{ user.name }}
-                    <small> {{user.email}} </small>
+                    <small>{{user.email}}</small>
                   </p>
                 </li>
                 <!-- Menu Footer-->
@@ -214,7 +214,7 @@
               <span>Bodegas</span>
             </router-link>
           </li>
-                  <li>
+          <li>
             <router-link to="/sucursales">
               <i class="fa fa-home"></i>
               <span>Sucursales</span>
@@ -231,7 +231,7 @@
             <ul class="treeview-menu">
               <li>
                 <router-link to="/devoluciones">
-                  <i class="fa fa-circle-o"></i> Devoluciones
+                  <i class="fa fa-circle-o"></i> Historial
                 </router-link>
               </li>
             </ul>
@@ -244,7 +244,7 @@
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
             </router-link>
-            <ul class="treeview-menu">
+            <!-- <ul class="treeview-menu">
               <li>
                 <router-link to="/ventas/contado">
                   <i class="fa fa-circle-o"></i> Ventas de contado
@@ -255,7 +255,7 @@
                   <i class="fa fa-circle-o"></i> Ventas a credito
                 </router-link>
               </li>
-            </ul>
+            </ul>-->
           </li>
           <li class="treeview">
             <router-link to="/nomina">
@@ -288,9 +288,9 @@
             </router-link>
             <ul class="treeview-menu">
               <li>
-                <router-link to="acuerdos">
+                <!-- <router-link to="acuerdos">
                   <i class="fa fa-circle-o"></i> Acuerdos de Pago
-                </router-link>
+                </router-link>-->
               </li>
               <li>
                 <router-link to="cartera">
@@ -331,13 +331,20 @@
 export default {
   data() {
     return {
-      user: ''
-    }
+      user: ""
+    };
   },
-  created(){
-
-    this.user = (localStorage.getItem('auth')) ? JSON.parse(localStorage.getItem('auth')) : {}
-
+  created() {
+    this.user = localStorage.getItem("auth")
+      ? JSON.parse(localStorage.getItem("auth"))
+      : {};
   }
 };
 </script>
+<style>
+.vs--searchable .vs__dropdown-toggle {
+  border-radius: 0px !important;
+  height: 34px !important;
+  line-height: 34px !important;
+}
+</style>
