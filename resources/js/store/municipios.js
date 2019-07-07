@@ -19,7 +19,7 @@ const mutations = {
     SET_MUNICIPIOS(state, value) {
         state.municipios = value
     },
-    SET_MUNICIPIOS_FORMART(state, value) {
+    SET_MUNICIPIOS_FORMAT(state, value) {
         state.municipiosFormat = value;
     }
 }
@@ -35,17 +35,16 @@ const actions = {
     async getMunicipiosAll({ commit }, query) {
 
         const rs = await MunicipioService.getAll(query);
-        commit('SET_MUNICIPIOS', rs.data.data);
+        commit('SET_MUNICIPIOS', rs.data.body);
     },
     async municipiosFormat({ commit }, query) {
         const rs = await MunicipioService.getAll(query);
-        let datos = rs.data.body.data;
+        let datos = rs.data.body;
         let municipios = [{id:'all',label:'Todos'}];
         for (let i = 0; i < datos.length; i++) {
             municipios.push({ id: datos[i].id, label: datos[i].municipio })
         }
         commit('SET_MUNICIPIOS_FORMAT', municipios);
-        commit('SET_LOADING_STATUS', false);
     },
 
 }

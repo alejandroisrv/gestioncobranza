@@ -12,7 +12,7 @@ const getters = {
     clientes (state) {
         return state.clientes
     },
-    clientesFormat(){
+    clientesFormat(state){
       return state.clientesFormat
     },
     loading (state) {
@@ -39,13 +39,11 @@ const actions = {
       const rs= await ClienteService.getAll();
       dispatch('getClientesFormat');
       commit('SET_CLIENTES',rs.data.body);
-      console.log(rs);
-      
       commit('SET_LOADING_STATUS',false)
   },
   async getClientesAll({commit}, query){
       commit('SET_LOADING_STATUS',true)
-      const rs= await ClienteService.getAll(query);
+      const rs = await ClienteService.getAll(query);
       commit('SET_CLIENTES',rs.data.body);
       commit('SET_LOADING_STATUS',false)
   },

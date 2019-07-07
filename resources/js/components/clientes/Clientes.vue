@@ -57,7 +57,7 @@
           </div>
         </div>
       </div>
-      <modal-cliente cliente="clienteModal" :titulo="tituloModal" :url="urlModal" :notificacion="notificacionModal"></modal-cliente>
+      <modal-cliente :cliente="clienteModal" :titulo="tituloModal" :url="urlModal" :notificacion="notificacionModal"></modal-cliente>
       <cliente></cliente>
     </section>
   </div>

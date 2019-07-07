@@ -10,7 +10,7 @@ import Sucursales from './components/sucursales/Sucursales'
 import Morosos from './components/cobranza/morosos';
 import Nomina from './components/nomina/nomina';
 import Comisiones from './components/nomina/comisiones'
-
+import Rutas from './components/rutas/rutas';
 Vue.use(VueRouter)
 
 export default new VueRouter({
@@ -60,6 +60,11 @@ export default new VueRouter({
             path: '/comisiones',
             name: 'Comisiones',
             component: Comisiones
+        },
+        {
+            path: '/rutas',
+            name: 'Rutas',
+            component: Rutas
         },
 
     ]

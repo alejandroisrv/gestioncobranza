@@ -82,6 +82,6 @@ class VentasController extends Controller
 
     public function getTipos(Request $request){
         $tipos_ventas=TipoVenta::all();
-        return response()->json([$tipos_ventas]);
+        return response()->json(['body'=> $tipos_ventas]);
     }
 }

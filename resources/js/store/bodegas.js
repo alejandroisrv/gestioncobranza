@@ -46,7 +46,7 @@ const actions = {
   },
   async getBodegasFormat({commit,dispatch},query){
     const rs= await BodegaService.getAll(query);
-    commit('SET_BODEGAS_FORMAT', p.select2Fortmat(rs.data.data,'bodega'));
+    commit('SET_BODEGAS_FORMAT', p.select2Fortmat(rs.data.body.data));
   },
 
 }

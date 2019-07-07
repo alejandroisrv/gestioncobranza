@@ -71,11 +71,13 @@ const actions = {
   },
   async getTipos({commit}, query=null){
     const rs = await VentaService.getTipos(query);
-    let datos = rs.data;
-    let ventas=[];
+    let datos = rs.data.body;
+    let ventas=[{id:0,label:'todos'}];
     for (let i = 0; i < datos.length; i++) {
       ventas.push({id:datos[i].id,label:datos[i].descripcion})
     }
+    console.log(ventas);
+    
     commit('SET_TIPOS_VENTAS', ventas);
   }
 

@@ -17,5 +17,10 @@ class SucursalController extends Controller
         $sucursal->save();
         return $sucursal;
     }
+    
 
+    public function destroy(Request $request,$id){
+        $data=$request->all();
+        Sucursal::destroy($id);
+    }
 }

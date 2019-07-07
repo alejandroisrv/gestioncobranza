@@ -70,7 +70,9 @@ Route::group(['middleware' => 'auth:api'], function () {
   Route::get('/comisiones','ComisionVentaController@index');
   Route::get('/comisiones/pagar','ComisionVentaController@pagar');
 
-  
+  Route::get('/rutas','ItemsRutaController@index');
+  Route::post('/rutas/add','ItemsRutaController@create');
+  Route::get('/rutas/delete/{id}','ItemsRutaController@destroy');
   Route::get('/municipios','MunicipioController@index');
 
   Route::get('users/all', 'UsersController@getUsers');

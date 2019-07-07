@@ -147,7 +147,7 @@ export default {
     generateVenta() {
       axios.post(this.url, this.VentaGeneral).then(rs => {
         this.closeTheModal();
-        this.eventHub.$emit("sendProducto");
+        this.eventHub.$emit("sendVentas");
         this.$noty.success("Nueva venta realizad con exito");
       }).catch(err => {      
         this.$noty.error("Ha ocurrido un error al intentar agregar al cliente "+err.response.data.message);
