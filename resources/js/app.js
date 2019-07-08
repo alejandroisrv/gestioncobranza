@@ -21,11 +21,15 @@ import store from './store';
 import vSelect from 'vue-select'
 Vue.component('v-select', vSelect)
 import 'vue-select/dist/vue-select.css';
+
 import Vuetify from 'vuetify'
 import VueNoty from 'vuejs-noty'
 import 'vuetify/src/stylus/app.styl';
 import 'vuejs-noty/dist/vuejs-noty.css'
 import VuetifyConfirm from 'vuetify-confirm';
+
+import Datepicker from 'vuejs-datepicker';
+Vue.use(Datepicker);
 
 Vue.use(Vuetify)
 Vue.use(VueNoty, {

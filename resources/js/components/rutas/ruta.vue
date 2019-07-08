@@ -6,7 +6,7 @@
                  <div class="box-body" v-if="ruta!=''">
                      <div class="row">
                         <div class="col-md-12">
-                            <p style="font-size:18px;" class="mb-1"> Ruta {{ruta.nombre}}  </p>
+                            <p style="font-size:18px;" class="mb-1">{{ruta.nombre}}  </p>
                             <p class="col-md-6 px-0 text-muted">Número de clientes {{ ruta.items.length }} </p>
                             <p class="col-md-6 text-muted">Municipio {{ruta.municipio.municipio  }}   </p>
                         </div>

@@ -1,7 +1,7 @@
 
 <template>
     <div>
-        <bootstrap-modal ref="NuevaRuta" :need-header="true" :need-footer="true" :size="'medium'" :opened="myOpenFunc">
+        <bootstrap-modal ref="NuevaRuta" :need-header="true" :need-footer="true" :size="'medium'">
             <div slot="title">{{ titulo }}</div>
             <div slot="body">
                 <div class="box-body">
@@ -33,11 +33,12 @@
                         </div>
                         <div class="form-row lista-clientes">
                             <div class="col-md-12">
-                                <table v-if="clientes.data && clientes.data.length > 0" class="col-md-12 mt-2">
+                                <table v-if="clientes.data && clientes.data.length > 0" class="col-md-12 mt-2"> 
                                     <tr class="list-item" v-for="item in clientes.data" :key="item.id" @click="addCliente(item)"> 
                                         <td> <i :class=" item.select ? 'fa fa-check-square-o' : 'fa fa-square-o'" ></i></td>  <td> {{item.nombre}}  {{item.apellido}} </td>  <td>  <small> {{  item.direccion}}</small>  </td> 
                                     </tr>
                                 </table>
+                                <span class="text-muted" v-if="clientes.data.length==0 && direccion!=''"> No se ha encontrado resultados</span>
                             </div>
                         </div>
                     </template>
@@ -78,14 +79,14 @@ export default {
             clientes:{data:[]},
             titulo:'Nueva ruta',
             direccion:'',
-            municipio:'',
             step:0,
             list:[],
             rutas:[],
+            editando:false,
             ruta:{
                 nombre:'',
-                direccion:'',
-                municipio:'',
+                direccion:{},
+                municipio:{},
                 seleccionados:{}
             }
         }
@@ -109,6 +110,20 @@ export default {
     created(){
         this.getMunicipios();
         this.eventHub.$on('modalRuta', ruta => {
+            this.reset();
+            if(ruta !== undefined){
+                this.ruta.id = ruta.id;
+                this.ruta.nombre = ruta.nombre
+                this.ruta.municipio = ruta.municipio;
+                this.ruta.municipio.label=ruta.municipio.municipio;
+                ruta.items.forEach(c=>{
+                    this.clientes.data.push(c.cliente);
+                    this.list.push(c.cliente)
+                });
+                this.editando = true;
+                this.step = 0;
+            }
+            console.log(this.clientes.data);
             this.openTheModal();
         })
     }, 
@@ -119,6 +134,9 @@ export default {
         "clientes.data"(){
             this.marcar();
         },
+        list(){
+            this.marcar();
+        }
     },
     methods:{
         ...mapActions({
@@ -127,33 +145,38 @@ export default {
         marcar(){
             this.clientes.data.forEach( x => {
                 this.list.forEach( y => {
-                    if(x.id==y.id){
+                    let id = (this.editando) ? y.cliente_id  : y.id ;
+                    if(x.id == y.id){
                         Vue.set(x,'select', true);
                     }
                 });    
             })
         },
         addCliente(item){
-            let posicion = this.list.indexOf(item);
-            if(!(item.select)){
+            if(!item.select){ 
+                this.list.push(item);
                 Vue.set(item,'select', true);
-                this.list.push(item)
             }else{
-                this.list.splice(posicion,1);
                 Vue.set(item,'select', false);
-                // setTimeout(()=>{
-                //     Vue.set(item,'select', false);
-                // },250);
+                this.list.forEach((e,i)=>{
+                   if(e.id == item.id)  
+                    this.list.splice(i,1);
+                })
             }
-           console.log(this.list);
       
         },
 
         async buscarClientes(){
-            if(this.direccion.length<1) return false;
+            
             let query = { direccion:this.direccion, ruta:0 };
-            const rs = await ClienteService.getAll(query);
-            this.clientes.data = rs.data.body.data;
+            try {
+                const rs = await ClienteService.getAll(query);
+                this.clientes.data = rs.data.body.data;
+            } catch (error) {
+                this.$noty.error(error.message);
+            }
+            
+            
         },
         next(){
             this.step++;
@@ -166,27 +189,36 @@ export default {
         },
         async save(){
             this.ruta.seleccionados = this.list;
-            const rs = await RutaService.add(this.ruta);
-            this.$noty.success('Ruta creada con exito');
+            let mensaje;
+            
+            if (this.ruta.nombre=='') return this.$noty.error('Introduce un nombre para la ruta');
+            if (this.ruta.municipio.id == undefined ) return this.$noty.error('Selecciona un minicipio');
+            if (this.ruta.seleccionados.length==0) return this.$noty.error('Debes seleccionar al menos un cliente');
+            try {
+                if(!this.editando) {
+                    const rs = await RutaService.add(this.ruta);
+                    mensaje = 'Ruta creada con exito';
+                }else{
+                    const rs = await RutaService.edit(this.ruta);
+                    mensaje  = 'Ruta editada con exito';
+                }
+            } catch (error) {
+                return this.$noty.error("Ha ocurrido un error: "+error.response);
+            }
+           
+            this.$noty.success(mensaje);
+
             this.eventHub.$emit('sendRuta');
             this.closeTheModal();
             
         },
-        myOpenFunc() {
-
+        reset() {
+            this.clientes = {data:[]}
             this.direccion=''
-            this.municipio=''
             this.step=0
             this.list=[]
-            this.rutas=[]
-            this.ruta={
-                nombre:'',
-                direccion:'',
-                municipio:'',
-                seleccionados:{}
-            }
-   
-        
+            this.ruta={nombre:'',direccion:'',municipio:'',seleccionados:{}}
+            this.editando=false;
         },
         openTheModal() {
 

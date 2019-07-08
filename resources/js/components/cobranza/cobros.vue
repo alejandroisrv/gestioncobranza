@@ -8,111 +8,100 @@
         <div class="col-xs-12">
           <div class="box box-default">
             <div class="box-body text-left align-items-center">
-              <div class="col-md-2">Filtrar por municipios</div>
               <div class="col-md-4">
-                <v-select
-                  v-model="municipio"
-                  :options="municipiosFormat"
-                  placeholder="Selecciona el municipio"
-                ></v-select>
+                <span @click="showFiltros()">Filtrar cobros</span>
+                <button class="btn btn-primary" @click="nuevaJornada()">Nueva jornada de cobranza</button>
               </div>
             </div>
           </div>
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Listado de Clientes en mora</h3>
+              <h3 class="box-title">Listado de cobros</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table v-if="clientes.data.length > 0 " class="table table-bordered table-striped">
+              <table v-if="cobros.data && cobros.data.length > 0 " class="table table-bordered table-striped">
                 <thead>
                   <tr>
-                    <th>Nombre</th>
-                    <th>Deuda</th>
-                    <th></th>
+                    <th>Cobrador</th>
+                    <th>Ruta</th>
+                    <th>Estado </th>
+                    <th>Fecha </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in clientes.data" :key="item.id">
-                    <td>{{ item.nombre }}</td>
-                    <td>{{ item.deuda }}</td>
+                  <tr v-for="item in cobros.data" :key="item.id">
+                    <td>{{ item.cobrador.nombre }} {{ item.cobrador.apellido }}</td>
+                    <td>{{ item.ruta.nombre }}</td>
+                    <td>{{ item.estado }}</td>
+                    <td>{{ item.created_at }}</td>
                     <td>
-                      <button class="btn btn-default btn-sm" @click="verCliente(item)">
+                      <button class="btn btn-default btn-sm" @click="verCobro(item)">
                         <i class="fa fa-eye"></i>
-                      </button>
-                      <button class="btn btn-danger btn-sm" @click="suspenderCliente(item.id)">
-                        <i class="fa fa-ban"></i>
                       </button>
                     </td>
                   </tr>
                 </tbody>
               </table>
               <div v-else>
-                <p class="py-4">No se han encontrado clientes</p>
+                <p class="py-4">No se han encontrado cobros</p>
               </div>
             </div>
-            <!-- /.box-body -->
           </div>
         </div>
       </div>
-      <modal-cliente :cliente="clienteModal"></modal-cliente>
+      <cobro />
+      <add-cobro />
+      <filtros />
     </section>
   </div>
 </template>
 <script>
-import modalCliente from "../clientes/Cliente";
+import CobroService from '../../services/cobros'
+import Cobro from "./Cobro";
+import AddCobros from "./AddCobros";
+import Filtros from './FiltrosCobros'
+
 import { mapGetters, mapActions } from "vuex";
-import { log } from "util";
+
 
 export default {
   data() {
     return {
       clienteModal: "",
-      notificacionModal: "",
-      municipio: ""
     };
   },
   components: {
-    modalCliente
+    AddCobros,Cobro,Filtros
   },
   computed: {
     ...mapGetters({
-      clientes: "clientes/clientes",
-      clientesFormat: "clientes/clientesFormat",
-      municipiosFormat: "municipios/municipiosFormat"
+      clientes: "clientes/clientesFormat",
     })
   },
   created() {
-    this.initClientes();
-    this.eventHub.$on("sendCliente", rs => {
-      this.initClientes();
+    this.getCobros({});
+    this.getClientes();
+    this.eventHub.$on("filtrar", query => {
+      this.getCobros(query);
     });
   },
   methods: {
-    ...mapActions({
-      initClientes: "clientes/initClientes"
-    }),
-    verCliente(cliente) {
-      this.clienteModal = cliente;
-      this.openModal();
+    ...mapGetters({getClientes:'clientes/'}),
+    nuevaJornada(){
+      this.eventHub.$emit('nuevaJornada');
     },
-    suspenderCliente(id) {
-      this.$confirm("¿Estas seguro que deseas suspender este cliente?").then(
-        res => {
-          if (res) {
-            const rs = ClienteService.suspend(id);
-            if (rs) this.notificacion("Cliente suspendido");
-            else this.$noty.error("Error al intentar suspender cliente");
-          }
-        }
-      );
+    verCobro(item) {
+      this.eventHub.$emit('verCobro',item);
     },
-    notificacion(texto) {
-      this.$noty.success(texto);
+    showFiltros(){
+        this.eventHub.$emit('openFiltrar');
     },
-    openModal() {
-      this.eventHub.$emit("detalleCliente");
-    }
+    async getCobros(query){
+      const rs = await CobroService.getAll(query);
+      this.cobros = rs.data.body;
+      this.datos_buscados = rs.data.datos_buscados;
+    },
   }
 };
 </script>

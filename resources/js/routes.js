@@ -11,6 +11,10 @@ import Morosos from './components/cobranza/morosos';
 import Nomina from './components/nomina/nomina';
 import Comisiones from './components/nomina/comisiones'
 import Rutas from './components/rutas/rutas';
+import Cobros from './components/cobranza/cobros';
+import NotFoundComponent from './errors/NotFoundComponent'
+import Cartera from './components/cobranza/cartera';
+
 Vue.use(VueRouter)
 
 export default new VueRouter({
@@ -65,7 +69,20 @@ export default new VueRouter({
             path: '/rutas',
             name: 'Rutas',
             component: Rutas
+            
         },
+        {
+            path: '/cobros',
+            name: 'Cobros',
+            component: Cobros
+        },
+        {
+            path: '/cartera',
+            name: 'Cartera',
+            component: Cartera
+        },
+
+        { path: '*', component: NotFoundComponent }
 
     ]
 })

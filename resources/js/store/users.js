@@ -36,7 +36,7 @@ const mutations = {
 
 const actions = {
 
-  async initBodega({commit,dispatch}){
+  async initUsers({commit,dispatch}){
       const rs= await UserService.getAll();
       dispatch('getUsersFormat');
       commit('SET_USER',rs.data.data);

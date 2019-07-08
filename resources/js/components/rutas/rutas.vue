@@ -8,15 +8,15 @@
         <div class="col-xs-12">
           <div class="box box-default">
             <div class="box-body text-left align-items-center">
-              <div class="row">
-                <div class="col-md-6 col-xs-12">Filtrar por municipios:</div>
-                <div class="col-md-6 text-right col-xs-12">
-                  <button class="btn btn-primary" @click="nuevaRuta"> Nueva ruta  </button>
+              <div class="row align-self-center">
+                <div class="col-md-6 text-left col-sm-12 col-xs-12 d-flex">
+                  <div class="col-md-4 pr-0 col-xs-12 col-sm-12 align-self-center">
+                     Filtrar por municipios:
+                  </div>
+                  <v-select class="pl-0 col-md-8 col-xs-12 col-sm-12" v-model="municipio" :options="municipios" placeholder="Selecciona el municipio"></v-select>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-md-4 col-xs-12">
-                  <v-select v-model="municipio" :options="municipios" placeholder="Selecciona el municipio"></v-select>
+                <div class="col-md-6 text-right col-xs-12 col-sm-12">
+                  <button class="btn btn-primary" @click="nuevaRuta"> Nueva ruta  </button>
                 </div>
               </div>
             </div>
@@ -27,7 +27,9 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table v-if="rutas.data && rutas.data.length > 0 " class="col-md-12 table table-bordered table-striped">
+              <div class="col-md-12" v-if="loading"><i class="fa fa-spinner fa-spin loading-spinner"></i></div>
+              <template v-else>
+                  <table v-if="rutas.data && rutas.data.length > 0 " class="col-md-12 table table-bordered table-striped">
                 <thead>
                   <tr>
                     <th> Nombre</th>
@@ -56,8 +58,11 @@
                 </tbody>
               </table>
               <div v-else>
-                <p class="py-4">No se han encontrado clientes</p>
+                <p class="py-4">No se han encontrado rutas</p>
               </div>
+              </template>
+            
+         
             </div>
             <!-- /.box-body -->
           
@@ -80,7 +85,8 @@ export default {
       rutas:{
           data:[{}]
       },
-      municipio: {id:'all', label:'Todos'}
+      municipio:undefined,
+      loading:true,
     };
   },
   components: {
@@ -90,8 +96,6 @@ export default {
     municipio(){
       if(this.municipio.id != undefined){
         let query = { municipio: this.municipio.id }
-        console.log(query);
-        
         this.getRutas(query);
       }
     }
@@ -110,15 +114,19 @@ export default {
   methods: {
     ...mapActions({ }),
       async getRutas(query){
+            this.loading = true;
             const rs = await RutaService.getAll(query);
             this.rutas = rs.data.body;
+            this.loading = false;
     },
-    verRuta(item){
-      this.openVerRuta(item);
+    nuevaRuta() {
+      this.eventHub.$emit("modalRuta");
     },
-    editRutas(ruta) {
-      this.ruta = ruta;
-      this.openModal();
+    verRuta(ruta){
+      this.eventHub.$emit('rutaVer',ruta);
+    },
+    editRuta(ruta) {
+        this.eventHub.$emit("modalRuta",ruta);
     },
     deleteRuta(id){
       this.$confirm("¿Estas seguro que deseas eliminar esta ruta?").then(
@@ -135,17 +143,9 @@ export default {
       })
       
     },
-
     notificacion(texto) {
       this.$noty.success(texto);
     },
-    openVerRuta(ruta){
-      console.log("metodo");
-      this.eventHub.$emit('rutaVer',ruta);
-    },
-    nuevaRuta() {
-      this.eventHub.$emit("modalRuta");
-    }
   }
 };
 </script>

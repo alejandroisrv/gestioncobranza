@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use DB;
+use Validator;
 use App\Ruta;
 use App\RutaItem;
 use Illuminate\Http\Request;
@@ -35,58 +36,60 @@ class ItemsRutaController extends Controller
     public function create(Request $request)
     {    
         $data=$request->all();
+        $validator = Validator::make($data, [
+            'municipio.id' => 'integer|required',
+            'nombre' => 'string|required',
+            'seleccionados' => 'array|required',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json(['response' => $validator->errors()], 422);
+        }
+
         $ruta = Ruta::create([ 'municipio_id' => $data['municipio']['id'], 'nombre' =>  $data['nombre']]);
         for ($i=0; $i < count($data['seleccionados']); $i++) { 
             RutaItem::create(['ruta_id'=> $ruta->id, 'cliente_id' => $data['seleccionados'][$i]['id'], 'orden' => $i+1 ]);
         }
 
-        return response()->json($ruta);
+        return response()->json(['response'=>'ok']);
 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Ruta  $ruta
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Ruta $ruta)
+    public function update(Request $request)
     {
-        //
-    }
+        $data = $request->all();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Ruta  $ruta
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Ruta $ruta)
-    {
-        //
-    }
+        $validator = Validator::make($data, [
+            'id' => 'integer|required',
+            'municipio.id' => 'integer|required',
+            'nombre' => 'string|required',
+            'seleccionados' => 'array|required',
+        ]);
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Ruta  $ruta
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Ruta $ruta)
-    {
-        //
+        if ($validator->fails()) {
+            return response()->json(['response' => $validator->errors()], 422);
+        }
+
+        $id = $data['id'];
+        $ruta = Ruta::where('id', $id)->update([ 'municipio_id' => $data['municipio']['id'], 'nombre' =>  $data['nombre']]);
+        DB::table('ruta_items')->where('ruta_id',$id)->delete();
+        $status = 0 ;
+
+        for ($i=0; $i < count($data['seleccionados']); $i++) { 
+            $ruta_item = RutaItem::create(['ruta_id'=> $id, 'cliente_id' => $data['seleccionados'][$i]['id'], 'orden' => $i+1 ]);
+            if($ruta_item) {
+                $status++;
+            }
+        }
+
+        if(count($data['seleccionados']) == $status){ 
+            return response()->json(['message' =>'ok']);
+        }else{
+            return response()->json(['message' =>'error']);
+        }
+
+
     }
 
     /**
@@ -96,7 +99,13 @@ class ItemsRutaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request,$id)
-    {
-        Ruta::destroy($id);
+    {   
+        $ruta = Ruta::find($id);
+        if($ruta->delete()){ 
+            return response()->json(['message' =>'ok']);
+        }else{
+            return response()->json(['message' =>'error']);
+        }
+        
     }
 }

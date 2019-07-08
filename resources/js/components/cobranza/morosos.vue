@@ -7,14 +7,10 @@
       <div class="row">
         <div class="col-xs-12">
           <div class="box box-default">
-            <div class="box-body text-left align-items-center">
+            <div class="box-body text-left align-self-center">
               <div class="col-md-2">Filtrar por municipios</div>
               <div class="col-md-4">
-                <v-select
-                  v-model="municipio"
-                  :options="municipiosFormat"
-                  placeholder="Selecciona el municipio"
-                ></v-select>
+                <v-select v-model="municipio" :options="municipiosFormat" placeholder="Selecciona el municipio" />
               </div>
             </div>
           </div>

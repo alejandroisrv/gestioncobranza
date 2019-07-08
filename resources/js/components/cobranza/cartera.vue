@@ -18,6 +18,7 @@
               </button>
             </div>
           </div>
+          
           <div class="box">
             <div class="box-header">
               <h3 class="box-title">Listado de productos</h3>
@@ -60,12 +61,12 @@
           </div>
         </div>
       </div>
-      <modal-producto producto="productoModal"></modal-producto>
+      <!-- <modal-producto producto="productoModal"></modal-producto> -->
     </section>
   </div>
 </template>
 <script>
-import modalProducto from "./modalProducto";
+// import modalProducto from "./modalProducto";
 export default {
   data() {
     return {
@@ -77,11 +78,7 @@ export default {
       notificacionModal: ""
     };
   },
-  components: {
-    modalProducto,
-    modalAbastecer,
-    modalEntregar
-  },
+  components: {},
   created() {
     this.getProductos();
     this.eventHub.$on("sendProducto", rs => {

@@ -72,7 +72,12 @@ Route::group(['middleware' => 'auth:api'], function () {
 
   Route::get('/rutas','ItemsRutaController@index');
   Route::post('/rutas/add','ItemsRutaController@create');
+  Route::post('/rutas/update','ItemsRutaController@update');
   Route::get('/rutas/delete/{id}','ItemsRutaController@destroy');
+
+  Route::get('/cobros','CobroController@index');
+  Route::post('/cobros/add','CobroController@create');
+
   Route::get('/municipios','MunicipioController@index');
 
   Route::get('users/all', 'UsersController@getUsers');

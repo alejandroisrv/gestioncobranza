@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Ruta extends Model
 {
     //
+    protected $cascadeDeletes = ['items'];
+
     protected $fillable= ['municipio_id','nombre'];
    
     public function items() { 
