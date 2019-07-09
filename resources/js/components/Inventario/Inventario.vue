@@ -8,15 +8,17 @@
       <div class="row">
         <div class="col-xs-12">
           <div class="box box-default">
-            <div class="box-body text-right">
-              <button class="btn btn-default" @click="openEntregar">
-                    <i class="fa fa-truck mr-2"></i>
-                    Entregar productos
+            <div class="box-body justify-content-end">
+              <div class="row justify-content-end">
+                <div class="col-md-12">
+                  <div class="col-md-5"></div>
+                  <button class="btn btn-default col-md-2 mx-1 col-xs-12 my-1" @click="openEntregar">
+                      <i class="fa fa-truck mr-2"></i>  Entregar productos
                   </button>
-              <button class="btn btn-default" @click="openAbastercer">Abastecer inventario</button>
-              <button class="btn btn-primary" @click="nuevoProducto">
-                    <i class="fa fa-plus"></i>
-                  </button>
+                  <button class="btn btn-default col-md-2  mx-1 col-xs-12 my-1" @click="openAbastercer">Abastecer inventario</button>
+                  <button class="btn btn-primary col-md-2  mx-1 col-xs-12 my-1" @click="nuevoProducto"><i class="fa fa-plus"></i></button>
+                </div>
+              </div>  
             </div>
           </div>
           <div class="box">
@@ -27,39 +29,41 @@
             <div class="box-body">
               <div class="col-md-12" v-if="loading"><i class="fa fa-spinner fa-spin loading-spinner"></i></div>
               <template v-else>
-              <table v-if="productos && productos.length > 0 " id="example1" class="table table-bordered table-striped">
-                <thead>
-                  <tr>
-                    <th>Nombre</th>
-                    <th>Cantidad</th>
-                    <th>Precio de contado</th>
-                    <th>Precio a credito</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in productos" :key="item.id" >
-                    <td>{{ item.nombre }}</td>
-                    <td :class="item.cantidad == 0 ? 'text-danger' : ''" >{{item.cantidad}}</td>
-                    <td>{{ item.precio_contado}}</td>
-                    <td>{{ item.precio_credito }}</td>
-                    <td>
-                      <button class="btn btn-default btn-sm" @click="verProducto(item)">
-                            <i class="fa fa-eye"></i>
-                          </button>
-                      <button class="btn btn-primary btn-sm" @click="editarProducto(item)">
-                            <i class="fa fa-edit"></i>
-                          </button>
-                      <button class="btn btn-danger btn-sm" @click="eliminarProducto(item.id)">
-                            <i class="fa fa-trash"></i>
-                          </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <div v-else>
-                <p class="py-4">No se han encontrado productos</p>
-              </div>
+                <div class="table-responsive">
+                  <table v-if="productos && productos.length > 0 " class="col-md-12 table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th>Nombre</th>
+                        <th>Cantidad</th>
+                        <th>Precio de contado</th>
+                        <th>Precio a credito</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="item in productos" :key="item.id" >
+                        <td>{{ item.nombre }}</td>
+                        <td :class="item.cantidad == 0 ? 'text-danger' : ''" >{{item.cantidad}}</td>
+                        <td>{{ item.precio_contado}}</td>
+                        <td>{{ item.precio_credito }}</td>
+                        <td>
+                          <button class="btn btn-default btn-sm" @click="verProducto(item)">
+                                <i class="fa fa-eye"></i>
+                              </button>
+                          <button class="btn btn-primary btn-sm" @click="editarProducto(item)">
+                                <i class="fa fa-edit"></i>
+                              </button>
+                          <button class="btn btn-danger btn-sm" @click="eliminarProducto(item.id)">
+                                <i class="fa fa-trash"></i>
+                              </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div v-else>
+                    <p class="py-4">No se han encontrado productos</p>
+                  </div>
+                </div>
             </template>
             </div>
             <!-- /.box-body -->

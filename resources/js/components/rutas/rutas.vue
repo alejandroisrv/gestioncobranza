@@ -28,38 +28,42 @@
             <!-- /.box-header -->
             <div class="box-body">
               <div class="col-md-12" v-if="loading"><i class="fa fa-spinner fa-spin loading-spinner"></i></div>
-              <template v-else>
+              <template  v-else>
+                <div class="table-responsive">
                   <table v-if="rutas.data && rutas.data.length > 0 " class="col-md-12 table table-bordered table-striped">
-                <thead>
-                  <tr>
-                    <th> Nombre</th>
-                    <th> Municipio</th>
-                    <th> Fecha creación </th>
-                    <th> </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in rutas.data" :key="item.id">
-                    <td>{{ item.nombre }}</td>
-                    <td>{{ item.municipio.municipio }}</td>
-                    <td >{{ item.created_at }}</td>
-                    <td class="text-right">
-                      <button class="btn btn-default btn-sm" @click="verRuta(item)">
-                        <i class="fa fa-eye"></i>
-                      </button>
-                      <button class="btn btn-primary btn-sm" @click="editRuta(item)">
-                        <i class="fa fa-edit"></i>
-                      </button>
-                      <button class="btn btn-danger btn-sm" @click="deleteRuta(item.id)">
-                        <i class="fa fa-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <div v-else>
-                <p class="py-4">No se han encontrado rutas</p>
-              </div>
+                  <thead>
+                    <tr>
+                      <th> Nombre</th>
+                      <th> Municipio</th>
+                      <th> Fecha creación </th>
+                      <th> </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="item in rutas.data" :key="item.id">
+                      <td>{{ item.nombre }}</td>
+                      <td>{{ item.municipio.municipio }}</td>
+                      <td >{{ item.created_at }}</td>
+                      <td class="text-right">
+                        <button class="btn btn-default btn-sm" @click="verRuta(item)">
+                          <i class="fa fa-eye"></i>
+                        </button>
+                        <button class="btn btn-primary btn-sm" @click="editRuta(item)">
+                          <i class="fa fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm" @click="deleteRuta(item.id)">
+                          <i class="fa fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table> 
+
+                <div v-else>
+                  <p class="py-4">No se han encontrado rutas</p>
+                </div>
+                </div>
+      
               </template>
             
          

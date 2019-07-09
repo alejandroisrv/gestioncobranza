@@ -1,6 +1,7 @@
 
 require('./bootstrap');
 window.Vue = require('vue');
+import 'babel-polyfill';
 import routes from './routes.js';
 import main from './components/main.vue'
 import navbar from './components/navbar.vue'

@@ -33,6 +33,7 @@
     },
     "dependencies": {
         "admin-lte": "^2.4.10",
+        "babel-polyfill": "^6.26.0",
         "noty": "^3.2.0-beta",
         "v-select2-component": "^0.3.8",
         "vue-multiselect": "^2.1.6",
