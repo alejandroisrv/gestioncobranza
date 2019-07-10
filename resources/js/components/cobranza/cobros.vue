@@ -1,7 +1,7 @@
 <template>
   <div>
     <section class="content-header">
-      <h1>Inventario</h1>
+      <h1>Cobros</h1>
     </section>
     <section class="content">
       <div class="row">
@@ -26,7 +26,8 @@
                     <th>Cobrador</th>
                     <th>Ruta</th>
                     <th>Estado </th>
-                    <th>Fecha </th>
+                    <th>Fecha Inicio </th>
+                    <th>Fecha Fin </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -77,18 +78,15 @@ export default {
   },
   computed: {
     ...mapGetters({
-      clientes: "clientes/clientesFormat",
+        clientes: "clientes/clientesFormat",
+        cobros:'cobros/cobros',
+        loading:'cobros/loading'
     })
   },
   created() {
     this.getCobros({});
-    this.getClientes();
-    this.eventHub.$on("filtrar", query => {
-      this.getCobros(query);
-    });
   },
   methods: {
-    ...mapGetters({getClientes:'clientes/'}),
     nuevaJornada(){
       this.eventHub.$emit('nuevaJornada');
     },
@@ -97,11 +95,6 @@ export default {
     },
     showFiltros(){
         this.eventHub.$emit('openFiltrar');
-    },
-    async getCobros(query){
-      const rs = await CobroService.getAll(query);
-      this.cobros = rs.data.body;
-      this.datos_buscados = rs.data.datos_buscados;
     },
   }
 };

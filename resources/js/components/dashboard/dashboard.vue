@@ -17,23 +17,40 @@
     <section class="content">
       <!-- Default box -->
       <div class="row">
-        <div class="col-lg-3 col-xs-6">
-          <div class="small-box bg-aqua">
+        <div class="col-lg-3 col-xs-6" v-for="(item,idx) in items" :key="idx">
+          <div class="small-box" :class="item.color">
             <div class="inner">
-              <h3>{{ productos.total   }}</h3>
-              <p>Productos</p>
+              <h3>{{ item.total   }}</h3>
+              <p>{{ item.text }}</p>
             </div>
             <div class="icon"> <i class="ion ion-bag"></i></div>
-            <router-link to="/inventario" class="small-box-footer">Ver inventario <i class="fa fa-arrow-circle-right"></i> </router-link>
+            <router-link :to="item.link" class="small-box-footer">{{ item.title }} <i class="fa fa-arrow-circle-right"></i> </router-link>
           </div>
         </div>
-        <!-- ./col -->
       </div>
-      <div class="row"></div>
     </section>
     <!-- /.content -->
   </div>
 </template>
 <script>
-export default {};
+import api from '../../services/api';
+export default {
+
+  data(){
+    return {
+      items:[{
+        total:15,
+        color:'bg-aqua',
+        text:'Productos',
+        title:'Ver productos',
+        link:'/inventario'
+      }]
+    }
+  },
+  methods:{
+      getData(){
+        api().get('/dashboard/all');
+      }
+    }
+};
 </script>
