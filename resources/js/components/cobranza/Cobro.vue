@@ -7,10 +7,10 @@
                      <div class="row">
                         <div class="col-md-12">
                             <p style="font-size:18px;" class="mb-1"> Jornada de Cobro </p>
-                            <p class="col-md-6 px-0 text-muted">  Número de clientes {{ ruta.items.length }} </p>
+                            <p class="col-md-6 px-0 text-muted">  Cobrador {{ cobro.cobrador.name }} </p>
                             <p class="col-md-6 text-muted">Municipio {{ruta.municipio.municipio  }}   </p>
                             <p class="col-md-6 px-0 text-muted">  Número de clientes {{ ruta.items.length }} </p>
-                            <p class="col-md-6 text-muted">Municipio {{ruta.municipio.municipio  }}   </p>
+                            <p class="col-md-6 text-muted">Fecha de culminación {{ruta.municipio.municipio  }}   </p>
                         </div>
                      </div>
                      <div class="row">

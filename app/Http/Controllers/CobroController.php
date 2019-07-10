@@ -46,10 +46,8 @@ class CobroController extends Controller
         ->orderBy('fecha_inicio','DESC')
         ->paginate(20);
 
-        $cobros['cobros']['acuerdos_pagos']->map(function(){
-            
-        });
-
+        
+     
         $datos_buscados = [];
         return response()->json(['body'=> $cobros , 'datos_buscados'=> $datos_buscados]);
     }
