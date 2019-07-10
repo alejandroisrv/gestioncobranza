@@ -8,18 +8,19 @@
               <div class="box-body">
                   <div class="row">
                       <div class="col-md-12">
+                          <p> Selecciona los parametros para buscar los cobros  </p>
                           <table>
                               <tr>
                                   <td>Cliente</td>
-                                  <td><v-select v-model="ruta.cliente" :options="clientes" placeholder="Selecciona un cliente"></v-select></td>
+                                  <td><v-select v-model="filtro.cliente" :options="clientes" placeholder="Selecciona un cliente"></v-select></td>
                               </tr>
                               <tr>
                                   <td>Cobrador</td>
-                                  <td><v-select v-model="ruta.cobrador" :options="cobradores" placeholder="Selecciona el municipio"></v-select></td>
+                                  <td><v-select v-model="filtro.cobrador" :options="cobradores" placeholder="Selecciona el municipio"></v-select></td>
                               </tr>
                               <tr>
                                   <td>Municipio</td>
-                                  <td><v-select v-model="ruta.municipio" :options="municipios" placeholder="Selecciona el municipio"></v-select></td>
+                                  <td><v-select v-model="filtro.municipio" :options="municipios" placeholder="Selecciona el municipio"></v-select></td>
                               </tr>
                               <tr>
                                   <td>Ruta</td>
@@ -27,10 +28,13 @@
                               </tr>
                               <tr>
                                   <td>Desde</td>
-                                  <td><datepicker v-model="state.desde"></datepicker></td>
+                                  <td><datepicker v-model="filtro.desde"></datepicker></td>
                                   <td>Hasta</td>
                                   <td><datepicker v-model="filtro.hasta"></datepicker></td>
                               </tr>
+                                <tr>
+                                    <td colspan="2"> <button class="btn btn-primary" @click="filtrar()">  Buscar </button> </td>
+                                </tr>
                           </table>
 
                       </div>
@@ -75,9 +79,6 @@ export default {
         this.eventHub.$on('openFiltrar', ()=>{
             this.$refs.filtrosCobro.open();
         });
-
-    },
-    watch:{
 
     },
     methods:{
