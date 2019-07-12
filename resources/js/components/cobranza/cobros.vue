@@ -52,7 +52,7 @@
         </div>
       </div>
       <cobro />
-      <add-cobro />
+
       <filtros />
     </section>
   </div>
@@ -60,7 +60,7 @@
 <script>
 import CobroService from '../../services/cobros'
 import Cobro from "./Cobro";
-import AddCobros from "./AddCobros";
+import modalCobros from "./AddCobros";
 import Filtros from './FiltrosCobros'
 
 import { mapGetters, mapActions } from "vuex";
@@ -72,9 +72,7 @@ export default {
       clienteModal: "",
     };
   },
-  components: {
-    AddCobros,Cobro,Filtros
-  },
+  components: { modalCobros ,Cobro, Filtros },
   computed: {
     ...mapGetters({
         clientes: "clientes/clientesFormat",
@@ -83,9 +81,10 @@ export default {
     })
   },
   created() {
-    this.getCobros({});
+    // this.getCobros({});
   },
   methods: {
+    ...mapActions({  }),
     nuevaJornada(){
       this.eventHub.$emit('nuevaJornada');
     },

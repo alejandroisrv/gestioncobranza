@@ -3,7 +3,9 @@ export const STORAGE_KEY = 'USUARIOS'
 import CobroService from '../services/cobros';
 
 const state = {
-    cobros: [{}],
+    cobros: [{
+        data:{}
+    }],
     loading: false,
 }
 

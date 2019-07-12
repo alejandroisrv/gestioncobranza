@@ -6,22 +6,25 @@ import bodegas from './store/bodegas.js';
 import municipios from './store/municipios.js'
 import clientes from './store/clientes';
 import ventas from './store/ventas'
+import cobros from './store/cobros';
+import rutas from './store/rutas';
+
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state: {
         items: [],
-        perfilActual:JSON.parse(localStorage.getItem('auth'))
+        perfilActual: JSON.parse(localStorage.getItem('auth'))
     },
     modules: {
-        users, bodegas, productos,municipios,clientes,ventas
+        users, bodegas, productos, municipios, clientes, ventas, cobros, rutas
     },
     mutations: {
-        INIT_STORE(state,value) {
+        INIT_STORE(state, value) {
         }
     },
     actions: {
-        initStore({dispatch, state}){
+        initStore({ dispatch, state }) {
             dispatch('municipios/initMunicipios');
             console.log("Store running...");
         }

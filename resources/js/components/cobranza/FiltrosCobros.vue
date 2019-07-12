@@ -2,39 +2,34 @@
     <bootstrap-modal ref="filtrosCobro" :need-header="false" :need-footer="false" :size="'small'">
       <div slot="body">
           <div class="box">
-              <div class="box-header">
-                  <p style="font-size:18px">Selecciona el filtro</p>
-              </div>
-              <div class="box-body">
                   <div class="row">
-                      <div class="col-md-12">
-                          <table>
+                      <div class="col-md-12" v-if="loading">
+                          <p style="font-size:18px">Selecciona el filtro</p>
+                          <table class="table col-md-12">
                               <tr>
-                                  <td>Cliente</td>
-                                  <td><v-select v-model="ruta.cliente" :options="clientes" placeholder="Selecciona un cliente"></v-select></td>
+                                  <td class="td-label">Cliente:</td>
+                                  <td class="td-select"><v-select v-model="filtro.ruta.cliente" :options="clientes" placeholder="Selecciona un cliente"></v-select></td>
                               </tr>
                               <tr>
-                                  <td>Cobrador</td>
-                                  <td><v-select v-model="ruta.cobrador" :options="cobradores" placeholder="Selecciona el municipio"></v-select></td>
+                                  <td class="td-label">Cobrador:</td>
+                                  <td class="td-select"><v-select v-model="filtro.ruta.cobrador" :options="cobradores" placeholder="Selecciona el municipio"></v-select></td>
                               </tr>
                               <tr>
-                                  <td>Municipio</td>
-                                  <td><v-select v-model="ruta.municipio" :options="municipios" placeholder="Selecciona el municipio"></v-select></td>
+                                  <td class="td-label">Municipio:</td>
+                                  <td class="td-select"><v-select v-model="filtro.ruta.municipio" :options="municipios" placeholder="Selecciona el municipio"></v-select></td>
                               </tr>
                               <tr>
-                                  <td>Ruta</td>
-                                  <td><v-select v-model="filtro.ruta" :options="rutas" placeholder="Selecciona el municipio"></v-select></td>
+                                  <td class="td-label">Ruta:</td>
+                                  <td class="td-selct"><v-select v-model="filtro.ruta" :options="rutas" placeholder="Selecciona el municipio"></v-select></td>
                               </tr>
                               <tr>
-                                  <td>Desde</td>
-                                  <td><datepicker v-model="state.desde"></datepicker></td>
-                                  <td>Hasta</td>
-                                  <td><datepicker v-model="filtro.hasta"></datepicker></td>
+                                  <td class="td-label-sm">Desde</td>
+                                  <td class="td-select-sm"><datepicker></datepicker></td>
+                                  <td class="td-label-sm">Hasta</td>
+                                  <td class="td-select-sm"><datepicker></datepicker></td>
                               </tr>
                           </table>
-
-                      </div>
-                  </div>
+                    </div>
               </div>
           </div>
       </div>
@@ -42,6 +37,7 @@
 
 </template>
 <script>
+import datepicker from 'vuejs-datepicker';
 import RutaService from '../../services/rutas';
 import { mapActions, mapGetters } from 'vuex';
 
@@ -56,8 +52,12 @@ export default {
                 ruta:{},
                 desde:new Date(),
                 hasta: new Date()
-            }
+            },
+            loading:true
         }
+    },
+    components: {
+        datepicker
     },
     computed:{
         ...mapGetters({
@@ -73,6 +73,8 @@ export default {
     created(){
 
         this.eventHub.$on('openFiltrar', ()=>{
+            console.log();
+            
             this.$refs.filtrosCobro.open();
         });
 
@@ -90,6 +92,7 @@ export default {
             this.getCobradores();
             this.getClientes();
             this.getRutas();
+            
         },
         filtrar(){
             this.eventHub.$emit('filtrar', this.filtro);
@@ -99,3 +102,28 @@ export default {
 
 }
 </script>
+<style>
+.td-label{
+    text-align: right;
+}
+.td-select{
+    min-width: 220px;
+}
+
+.td-label-sm{
+    min-width: 100px;
+    text-align: right;
+}
+
+.td-select-sm{
+    min-width: 50px;
+}
+
+
+@media (min-width: 768px){
+    .modal-sm {    
+        width: 400px;
+    }
+}
+
+</style>

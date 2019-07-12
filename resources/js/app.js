@@ -14,10 +14,6 @@ Vue.mixin({
         }
     }
 })
-import axios from 'axios';
-const auth = JSON.parse(document.querySelector('meta[name="user"]').getAttribute('content'));
-localStorage.setItem('auth',JSON.stringify(auth));
-axios.defaults.headers.common['Authorization'] = 'Bearer '+ auth.api_token;
 import store from './store';
 import vSelect from 'vue-select'
 Vue.component('v-select', vSelect)
