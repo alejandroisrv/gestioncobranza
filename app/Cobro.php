@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cobro extends Model
 {
+    protected $fillable = ['user_id','ruta_id','estado','comision','fecha_inicio','fecha_culminacion'];
     public function ruta () {
         return $this->belongsTo('App\Ruta');
     }
@@ -20,6 +21,9 @@ class Cobro extends Model
     public function cobros(){
         return $this->hasManyThrough('App\AcuerdoPago','App\CobroJornada');
 
+    }
+    public function items() { 
+        return $this->hasMany('App\CobroJornada');
     }
 
 

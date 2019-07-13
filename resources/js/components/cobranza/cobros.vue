@@ -7,9 +7,9 @@
       <div class="row">
         <div class="col-xs-12">
           <div class="box box-default">
-            <div class="box-body text-left align-items-center">
-              <div class="col-md-4">
-                <span @click="showFiltros()">Filtrar cobros</span>
+            <div class="box-body text-left justify-content-end align-items-center">
+              <div class="col-md-4 text-right">
+                <span @click="showFiltros()" class="mx-3">Filtrar cobros</span>
                 <button class="btn btn-primary" @click="nuevaJornada()">Nueva jornada de cobranza</button>
               </div>
             </div>
@@ -54,13 +54,14 @@
       <cobro />
 
       <filtros />
+      <nuevo-cobro />
     </section>
   </div>
 </template>
 <script>
 import CobroService from '../../services/cobros'
 import Cobro from "./Cobro";
-import modalCobros from "./AddCobros";
+import NuevoCobro from "./AddCobros";
 import Filtros from './FiltrosCobros'
 
 import { mapGetters, mapActions } from "vuex";
@@ -72,7 +73,7 @@ export default {
       clienteModal: "",
     };
   },
-  components: { modalCobros ,Cobro, Filtros },
+  components: { NuevoCobro ,Cobro, Filtros },
   computed: {
     ...mapGetters({
         clientes: "clientes/clientesFormat",
@@ -81,10 +82,10 @@ export default {
     })
   },
   created() {
-    // this.getCobros({});
+    this.getCobros({});
   },
-  methods: {
-    ...mapActions({  }),
+  methods: {  
+    ...mapActions({getCobros:'cobros/getCobrosAll'}),
     nuevaJornada(){
       this.eventHub.$emit('nuevaJornada');
     },

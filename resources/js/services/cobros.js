@@ -3,8 +3,7 @@ import api from './api.js'
 
 export default {
     getAll(params=null) {
-        let query =  p.converParamters(params) ;
-        return api().get('cobros'+query);
+        return api().get('/cobros'+ p.converParamters(params));
     },
     add(params){
         return api().post('/cobros/add',params);
