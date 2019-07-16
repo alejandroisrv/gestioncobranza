@@ -7,29 +7,25 @@
                           <p style="font-size:18px">Selecciona el filtro</p>
                           <table class="table col-md-12">
                               <tr>
-                                  <td class="td-label">Cliente:</td>
-                                  <td class="td-select"><v-select v-model="filtro.cliente" :options="clientes" placeholder="Selecciona un cliente"></v-select></td>
-                              </tr>
-                              <tr>
                                   <td class="td-label">Cobrador:</td>
-                                  <td class="td-select"><v-select v-model="filtro.cobrador" :options="cobradores" placeholder="Selecciona el cobrador"></v-select></td>
+                                  <td class="td-select"><v-select v-model="cobrador" :options="cobradores" placeholder="Selecciona el cobrador"></v-select></td>
                               </tr>
                               <tr>
                                   <td class="td-label">Ruta:</td>
-                                  <td class="td-selct"><v-select v-model="filtro.ruta" :options="rutas" placeholder="Selecciona el municipio"></v-select></td>
+                                  <td class="td-selct"><v-select v-model="ruta" :options="rutas" placeholder="Selecciona el municipio"></v-select></td>
                               </tr>
                               <tr>
                                   <td class="td-label">Fecha:</td>
-                                  <td class="td-selct"><v-select v-model="filtro.fecha" :options="[{id:'all',label:'Todas'},{id:'otras', label:'Rango personalizado'}]" placeholder="Selecciona el una opcion para la fecha"></v-select></td>
+                                  <td class="td-selct"><v-select v-model="fecha" :options="[{id:'all',label:'Todas'},{id:'otras', label:'Rango personalizado'}]" placeholder="Selecciona el una opcion para la fecha"></v-select></td>
                               </tr>
-                              <tr  v-if="filtro.fecha.id =='otras'">
+                              <tr  v-if="fecha.id =='otras'">
                                   <td class="td-label">Desde</td>
-                                  <td class="td-select"><date-picker v-model="filtro.desde" :lang="'es'" width="220" format="DD/MM/YY"></date-picker></td>
+                                  <td class="td-select"><date-picker v-model="desde" :lang="'es'" width="220" format="DD/MM/YY"></date-picker></td>
                               </tr>
 
-                              <tr v-if="filtro.fecha.id =='otras'">
+                              <tr v-if="fecha.id =='otras'">
                                   <td class="td-label">Hasta</td>
-                                  <td class="td-select"><date-picker v-model="filtro.hasta" :lang="'es'" width="220" format="DD/MM/YY"></date-picker></td>
+                                  <td class="td-select"><date-picker v-model="hasta" :lang="'es'" width="220" format="DD/MM/YY"></date-picker></td>
                               </tr>
 
                               <tr>
@@ -54,14 +50,13 @@ export default {
     components: { DatePicker },
     data(){
         return{
-            filtro:{
-                fecha:{id:'all',label:'Todas'},
-                cliente:{id:'all',label:'Todos'},
-                cobrador:{id:'all',label:'Todos'},
-                ruta:{id:'all',label:'Todas'},
-                desde:'all',
-                hasta:'all'
-            },
+            fecha:{id:'all',label:'Todas'},
+            cliente:{id:'all',label:'Todos'},
+            cobrador:{id:'all',label:'Todos'},
+            ruta:{id:'all',label:'Todas'},
+            desde:'all',
+            hasta:'all',
+
             loading:true
         }
     },
@@ -95,15 +90,16 @@ export default {
             this.getRutas();
         },
         filtrar(){
-            let desde = moment(this.filtro.desde ).format('DD/MM/YY');
-            let hasta =  moment(this.filtro.hasta ).format('DD/MM/YY');
-            let query = {cliente: this.filtro.cliente.id, cobrador:this.filtro.cobrador.id,
-                         ruta:this.filtro.ruta.id,
-                        desde:(desde !='Invalid date') ? dasde : '',
-                        hasta:(hasta!='Invalid date' ? hasta : '')};
+            let desde = moment(this.desde ).format('DD/MM/YY');
+            let hasta =  moment(this.hasta ).format('DD/MM/YY');
+            let query = {
+                        cobrador:(this.cobrador.id) ? this.cobrador.id : '',
+                        cliente:(this.cliente.id) ? this.cliente.id  : '', 
+                        desde:(desde !='Invalid date') ? desde : '',
+                        hasta:(hasta !='Invalid date') ? hasta : ''};
     
             this.getCobros(query);
-            //this.$refs.filtrosCobro.close();
+            this.$refs.filtrosCobro.close();
         }
     }
 

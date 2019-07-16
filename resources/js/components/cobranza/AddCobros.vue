@@ -5,7 +5,7 @@
           <div class="box-body" style="padding-top:0px;">
                 <div class="row">
                     <div class="col-md-12" v-if="loading">
-                        <p style="font-size:18px;margin-bottom:5px;">Nueva jornada de cobro</p>
+                        <p style="font-size:18px;margin-bottom:5px;">Nueva jornada de cobro </p>
                         <p class="text-muted">Crea una nueva jornada de cobro, puedes programar la jornada de cobro</p>
                     </div>
                     <div class="form-row">
@@ -32,9 +32,7 @@
             </div>
         </div>
         <div slot="footer">
-            <button class="btn btn-default">
-                Cancelar
-            </button>
+            <button class="btn btn-default">Cancelar</button>
             <button class="btn btn-primary" @click="sendCobro"> Guardar </button>
         </div>
     </bootstrap-modal>
@@ -44,16 +42,16 @@
 import DatePicker from 'vue2-datepicker'
 import { mapActions, mapGetters } from 'vuex';
 import moment from 'moment'
-
+import CobroService from '../../services/cobros'
 export default {
     components: { DatePicker },
     data(){
         return{
-
+            error:'',
             inicio:'',
             culminacion:'',
-            cobrador:{id:'all',label:'Todos'},
-            ruta:{id:'all',label:'Todas'},
+            cobrador:null,
+            ruta:null,
             filtro:{},
             loading:true
         }
@@ -73,6 +71,7 @@ export default {
         this.inicio = new Date(hoy.getFullYear(),hoy.getMonth(),hoy.getDate(),7,30,0);
         this.culminacion = new Date(hoy.getFullYear(),hoy.getMonth(),hoy.getDate(),18,0,0);
         this.eventHub.$on('nuevaJornada', ()=>{
+            this.resetModal();
             this.$refs.nuevaJornada.open();
         });
     },
@@ -88,9 +87,29 @@ export default {
         sendCobro(){
             let inicio  = moment(this.inicio).format('YYYY-MM-DD HH:mm:ss');
             let culminacion = moment(this.culminacion).format('YYYY-MM-DD HH:mm:ss');
+
+            if(this.cobrador==null){
+                return this.$noty.error('Debes seleccionar una cobrador');
+            }
+
+            if(this.ruta==null){
+                return this.$noty.error('Debes seleccionar una ruta');
+            }
+
+
             let query = {ruta: this.ruta, cobrador: this.cobrador.id,inicio:inicio,culminacion:culminacion};
-            console.log(query);
             
+            CobroService.add(query).then(rs=>{
+                this.$noty.success("Se ha creado la jornada de cobro con exito");
+                this.$refs.nuevaJornada.close();
+            }).catch(err=>{
+                this.$noty.error("Se ha producido un error")
+            })
+
+        },
+        resetModal(){
+            this.ruta = null;
+            this.cobrador= null;
         }
     }
 

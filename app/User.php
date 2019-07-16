@@ -49,4 +49,8 @@ class User extends Authenticatable
     public function comisiones(){
         return $this->hasMany('App\ComisionVenta');
     }
+
+    public function cobros(){
+        return $this->hasMany('App\Cobro');
+    }
 }

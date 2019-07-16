@@ -46,7 +46,12 @@ const actions = {
   },
   async getRutasFormat({commit,dispatch},query){
     const rs= await RutaService.getAll(query);
-    commit('SET_RUTA_FORMAT', p.select2Fortmat(rs.data.body.data));
+    let format=[];
+    let datos = rs.data.body.data;
+    for(let i=0;i < datos.length; i++){
+        format.push({id:datos[i].id,label:datos[i].nombre, items:datos[i].items})
+    }
+    commit('SET_RUTA_FORMAT',format);
   },
 
 }

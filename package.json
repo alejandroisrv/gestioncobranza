@@ -29,13 +29,17 @@
         "stylus-loader": "^3.0.2",
         "vue": "^2.5.17",
         "vue-router": "^3.0.6",
-        "vue-template-compiler": "^2.6.10"
+        "vue-template-compiler": "^2.6.10",
+        "vue2-collapse": "^1.0.15"
     },
     "dependencies": {
         "admin-lte": "^2.4.10",
         "babel-polyfill": "^6.26.0",
+        "moment": "^2.24.0",
         "noty": "^3.2.0-beta",
         "v-select2-component": "^0.3.8",
+        "vue-currency-filter": "^3.4.2",
+        "vue-moment": "^4.0.0",
         "vue-multiselect": "^2.1.6",
         "vue-select": "^3.1.0",
         "vue-select2": "^0.2.6",

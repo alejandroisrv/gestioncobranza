@@ -21,37 +21,41 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table v-if="ventas.data && ventas.total > 0" class="table table-bordered table-striped" >
-                <thead>
-                  <tr>
-                    <th>Vendedor</th>
-                    <th>Cliente</th>
-                    <th>Tipo de venta</th>
-                    <th>Perido de pago</th>
-                    <th>Total</th>
-                    <th>Fecha</th>
+              <div class="col-md-12" v-if="loading"><i class="fa fa-spinner fa-spin loading-spinner"></i></div>
+              <div class="table-responsive" v-else>
+                <table v-if="ventas.data && ventas.total > 0" class="table table-bordered table-striped" >
+                  <thead>
+                    <tr>
+                      <th>Vendedor</th>
+                      <th>Cliente</th>
+                      <th>Tipo de venta</th>
+                      <th>Periodo de pago</th>
+                      <th>Total</th>
+                      <th>Fecha</th>
 
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in ventas.data" :key="item.id">
-                    <td>{{ item.vendedor.name }}</td>
-                    <td>{{item.persona.nombre}}</td>
-                    <td>{{ item.tipos_ventas.descripcion }}</td>
-                    <td>{{ item.acuerdo_pago.periodo_pago}}</td>
-                    <td>{{item.total}}</td>
-                    <td>{{ item.created_at }}</td>
-                    <td>
-                      <button class="btn btn-default btn-sm" @click="verVenta(item)">
-                        <i class="fa fa-eye"></i>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <div v-else>
-                <p class="py-4">No se han encontrado ventass</p>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="item in ventas.data" :key="item.id">
+                      <td>{{ item.vendedor.name }}</td>
+                      <td>{{item.persona.nombre}}</td>
+                      <td>{{ item.tipos_ventas.descripcion }}</td>
+                      <td>{{ item.acuerdo_pago.periodo_pago}}</td>
+                      <td>{{ item.total | currency}}</td>
+                      <td>{{ item.created_at | dateFormat(item.created_at,"DD-MM-YYYY") }}</td>
+                      <td>
+                        <button class="btn btn-default btn-sm" @click="verVenta(item)">
+                          <i class="fa fa-eye"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div v-else>
+                  <p class="py-4">No se han encontrado ventass</p>
+                </div>
+
               </div>
             </div>
             <!-- /.box-body -->

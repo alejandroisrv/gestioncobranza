@@ -8,8 +8,8 @@
         <div class="col-xs-12">
           <div class="box box-default">
             <div class="box-body text-left justify-content-end align-items-center">
-              <div class="col-md-4 text-right">
-                <span @click="showFiltros()" class="mx-3">Filtrar cobros</span>
+              <div class="col-md-12 text-right">
+                <span @click="showFiltros()" class="mx-4">Filtrar cobros</span>
                 <button class="btn btn-primary" @click="nuevaJornada()">Nueva jornada de cobranza</button>
               </div>
             </div>
@@ -20,33 +20,39 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table v-if="cobros.data && cobros.data.length > 0 " class="table table-bordered table-striped">
-                <thead>
-                  <tr>
-                    <th>Cobrador</th>
-                    <th>Ruta</th>
-                    <th>Estado </th>
-                    <th>Fecha Inicio </th>
-                    <th>Fecha Fin </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in cobros.data" :key="item.id">
-                    <td>{{ item.cobrador.nombre }} {{ item.cobrador.apellido }}</td>
-                    <td>{{ item.ruta.nombre }}</td>
-                    <td>{{ item.estado }}</td>
-                    <td>{{ item.created_at }}</td>
-                    <td>
-                      <button class="btn btn-default btn-sm" @click="verCobro(item)">
-                        <i class="fa fa-eye"></i>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <div v-else>
-                <p class="py-4">No se han encontrado cobros</p>
+              <div class="col-md-12" v-if="loading"><i class="fa fa-spinner fa-spin loading-spinner"></i></div>
+              <div class="table-responsive" v-else>
+                <table v-if="cobros.data && cobros.data.length > 0 " class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>Cobrador</th>
+                      <th>Ruta</th>
+                      <th>Estado </th>
+                      <th>Fecha</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="item in cobros.data" :key="item.id">
+                      <td>{{ item.cobrador.name }}</td>
+                      <td>{{ item.ruta.nombre }}</td>
+                      <td v-if="item.estado==0">  <span class="label label-primary">{{ item.estado | cobrosEstado(item.estado ) }}</span> </td>
+                        <td v-if="item.estado==1"><span class="label label-warning">{{ item.estado | cobrosEstado(item.estado ) }}</span> </td>
+                        <td v-if="item.estado==2"><span class="label label-success">{{ item.estado | cobrosEstado(item.estado ) }}</span> </td>
+                      <td>{{ item.created_at | moment('DD/MM/YYYY') }}</td>
+                      <td>
+                        <button class="btn btn-default btn-sm" @click="verCobro(item)">
+                          <i class="fa fa-eye"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div v-else>
+                  <p class="py-4">No se han encontrado cobros</p>
+                </div>
               </div>
+           
             </div>
           </div>
         </div>

@@ -279,7 +279,7 @@
             </ul>
           </li>
           <li class="treeview">
-            <router-link to="cobrana">
+            <router-link to="/cobros">
               <i class="fa fa-money"></i>
               <span>Cobranza</span>
               <span class="pull-right-container">
@@ -288,9 +288,9 @@
             </router-link>
             <ul class="treeview-menu">
               <li>
-                <!-- <router-link to="acuerdos">
+                <router-link to="acuerdos">
                   <i class="fa fa-circle-o"></i> Acuerdos de Pago
-                </router-link>-->
+                </router-link>
               </li>
               <li>
                 <router-link to="cartera">
@@ -347,4 +347,25 @@ export default {
   height: 34px !important;
   line-height: 34px !important;
 }
+@media (max-width: 500px){
+  .btn{
+    width: 100% !important;
+  }
+
+}
+@media (min-width: 1000px){
+  .fecha-text{
+    position: absolute;
+    top: -15px;
+    right: -100px;
+    font-size: 13px;
+  }
+  .fecha-text2{
+    position: absolute;
+    top: -15px;
+    right: 80px;
+    font-size: 13px;
+  }
+}
+
 </style>
