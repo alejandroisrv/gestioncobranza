@@ -14,7 +14,7 @@ import Rutas from './components/rutas/rutas';
 import Cobros from './components/cobranza/cobros';
 import NotFoundComponent from './errors/NotFoundComponent'
 import Cartera from './components/cobranza/cartera';
-
+import Acuerdos from './components/cobranza/acuerdos_pagos'
 Vue.use(VueRouter)
 
 export default new VueRouter({
@@ -80,6 +80,11 @@ export default new VueRouter({
             path: '/cartera',
             name: 'Cartera',
             component: Cartera
+        },
+        {
+            path: '/acuerdos',
+            name: 'Acuerdos',
+            component: Acuerdos
         },
 
         { path: '*', component: NotFoundComponent }

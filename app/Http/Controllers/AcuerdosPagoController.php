@@ -18,13 +18,15 @@ class AcuerdosPagoController extends Controller
         $cliente = (isset($data['cliente'])) ? $data['cliente']: null ;
         $venta = (isset($data['venta'])) ? $data['venta']: null ;
         $limite = (isset($data['limite'])) ? $data['limite'] : 20 ;
-        $acuerdos_pagos= AcuerdoPago::with(['clientes','ventas','pagos_clientes'])
+        $acuerdos_pagos= AcuerdoPago::with(['cliente','venta.vendedor','venta.tipos_ventas'])
         ->where(function($q) use ($cliente) {
             return ($cliente!=null) ? $q->where('cliente_id',$cliente): $q; 
         })
         ->where(function($q) use ($venta) {
             return ($venta!=null) ? $q->where('venta_id',$venta): $q; 
         })->paginate($limite);
+
+        return response()->json(['body'=> $acuerdos_pagos ]);
     }
 
     /**
