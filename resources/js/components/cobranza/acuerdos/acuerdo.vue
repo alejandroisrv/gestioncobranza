@@ -8,7 +8,7 @@
                         <div class="col-md-12">
                             <p style="font-size:18px;" class="mb-1"> Acuerdo de pago por venta {{ acuerdo.venta.tipos_ventas.descripcion }} </p>
                             <p class="col-md-6 pr-2 pl-1 text-muted fecha-text">{{  acuerdo.created_at | moment('calendar') }}   </p>
-                            <p class="col-md-6 px-0 text-muted">  Cliente: {{ acuerdo.cliente.nombre }} {{ acuerdo.cliente.apellido }} </p>
+                            <p class="col-md-6 px-0 text-muted"> Cliente: {{ acuerdo.cliente.nombre }} {{ acuerdo.cliente.apellido }} </p>
                             <p class="col-md-6 px-0 text-muted"> Vendedor: {{ acuerdo.venta.vendedor.name }}  </p>
 
                         </div>

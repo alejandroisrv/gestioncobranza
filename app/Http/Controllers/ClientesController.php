@@ -8,11 +8,8 @@ use Carbon\Carbon;
 
 class ClientesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+
     public function index(Request $request){   
         $data = $request->all();
         $municipio = isset($data['municipio']) ? $data['municipio'] : null ;
@@ -38,13 +35,6 @@ class ClientesController extends Controller
         return response()->json(['body'=>$clientes,'datos_buscados'=> $datos_buscados]);
     }
 
-
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create(Request $request)
     {
         $cliente = new Cliente($request->all());
@@ -56,23 +46,15 @@ class ClientesController extends Controller
 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function pagos_clientes(Request $request)
     {
-        //
+       
+        
+
+
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Clientes  $clientes
-     * @return \Illuminate\Http\Response
-     */
     public function getMorosos(Request $request ){
         $data = $request->all();
 
@@ -84,36 +66,13 @@ class ClientesController extends Controller
 
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Clientes  $clientes
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Clientes $clientes)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Clientes  $clientes
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request,$id)
     {
         $cliente=Cliente::find($id);
         $cliente->update($request->all());
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Clientes  $clientes
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request,$id)
     {
          return Cliente::destroy($id);
