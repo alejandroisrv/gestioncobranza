@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Cliente;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class ClientesController extends Controller
 {
@@ -72,9 +73,15 @@ class ClientesController extends Controller
      * @param  \App\Clientes  $clientes
      * @return \Illuminate\Http\Response
      */
-    public function show(Clientes $clientes)
-    {
-        //
+    public function getMorosos(Request $request ){
+        $data = $request->all();
+
+        $clientes = Cliente::with(['sucursal','acuerdos_pagos','pagos_clientes'])
+        ->whereHas('acuerdos_pagos', function($q){
+            return $q->whereDate('finished_at','>=', Carbon::now() );
+        })->paginate(20);
+
+
     }
 
     /**

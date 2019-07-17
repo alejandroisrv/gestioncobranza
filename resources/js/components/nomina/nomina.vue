@@ -22,34 +22,36 @@
             <div class="box-body">
               <div class="col-md-12" v-if="loading"><i class="fa fa-spinner fa-spin loading-spinner"></i></div>
               <template v-else>
-              <table v-if="nomina.data && nomina.data.length > 0 " class="table table-bordered table-striped">
-                <thead>
-                  <tr>
-                    <th>Usuario</th>
-                    <th>Nombre</th>
-                    <th>Telefono</th>
-                    <th>Dirección</th>
-                    <th>Rol</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in nomina.data" :key="item.id" >
-                    <td>{{ item.email }}</td>
-                    <td>{{ item.name}}</td>
-                    <td>{{ item.telefono }}</td>
-                    <td>{{ item.direccion }}</td>
-                    <td>{{ item.roles.name }}</td>
-                    <td>
-                      <button class="btn btn-default btn-sm" @click="verProducto(item)">
-                            <i class="fa fa-eye"></i>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <div v-else>
-                <p class="py-4">No se han encontrado trabajadores</p>
-              </div>
+                <div class="table-responsive">
+                  <table v-if="nomina.data && nomina.data.length > 0 " class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th>Usuario</th>
+                        <th>Nombre</th>
+                        <th>Telefono</th>
+                        <th>Dirección</th>
+                        <th>Rol</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="item in nomina.data" :key="item.id" >
+                        <td>{{ item.email }}</td>
+                        <td>{{ item.name}}</td>
+                        <td>{{ item.telefono }}</td>
+                        <td>{{ item.direccion }}</td>
+                        <td>{{ item.roles.name }}</td>
+                        <td>
+                          <button class="btn btn-default btn-sm" @click="verProducto(item)">
+                                <i class="fa fa-eye"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div v-else>
+                    <p class="py-4">No se han encontrado trabajadores</p>
+                  </div>
+                </div>
             </template>
             </div>
             <!-- /.box-body -->

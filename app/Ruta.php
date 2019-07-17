@@ -22,4 +22,9 @@ class Ruta extends Model
     public function cliente(){
         return $this->hasManyThrough('App\Cliente','App\RutaItem');
     }
+
+    public function cobros (){
+        return $this->hasMany('App\Cobro');
+
+    }
 }

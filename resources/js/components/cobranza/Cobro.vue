@@ -7,10 +7,10 @@
                      <div class="row">
                         <div class="col-md-12">
                             <p style="font-size:18px;" class="mb-1"> Jornada de Cobro </p>
-                            <p class="col-md-6 px-0 text-muted">  Cobrador {{ cobro.cobrador.name }} </p>
-                            <p class="col-md-6 text-muted">Municipio {{ruta.municipio.municipio  }}   </p>
-                            <p class="col-md-6 px-0 text-muted">  Número de clientes {{ ruta.items.length }} </p>
-                            <p class="col-md-6 text-muted">Fecha de culminación {{ruta.municipio.municipio  }}   </p>
+                            <p class="col-md-12 pl-1 text-muted">  Cobrador {{ cobro.cobrador.name }} </p>
+                            <p class="col-md-6 pr-0 pl-1 text-muted">Inicia {{  cobro.fecha_inicio | moment('calendar') }}   </p>
+                            <p class="col-md-6 pr-0 pl-1 text-muted">  Culmina {{ cobro.fecha_culminacion | moment('calendar')  }}   </p>
+                            
                         </div>
                      </div>
                      <div class="row">
@@ -19,62 +19,48 @@
                              <table class="table table-condensed">
                                 <thead>
                                     <tr>
-                                        <th style="width: 10px">#</th>
                                         <th>Cliente</th>
-                                        <th> Dirección</th>
+                                        <th>Dirección</th>
+                                        <th>Monto</th>
+                                        <th>Comisión</th>
+                                        <th>Estado</th>
+                                        <th>Culminación</th>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="item in ruta.items" :key="item.id">
-                                        <th scope="row">{{item.orden}}</th>
-                                        <td>{{item.cliente.nombre}} {{item.cliente.apellido}}</td>
-                                        <td>{{item.cliente.direccion}}</td>
+                                </thead> 
+
+                                <div v-for="item in cobro.items" :key="item.id" style="display:contents">
+                                    <tr @click="showDetail(item.id)"> 
+                                        <td>{{ item.ruta_items.cliente.nombre}} {{item.ruta_items.cliente.apellido}}</td>
+                                        <td>{{ item.ruta_items.cliente.direccion}}</td>
+                                        <td>{{ item.monto | currency }}</td>
+                                        <td>{{ item.comision | currency  }} </td>
+                                        <td>{{ item.estado | cobrosEstado(item.estado) }}</td>
+                                        <td>{{ item.fecha_culminacion | moment('calendar') }}  </td>
                                     </tr>
-                                </tbody>
+                                    <tr v-show="showDetails == 'detail'+item.id" style="font-size:13px;">
+                                        
+                                        <td :colspan="item.observacion!=null ? 4 : 2"><span v-if="item.observacion!=null">{{ item.obervacion }}  </span> <span v-else>Sin obersevación</span> </td>
+                                        <td :colspan="item.observacion!=null ? 2 : 4">Ver acuerdo de pago</td>       
+                                    </tr>
+                                </div>
                             </table>
                          </div>
                      </div>
                 </div>
             </div>
-            <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">Condensed Full Width Table</h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body no-padding">
-              <table class="table table-condensed">
-                <tbody><tr>
-                  
-                  <th>Task</th>
-                  <th>Progress</th>
-                  <th style="width: 40px">Label</th>
-                </tr>
-                <tr>
-                  <td>1.</td>
-                  <td>Update software</td>
-                  <td>
-                    <div class="progress progress-xs">
-                      <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
-                    </div>
-                  </td>
-                  <td><span class="badge bg-red">55%</span></td>
-                </tr>
-              </tbody></table>
-            </div>
-            <!-- /.box-body -->
-          </div>
             <div slot="footer">
-
                 <button class="btn btn-primary" @click="close">Continuar</button>
             </div>
         </bootstrap-modal>
 
 </template>
 <script>
+import moment from 'moment'
 export default {
     
     data(){
         return {
+            showDetails:'',
             cobro:''
         }
     },
@@ -83,11 +69,20 @@ export default {
     },
     created(){
         this.eventHub.$on('verCobro', cobro =>{
+            console.log(cobro);
             this.cobro = cobro
             this.open();
         });
     },
     methods:{
+        showDetail(id){
+            let showDetail ='detail'+id;
+            if(showDetail==this.showDetails){
+                this.showDetails = '';
+            }else{
+                this.showDetails = showDetail;
+            }
+        },
         open(){
             this.$refs.verCobro.open();
         },

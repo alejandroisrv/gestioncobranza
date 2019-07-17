@@ -1,14 +1,7 @@
 <template>
   <div>
-    <bootstrap-modal
-      ref="theModal"
-      :need-header="true"
-      :need-footer="true"
-      :size="'large'"
-      :opened="resetModal"
-    >
+    <bootstrap-modal ref="theModal" :need-header="true" :need-footer="true" :size="'large'">
       <div slot="title">Nueva Venta</div>
-
       <div slot="body">
         <form @submit.prevent="generateVenta" id="ventaFrom">
           <div class="box-body">
@@ -24,30 +17,27 @@
               </div>
             </div>
             <div class="row">
+              <template v-if="VentaGeneral.tipo && VentaGeneral.tipo.id   == 2 ">
+                <div class="form-group col-md-4">
+                  <label>Periodo de pago</label>
+                  <v-select v-model="VentaGeneral.periodo" :options="['Semanal','Quincenal','Mensual']" placeholder="Seleciona el periodo de pago"></v-select>
+                </div>
               <div class="form-group col-md-4">
-                <label>Periodo de pago</label>
-                <select class="form-control" name="periodo_pago" v-model="VentaGeneral.periodo">
-                  <option value="Semanal">Semanal</option>
-                  <option value="Quincenal">Quincenal</option>
-                  <option value="Mensual">Mensual</option>
-                </select>
-              </div>
-
-              <div class="form-group col-md-4">
-                <label>Numero de cuotas</label>
-                <input type="text" name="cuotas" class="form-control" v-model="VentaGeneral.cuotas">
+                <label>Número de cuotas</label>
+                <input type="text" name="cuotas" class="form-control" v-model.number="VentaGeneral.cuotas" placeholder="Introduce el número de cuotas">
               </div>
               <div class="form-group col-md-4">
                 <label>Monto de las cuotas</label>
-                <input type="text" name="cuotas" class="form-control" v-model="VentaGeneral.cuotas">
+                <input type="text" name="monto" class="form-control" v-model="VentaGeneral.monto" readonly>
               </div>
+              </template>
               <div class="col-md-12 mt-3">
                 <label>Productos</label>
 
                 <div class="my-3">
                   <div class="row my-3">
                     <div class="col-md-6">
-                      <v-select v-model="item.producto" :options="productoList" placeholder="Seleciona un producto"></v-select>
+                      <v-select v-model="item.producto" :options="productList" placeholder="Seleciona un producto"></v-select>
                     </div>
                     <div class="col-md-5">
                       <input  v-model.number="item.cantidad" placeholder="Cantidad" class="form-control" @keyup.enter="addCuadro()">
@@ -68,13 +58,13 @@
                       <tr v-for="(productoVendido,idx) in VentaGeneral.productosVendidos" :key="idx+'prod'">
                         <td>{{ productoVendido.producto.nombre }}</td>
                         <td>{{ productoVendido.cantidad }}</td>
-                        <td>{{ productoVendido.subtotal }}</td>
+                        <td>{{ productoVendido.subtotal | currency }}</td>
                         <td>
                           <i class="fa fa-times text-danger" @click="deleteProductoVendido(idx)"></i>
                         </td>
                       </tr>
                       <tr>
-                        <th>Total: <span>{{ total }} </span></th>
+                        <th style="font-size:16px;">Total: <span>{{ total | currency }} </span></th>
                       </tr>
                     </tbody>
                   </table>
@@ -101,21 +91,34 @@ export default {
       url: "/api/ventas",
       item: { producto: "", cantidad: "", subtotal: 0 },
       VentaGeneral: {
-        cliente: "",
-        periodo: "",
-        tipo: 1,
-        cuotas: 0,
-        total: 0,
+        cliente: null,
+        periodo:null,
+        tipo:null,
+        cuotas: '',
+        monto:0,
+        total:0,
         productosVendidos: []
       }
     };
   },
+
+
   computed: {
     ...mapGetters({
       productoList:'productos/productosFormat',
       tiposVenta:'ventas/tiposVenta',
       clientes:'clientes/clientesFormat'
     }),
+    productList(){
+      let list=[];
+      this.productoList.forEach(e=>{
+        if(e.cantidad>0){
+            list.push(e);
+        } 
+      })
+
+      return list;
+    },
     total: {
       set(value) {
         this.VentaGeneral.total = value;
@@ -125,6 +128,7 @@ export default {
         this.VentaGeneral.productosVendidos.forEach(item => {
           total = parseInt(item.subtotal) + parseInt(total) ;
         });
+        this.VentaGeneral.monto = (this.VentaGeneral.cuotas !== '') ? total/this.VentaGeneral.cuotas : 0 ;
         this.VentaGeneral.total = total;
         return this.VentaGeneral.total;
       }
@@ -136,6 +140,7 @@ export default {
   created() {
     this.loadData();
     this.eventHub.$on("openModal", rs => {
+      this.resetModal();
       this.openTheModal();
     });
   },
@@ -146,11 +151,11 @@ export default {
     }),
     generateVenta() {
       axios.post(this.url, this.VentaGeneral).then(rs => {
-        this.closeTheModal();
+        //this.closeTheModal();
         this.eventHub.$emit("sendVentas");
-        this.$noty.success("Nueva venta realizad con exito");
+        this.$noty.success("Nueva venta realizada con exito");
       }).catch(err => {      
-        this.$noty.error("Ha ocurrido un error al intentar agregar al cliente "+err.response.data.message);
+        this.$noty.error("Ha ocurrido un error al intentar procesar la venta "+err.response.data.message);
       });
     },
     addCuadro() {

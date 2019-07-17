@@ -7,14 +7,19 @@ use Illuminate\Http\Request;
 
 class CarteraController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        //
+        $cartera = AcuerdoPago::where('cuotas','>','cuotas_pagadas')->paginate(20);
+        $total = 0;
+        $cartera->map(function($item){
+            $total += ($item->cuotas- $item->cuotas_pagadas) * ($item->monto / $item->cuotas);
+        });
+
+        response()->json(['body'=> $cartera,'total'=> $total]);
+
+
+        
     }
 
     /**

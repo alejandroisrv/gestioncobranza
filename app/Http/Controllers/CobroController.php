@@ -6,6 +6,8 @@ use App\Cobro;
 use App\CobroJornada;
 use App\AcuerdoPago;
 use Illuminate\Http\Request;
+use Validator;
+
 
 class CobroController extends Controller
 {
@@ -23,14 +25,8 @@ class CobroController extends Controller
         $municipio = isset($data['municipio']) ? $data['municipio']: null ;
         $desde = isset($data['desde']) ? $data['desde']: null ;
         $hasta = isset($data['hasta']) ? $data['hasta']: null ;
-        $load = ['cobrador','ruta','cliente','items.cliente','cobros.acuerdo_pagos'];
-        $cobros = Cobro::with($loads)
-        ->whereHas('ruta', function($q) use($municipio){
-            return ($municipio !== null) ? $q->where('municipio_id',$municipio) :  $q;
-        })
-        ->whereHas('items', function($q) use($cliente){
-            return ($cliente !== null) ? $q->where('cliente_id',$cliente) :  $q;
-        })
+        $load = ['cobrador','ruta'];
+        $cobros = Cobro::with($load)
         ->where(function($q)use($desde){
             return ($desde !== null) ? $q->whereDate('fecha_inicio','>=',$desde) :  $q;
         })
@@ -38,7 +34,7 @@ class CobroController extends Controller
             return ($hasta !== null) ? $q->whereDate('fecha_inicio','<=',$hasta) :  $q;
         })
         ->where(function($q)use($cobrador){
-            return ($cobrador !== null) ? $q->where('cobrador_id',$cobrador) :  $q;
+            return ($cobrador !== null) ? $q->where('user_id',$cobrador) :  $q;
         })
         ->where(function($q)use($ruta){
             return ($ruta !== null) ? $q->where('ruta_id',$ruta) :  $q;
@@ -46,8 +42,9 @@ class CobroController extends Controller
         ->orderBy('fecha_inicio','DESC')
         ->paginate(20);
 
-        
-     
+        $cobros->map(function($item){
+            $item['items'] = CobroJornada::with(['acuerdospagos','ruta_items.cliente'])->where('cobro_id',$item->id)->get();
+        });
         $datos_buscados = [];
         return response()->json(['body'=> $cobros , 'datos_buscados'=> $datos_buscados]);
     }
@@ -60,11 +57,25 @@ class CobroController extends Controller
     public function create(Request $request)
     {
         $data = $request->all();
+        $validator = Validator::make($data, [
+            'cobrador' => 'integer|required',
+            'ruta.id' => 'integer|required',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['response' => $validator->errors()], 422);
+        }
+
+
+        $inicio = isset($data['inicio']) ? $data['inicio'] : null ;
+        $culminacion = isset($data['culminacion']) ? $data['culminacion'] : null ;
+
 
         $jornada = Cobro::create([
-            'cobrador_id' => $data['cobrador'], 
-            'ruta_id' => $data['ruta']['id'] ,
-            'fecha_inicio' => $data['fecha_inicio']
+            'user_id' => $data['cobrador'], 
+            'ruta_id' => $data['ruta']['id'],
+            'fecha_inicio' => $inicio,
+            'fecha_culminacion' => $culminacion
         ]);
         for ($i=0; $i < count($data['ruta']['items']) ; $i++) { 
             $acuerdo_pagos = AcuerdoPago::where('cliente_id', $data['ruta']['items'][$i]['cliente_id'])->where('estado',0)->get();
@@ -73,12 +84,14 @@ class CobroController extends Controller
                     'cobro_id'=> $jornada->id,
                     'ruta_item_id' => $data['ruta']['items'][$i]['id'],
                     'acuerdo_pago_id' => $acuerdo->id,
+                    'monto' =>  $acuerdo->monto/$acuerdo->cuotas, 
+                    'comision' => ($acuerdo->monto/$acuerdo->cuotas*10)/100
                 ]);
             }
 
         }
 
-        return $jornada;
+        return response()->json(['response'=>'ok']);
 
     }
 

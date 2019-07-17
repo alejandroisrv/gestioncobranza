@@ -9,6 +9,9 @@ use App\ComisionVenta;
 use App\Productos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+
+
 class VentasController extends Controller
 {
     /**
@@ -45,37 +48,56 @@ class VentasController extends Controller
     public function create(Request $request)
     {
 
+
+        $now = Carbon::now();
         $data=$request->all();
         $vendedor=$request->user()->id;
         $total=0;
-        $venta = [
-                    'cliente_id'=> $data['cliente']['id'],
-                    'user_id'=>$vendedor,
-                    'tipo_venta'=>$data['tipo']['id'],
-                    'total'=> $total
-        ];
-        $venta = new Venta($venta);
-        $acuerdoPago=new AcuerdoPago(['cuotas'=> $data['cuotas'], 'periodo_pago'=>$data['periodo']]);
-        $venta->save();
-        $acuerdoPago->venta_id=$venta->id;
-        $acuerdoPago->save();
+        $periodo=0;
+         if ($data['periodo'] =='Semanal'){
+             $periodo = 7;
+        }else if($data['periodo'] =='Quincenal'){
+            $periodo = 15;
+        }else {
+            $periodo = 30;
+        }
       
+        $ciclo = $periodo*$data['cuotas'];
+
+        $venta = Venta::create([
+            'cliente_id'=> $data['cliente']['id'],
+            'user_id'=>$vendedor,
+            'tipo_venta'=>$data['tipo']['id'],
+            'total'=> $data['total']
+        ]);
+
+        if($venta->tipo_venta == 2){
+            $acuerdoPago=AcuerdoPago::create(['venta_id' => $venta->id, 
+                'cliente_id' =>  $data['cliente']['id'], 
+                'cuotas'=> $data['cuotas'], 
+                'periodo_pago'=>$data['periodo'], 
+                'monto'=> $data['total'],
+                'finished_at' => $now->add($ciclo,'day')->toDateTimeString()   
+            ]);
+        }
+
         for($i=0; $i<count($data['productosVendidos']);$i++){
             $data['productosVendidos'][$i]['venta_id']=$venta->id;
             $producto=Productos::findOrFail($data['productosVendidos'][$i]['producto']['id']);
+            $producto->cantidad = $producto->cantidad-$data['productosVendidos'][$i]['cantidad'];
+            $producto->save();
             $comision=$producto->comision*$data['productosVendidos'][$i]['cantidad'];
-            $precio = ($venta->id == 1 ) ? $producto->precio_costo : $producto->precio_contado ;
+            $precio = ($venta->tipo_venta == 1 ) ? $producto->precio_contado : $producto->precio_credito ;
             $total+=$data['productosVendidos'][$i]['cantidad']*$precio;
-            ComisionVenta::create(['venta_id'=> $venta->id, 'user_id'=> $vendedor, 'monto'=>$comision, 'estado'=> 'No pagada' ]);
+            ComisionVenta::create(['item_id'=> $venta->id, 'user_id'=> $vendedor, 'tipo'=>1 , 'monto'=>$comision, 'estado'=> 'No pagada' ]);
             $productoVenta=['venta_id' => $venta->id,
                             'producto_id'=> $data['productosVendidos'][$i]['producto']['id'],
                             'producto' => $data['productosVendidos'][$i]['producto']['nombre'],
                             'cantidad'=> $data['productosVendidos'][$i]['cantidad']
                         ];
+
             ProductosVenta::create($productoVenta);
         }
-        $venta->total=$total;
-        $venta->save();
         return response()->json(['response'=>'ok','producto'=>$productoVenta]);
        
     }

@@ -11,28 +11,24 @@
         </div>
         <div class="row">
         <div class="col-md-4 col-lg-4">
-          <p>{{ cliente.nombre}} {{cliente.apellido}}</p>
+          <p class="text-muted mb-1">{{ cliente.nombre}} {{cliente.apellido}}</p>
         </div>
-        <div class="col-md-4 col-lg-4">C.I {{ cliente.cedula }}</div>
+        <div class="col-md-4 col-lg-4"><p class="text-muted mb-1">C.I {{ cliente.cedula }}</p></div>
+         <div class="col-md-4 col-lg-4"><p class="text-muted mb-1">Teléfono: {{ cliente.telefono }}</p></div>
       </div>
       <div class="row">
         <div class="col-md-4 col-lg-4">
-          <p>Dirección: {{ cliente.direccion}}</p>
+          <p class="text-muted mb-1">Dirección: {{ cliente.direccion}}</p>
+        </div>
+        <div class="col-md-4 col-lg-4">
+          <p class="text-muted mb-1">E-mail: {{ cliente.email}}</p>
         </div>
       </div>
       <div class="row">
         <div class="col-md-4 col-lg-4">
-          <p>E-mail: {{ cliente.email}}</p>
+          <p class="text-muted mb-1">Deuda actual :{{ calcularDeuda(cliente.acuerdos_pagos) | currency }}</p>
         </div>
-        <div class="col-md-4 col-lg-4">Teléfono: {{ cliente.telefono }}</div>
-      </div>
-      <div class="row">
-        <div class="col-md-4 col-lg-4">
-          <p>Deuda actual :{{ cliente.acuerdos_pagos.monto}}</p>
-        </div>
-        <div class="col-md-4 col-lg-4">Próximo pago: {{ cliente.proximo_pago }}</div>
-        <div class="col-md-4 col-lg-4">Cliente desde {{ cliente.created_at}}</div>
-        <div class="col-md-4 col-lg-4">{{ cliente.fecha }}</div>
+        <div class="col-md-4 col-lg-4 fecha-text"><i>Cliente desde hace {{ cliente.created_at | moment("from", "now", true)}}</i></div>
       </div>
       <div class="row">
         <div class="col-md-12 col-lg-12" v-if="ventas.data && ventas.data.length > 0">
@@ -102,6 +98,18 @@ export default {
       this.ventas = rs.data.body;
       this.loading = false;
       
+    },
+    calcularDeuda(acuerdo){
+      let deuda = 0;
+      acuerdo.forEach(e => {
+        
+        if((e.cuotas > e.cuotas_pagadas ) && (e.estado == 0)){
+          deuda += parseInt((e.cuotas-e.cuotas_pagadas) * (e.monto/e.cuotas));
+        }
+
+        
+      });
+      return deuda;
     },
     open() {
       this.$refs.detalleCliente.open();

@@ -1,9 +1,10 @@
 
 export default {
     converParamters (object) {
-
+    
+        
         let query = ''
-        if(object===undefined || object===null) return query;
+        if(object===null) return query;
         let arr = Object.entries(object)
         if(arr && arr.length > 0) {
 

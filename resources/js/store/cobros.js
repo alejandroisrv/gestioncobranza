@@ -3,7 +3,9 @@ export const STORAGE_KEY = 'USUARIOS'
 import CobroService from '../services/cobros';
 
 const state = {
-    cobros: [{}],
+    cobros: [{
+        data:{}
+    }],
     loading: false,
 }
 
@@ -30,7 +32,7 @@ const mutations = {
 
 const actions = {
 
-  async getCobrosAll({commit}, query){
+  async getCobrosAll({commit}, query){ 
       commit('SET_LOADING_STATUS',true);
       const rs= await CobroService.getAll(query);
       commit('SET_COBROS',rs.data.body);

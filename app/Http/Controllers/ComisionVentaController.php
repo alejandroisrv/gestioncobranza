@@ -16,19 +16,15 @@ class ComisionVentaController extends Controller
     {
         $data = $request->all();
         $limite = isset($data['limite']) ? $data['limite'] : 20 ;
-        $venta  = isset($data['venta'])  ? $data['venta'] : null ;
         $vendedor = isset($data['vendedor']) ? $data['vendedor'] : null ;
 
 
 
-        $loads=['venta','vendedor'];
-        $comisiones = ComisionVenta::with($loads)->where(function($q) use($venta){
-            return ($venta!=null) ? $q->where('venta_id',$venta) : $q ; 
-        })->where(function($q) use($vendedor){
+        $loads=['usuario'];
+        $comisiones = ComisionVenta::with($loads)->where(function($q) use($vendedor){
             return ($vendedor!=null) ? $q->where('user_id',$vendedor) : $q ; 
         })
         ->paginate($limite);
-
         return response()->json(['body'=>$comisiones]);
     }
 
