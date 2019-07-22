@@ -11,7 +11,7 @@ class ComisionVenta extends Model
     protected $fillable=['item_id','user_id','monto','tipo','estado'];
 
     public function usuario() {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\User','user_id','id');
     }
 
 }

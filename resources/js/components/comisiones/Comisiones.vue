@@ -53,7 +53,7 @@
           </div>
         </div>
       </div>
-      <modal-venta></modal-venta>
+      <!-- <modal-venta></modal-venta> -->
     </section>
   </div>
 </template>

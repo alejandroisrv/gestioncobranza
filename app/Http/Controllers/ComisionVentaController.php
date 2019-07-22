@@ -17,9 +17,6 @@ class ComisionVentaController extends Controller
         $data = $request->all();
         $limite = isset($data['limite']) ? $data['limite'] : 20 ;
         $vendedor = isset($data['vendedor']) ? $data['vendedor'] : null ;
-
-
-
         $loads=['usuario'];
         $comisiones = ComisionVenta::with($loads)->where(function($q) use($vendedor){
             return ($vendedor!=null) ? $q->where('user_id',$vendedor) : $q ; 
@@ -33,9 +30,15 @@ class ComisionVentaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function pay($id)
     {
-        //
+        
+        $comision = ComisionVenta::find($id);
+        $comision->estado = 'Pagado';
+        $comision->save();
+        return response()->json(['response'=> 'ok']);
+
+
     }
 
     /**

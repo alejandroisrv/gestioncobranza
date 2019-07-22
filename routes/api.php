@@ -68,7 +68,7 @@ Route::group(['middleware' => 'auth:api'], function () {
   Route::post('/nomina/delete/{id}','NominaController@delete');
 
   Route::get('/comisiones','ComisionVentaController@index');
-  Route::get('/comisiones/pagar','ComisionVentaController@pagar');
+  Route::get('/comisiones/pagar/{id}','ComisionVentaController@pay');
 
   Route::get('/rutas','ItemsRutaController@index');
   Route::post('/rutas/add','ItemsRutaController@create');
