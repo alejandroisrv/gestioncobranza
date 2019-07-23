@@ -8,8 +8,7 @@ use Illuminate\Http\Request;
 class CarteraController extends Controller
 {
 
-    public function index()
-    {
+    public function index(){
         $cartera = AcuerdoPago::where('cuotas','>','cuotas_pagadas')->paginate(20);
         $total = 0;
         $cartera->map(function($item){
@@ -20,61 +19,6 @@ class CarteraController extends Controller
 
 
         
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Cartera  $cartera
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Cartera $cartera)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Cartera  $cartera
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Cartera $cartera)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Cartera  $cartera
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Cartera $cartera)
-    {
-        //
     }
 
     /**

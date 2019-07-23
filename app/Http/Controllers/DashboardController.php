@@ -24,6 +24,8 @@ class DashboardController extends Controller
         $datos = ['cartera'=> $carteraMora, 'bodegas'=> $cartera,'productos'=> $productos, 
                   'clientes' => $clientes, 'rutas'=> $rutas ];
         $graficos = [];
+
+        
         return response()->json(['body'=> $datos,'graficos'=> $graficos ]);
         
 
