@@ -17,15 +17,21 @@
     <section class="content">
       <!-- Default box -->
       <div class="row">
-        <div class="col-lg-3 col-xs-6" v-for="(item,idx) in items" :key="idx">
+        <div class="col-lg-4 col-xs-6" v-for="(item,idx) in items" :key="idx">
           <div class="small-box" :class="item.color">
             <div class="inner">
-              <h3>{{ item.total   }}</h3>
+              <h3 v-if="item.link !== '/cartera'">{{ item.total }}</h3>
+              <h3 v-else >{{ item.total | currency   }}</h3>              
               <p>{{ item.text }}</p>
             </div>
-            <div class="icon"> <i class="ion ion-bag"></i></div>
+            <div class="icon"> <i :class="item.icon"></i></div>
             <router-link :to="item.link" class="small-box-footer">{{ item.title }} <i class="fa fa-arrow-circle-right"></i> </router-link>
           </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <line-chart :chartdata="chartData" :options="chartOptions"/>
         </div>
       </div>
     </section>
@@ -33,9 +39,10 @@
   </div>
 </template>
 <script>
+import LineChart from './line-chart';
 import api from '../../services/api';
 export default {
-
+  components:{LineChart},
   data(){
     return {
       items:[{
@@ -44,12 +51,31 @@ export default {
         text:'Productos',
         title:'Ver productos',
         link:'/inventario'
-      }]
+      }],
+      chartData:{
+        labels: ['Lunes', 'Martes','Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'],
+        datasets: [
+          {
+            label: 'Ventas de la semana',
+            backgroundColor: '#337ab7',
+            data: [40, 39, 10, 40, 39, 80, 40]
+          }
+        ]
+      },
+      chartOptions:{responsive: true, maintainAspectRatio: false}
     }
+  
+  },
+  created(){
+    this.getData();
   },
   methods:{
-      getData(){
-        api().get('/dashboard/all');
+      async getData(){
+       const rs = await api().get('/dashboard/all');
+      this.items = rs.data.body;
+      console.log(rs);
+      
+        
       }
     }
 };

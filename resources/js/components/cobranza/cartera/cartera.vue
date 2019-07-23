@@ -64,9 +64,9 @@
   </div>
 </template>
 <script>
-import modalAcuerdoPago from "./modalAcuerdo";
-import Acuerdo from "./acuerdo";
-import AcuerdoService from '../../services/acuerdos_pagos'
+import modalAcuerdoPago from "../acuerdos/modalAcuerdo";
+import Acuerdo from "../acuerdos/acuerdo";
+import AcuerdoService from '../../../services/acuerdos_pagos'
 import { log } from "util";
 export default {
   data() {

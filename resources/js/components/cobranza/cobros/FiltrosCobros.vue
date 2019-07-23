@@ -45,7 +45,7 @@
 </template>
 <script>
 import DatePicker from 'vue2-datepicker'
-import RutaService from '../../services/rutas';
+import RutaService from '../../../services/rutas';
 import { mapActions, mapGetters } from 'vuex';
 import moment from 'moment'
 

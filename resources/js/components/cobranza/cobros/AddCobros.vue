@@ -42,7 +42,7 @@
 import DatePicker from 'vue2-datepicker'
 import { mapActions, mapGetters } from 'vuex';
 import moment from 'moment'
-import CobroService from '../../services/cobros'
+import CobroService from '../../../services/cobros'
 export default {
     components: { DatePicker },
     data(){

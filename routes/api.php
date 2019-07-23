@@ -25,6 +25,7 @@ Route::group(['middleware' => 'auth:api'], function () {
   Route::get('/example','ExampleController@show');
   Route::post('/example','ExampleController@create');
 
+  Route::get('/dashboard/all','DashboardController@index');
   Route::post('/producto','ProductosController@create');
   Route::get('/productos','ProductosController@index');
   Route::get('/producto/{id}','ProductosController@getProducto');

@@ -35,9 +35,11 @@
     "dependencies": {
         "admin-lte": "^2.4.10",
         "babel-polyfill": "^6.26.0",
+        "chart.js": "^2.8.0",
         "moment": "^2.24.0",
         "noty": "^3.2.0-beta",
         "v-select2-component": "^0.3.8",
+        "vue-chartjs": "^3.4.2",
         "vue-currency-filter": "^3.4.2",
         "vue-moment": "^4.0.0",
         "vue-multiselect": "^2.1.6",

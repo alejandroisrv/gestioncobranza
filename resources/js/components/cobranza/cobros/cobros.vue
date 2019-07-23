@@ -65,7 +65,7 @@
   </div>
 </template>
 <script>
-import CobroService from '../../services/cobros'
+import CobroService from '../../../services/cobros'
 import Cobro from "./Cobro";
 import NuevoCobro from "./AddCobros";
 import Filtros from './FiltrosCobros'

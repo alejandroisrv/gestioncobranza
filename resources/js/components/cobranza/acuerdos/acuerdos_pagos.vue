@@ -68,7 +68,7 @@
 <script>
 import modalAcuerdoPago from "./modalAcuerdo";
 import Acuerdo from "./acuerdo";
-import AcuerdoService from '../../services/acuerdos_pagos'
+import AcuerdoService from '../../../services/acuerdos_pagos'
 import { log } from "util";
 export default {
   data() {
