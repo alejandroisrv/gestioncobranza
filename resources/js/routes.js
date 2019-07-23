@@ -11,10 +11,10 @@ import Morosos from './components/cobranza/morosos';
 import Nomina from './components/nomina/nomina';
 import Comisiones from './components/nomina/comisiones'
 import Rutas from './components/rutas/rutas';
-import Cobros from './components/cobranza/cobros';
+import Cobros from './components/cobranza/cobros/cobros';
 import NotFoundComponent from './errors/NotFoundComponent'
-import Cartera from './components/cobranza/cartera';
-import Acuerdos from './components/cobranza/acuerdos_pagos'
+import Cartera from './components/cobranza/cartera/cartera';
+import Acuerdos from './components/cobranza/acuerdos/acuerdos_pagos'
 Vue.use(VueRouter)
 
 export default new VueRouter({
