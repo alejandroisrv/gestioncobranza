@@ -267,12 +267,12 @@
             </router-link>
             <ul class="treeview-menu">
               <li>
-                <router-link to="comisiones">
+                <router-link to="/comisiones">
                   <i class="fa fa-circle-o"></i> Comisiones
                 </router-link>
               </li>
               <li>
-                <router-link to="comisiones/reportes">
+                <router-link to="/comisiones/reportes">
                   <i class="fa fa-circle-o"></i> Reportes
                 </router-link>
               </li>

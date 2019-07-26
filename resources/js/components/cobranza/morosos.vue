@@ -88,6 +88,11 @@ export default {
     ...mapActions({
       initClientes: "clientes/initClientes"
     }),
+    getMorosos(){
+
+      
+
+    },
     verCliente(cliente) {
       this.clienteModal = cliente;
       this.openModal();
