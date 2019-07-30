@@ -68,7 +68,10 @@ class VentasController extends Controller
             'cliente_id'=> $data['cliente']['id'],
             'user_id'=>$vendedor,
             'tipo_venta'=>$data['tipo']['id'],
-            'total'=> $data['total']
+            'total'=> $data['total'],
+            'subtotal' => $data['subtotal'],
+            'abono' => $data['abono'],
+            'descuento' => $data['descuento']
         ]);
 
         if($venta->tipo_venta == 2){
@@ -100,6 +103,7 @@ class VentasController extends Controller
         }
         return response()->json(['response'=>'ok','producto'=>$productoVenta]);
        
+
     }
 
     public function getTipos(Request $request){

@@ -5,7 +5,7 @@
       <div slot="body">
         <form @submit.prevent="generateVenta" id="ventaFrom">
           <div class="box-body">
-            <p> Vendedor: {{ $store.state.perfilActual.name}}  </p> 
+            <p> Vendedor: <small>{{ $store.state.perfilActual.name}}</small></p> 
             <div class="row">
               <div class="form-group col-md-6">
                 <label>Cliente</label>
@@ -23,17 +23,20 @@
                   <v-select v-model="VentaGeneral.periodo" :options="['Semanal','Quincenal','Mensual']" placeholder="Seleciona el periodo de pago"></v-select>
                 </div>
               <div class="form-group col-md-4">
-                <label>Número de cuotas</label>
-                <input type="text" name="cuotas" class="form-control" v-model.number="VentaGeneral.cuotas" placeholder="Introduce el número de cuotas">
+                <label>Monto de las cuotas</label>
+                <input type="text" name="monto" class="form-control" v-model="VentaGeneral.monto" placeholder="Introduce el monto de las cuotas">
               </div>
               <div class="form-group col-md-4">
-                <label>Monto de las cuotas</label>
-                <input type="text" name="monto" class="form-control" v-model="VentaGeneral.monto" readonly>
+                <label>Abono</label>
+                <input type="text" name="cuotas" class="form-control" v-model="VentaGeneral.abono" placeholder="Introduce el monto a abonar">
               </div>
               </template>
+              <div class="form-group col-md-4">
+                <label>Descuento</label>
+                <input type="text" name="monto" class="form-control" v-model="VentaGeneral.descuento" placeholder="Descuento">
+              </div>
               <div class="col-md-12 mt-3">
                 <label>Productos</label>
-
                 <div class="my-3">
                   <div class="row my-3">
                     <div class="col-md-6">
@@ -64,7 +67,8 @@
                         </td>
                       </tr>
                       <tr>
-                        <th style="font-size:16px;">Total: <span>{{ total | currency }} </span></th>
+                        <th style="font-size:16px;">Sub-total: <span>{{ subtotal | currency }} </span></th>
+                        <th style="font-size:17px;">Total: <span>{{ total | currency }} </span></th>
                       </tr>
                     </tbody>
                   </table>
@@ -94,9 +98,11 @@ export default {
         cliente: null,
         periodo:null,
         tipo:null,
-        cuotas: '',
+        abono: '',
+        descuento:','
         monto:0,
         total:0,
+        subtotal:0,
         productosVendidos: []
       }
     };
@@ -119,20 +125,30 @@ export default {
 
       return list;
     },
+    subtotal: {
+      set(value) {
+        this.VentaGeneral.subtotal = value;
+      },
+      get() {
+        let subtotal = 0;
+        this.VentaGeneral.productosVendidos.forEach(item => {
+          subtotal = parseInt(item.subtotal) + parseInt(subtotal) ;
+        });
+        this.VentaGeneral.subtotal = subtotal;
+        return this.VentaGeneral.subtotal;
+      }
+    },
     total: {
       set(value) {
         this.VentaGeneral.total = value;
       },
       get() {
-        let total = 0;
-        this.VentaGeneral.productosVendidos.forEach(item => {
-          total = parseInt(item.subtotal) + parseInt(total) ;
-        });
-        this.VentaGeneral.monto = (this.VentaGeneral.cuotas !== '') ? total/this.VentaGeneral.cuotas : 0 ;
+        let total = this.VentaGeneral.subtotal - this.VentaGeneral.descuento;
         this.VentaGeneral.total = total;
+        this.VentaGeneral.cuotas = (this.VentaGeneral.monto > 0 || this.VentaGeneral.monto !== '') ? total / this.VentaGeneral.monto : 0 ;
         return this.VentaGeneral.total;
       }
-    }
+  
   },
   components: {
     "bootstrap-modal": require("vue2-bootstrap-modal")
@@ -166,7 +182,6 @@ export default {
       this.item.subtotal = this.item.cantidad * precio;
       this.VentaGeneral.productosVendidos.forEach(e=>{
         if(e.producto && e.producto.id===this.item.producto.id){
-            console.log(e.producto.id,this.item.producto.id);
             if((e.producto.cantidad + this.item.cantidad) > e.producto.cantidad){
               this.item.producto='';
               this.item.cantidad='';

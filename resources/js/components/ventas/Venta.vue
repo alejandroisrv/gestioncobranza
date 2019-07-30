@@ -10,12 +10,13 @@
                 <p style="font-size:18px;" class="mb-1"> Venta {{ venta.tipos_ventas.descripcion }} </p>
                 <p class="col-md-6 px-0 mb-1 text-muted">  Vendedor: {{ venta.vendedor.name }}  </p>
                 <p class="col-md-6 px-0 mb-1 text-muted">  Cliente: {{ venta.persona.nombre }} {{ venta.persona.apellido }} </p>
-                <p class="col-md-6 px-0 mb-1 text-muted fecha-text"> Fecha: {{ venta.created_at  }} </p>
+                <p class="col-md-6 px-0 mb-1 text-muted fecha-text"> Fecha: {{ venta.created_at | moment('DD/MM/YYYY H:m:s') }} </p>
                 <template v-if="venta.tipo_venta == 2">
-                  <p style="font-size:16px;" class="my-3"> Acuerdo de Pago </p>
-                  <p class="col-md-6 px-0 mb-1 text-muted">  Periodo de pago: <span style="font-weight:600;">{{ venta.acuerdo_pago.periodo_pago}} </span> </p>
-                  <p class="col-md-6 px-0 mb-1 text-muted">  Número de cuotas: <span style="font-weight:600;">{{ venta.acuerdo_pago.cuotas  }} </span>  </p>
-                  <p class="col-md-6 px-0 text-muted">  Monto de las cuotas: {{ montoCuotas | currency }} </p>
+                  <p class="col-md-4 px-0 mb-1 text-muted">  Periodo de pago: <span style="font-weight:600;">{{ venta.acuerdo_pago.periodo_pago}} </span> </p>
+                  <p class="col-md-4 px-0 mb-1 text-muted">  Número de cuotas: <span style="font-weight:600;">{{ venta.acuerdo_pago.cuotas  }} </span>  </p>
+                  <p class="col-md-4 px-0 text-muted">  Monto de las cuotas: {{ montoCuotas | currency }} </p>
+                  <p class="col-md-4 px-0 mb-1 text-muted"> Abono: <span style="font-weight:600;">{{ venta.abono | currency  }} </span>  </p>                  
+                  <p class="col-md-4 px-0 mb-1 text-muted"> Descuento: <span style="font-weight:600;">{{ venta.abono | currency  }} </span>  </p>                  
                 </template>  
               </div>
             </div>
@@ -26,6 +27,7 @@
                   <tr v-for='item in venta.productos_venta' :key="item.id+'a'"> 
                     <td>{{ item.producto }} <b>x{{ item.cantidad }}</b> </td>  
                   </tr>
+                  <th style="font-size:16px"> Sub-total: {{ venta.subtotal | currency }}</th>
                   <th style="font-size:16px"> Total: {{ venta.total | currency }}</th>
                 </table>
               </div>
@@ -56,9 +58,8 @@ export default {
   created() {
     this.eventHub.$on("openDetalle", (venta) => {
       this.venta = venta;
-      console.log(this.venta);
-      
       this.openTheModalVenta();
+      
     });
   },
   computed:{

@@ -31,6 +31,7 @@
                         <th>Telefono</th>
                         <th>Dirección</th>
                         <th>Rol</th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody>

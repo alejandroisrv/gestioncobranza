@@ -48,7 +48,7 @@
                     <td>  <span :class="item.estado == 'Pagado' ? 'label label-success' : 'label label-warning' "> {{ item.estado }} </span>  </td>
                     <td>{{ item.created_at | moment('DD/MM/YYYY') }}</td>
                     <td>
-                      <button v-if="item.estado != 'No pagado' " class="btn btn-success btn-sm" @click="pagarComision(item)">
+                      <button v-if="item.estado != 'Pagado' " class="btn btn-success btn-sm" @click="pagarComision(item)">
                             <i class="fa fa-usd"></i>
                       </button>
                     </td>
@@ -93,12 +93,12 @@ export default {
     },
     async pagarComision(item){
       const rs = await ComisionService.pay(item.id);
+      console.log(rs);
+      
     }
   },
   filters:{
-
     tipoComision(value){
-
       if(value==2){
         return 'Cobranza'
       }else {
