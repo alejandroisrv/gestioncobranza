@@ -16,10 +16,6 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('/datos-usuarios' ,function(Request $request){
-    return $request->user();
-});
-
 
 Route::group(['middleware' => 'auth:api'], function () {
   Route::get('/example','ExampleController@show');
@@ -82,5 +78,14 @@ Route::group(['middleware' => 'auth:api'], function () {
   Route::get('/municipios','MunicipioController@index');
 
   Route::get('users/all', 'UsersController@getUsers');
+
+
+  Route::get('contabilidad/all', 'ContabilidadController@getAll');
+  Route::get('contabilidad/categorias', 'ContabilidadController@getCategorias');
+  Route::post('contabilidad/categoria', 'ContabilidadController@createCategoria');
+  Route::post('contabilidad/categoria/edit', 'ContabilidadController@updateCategoria');
+  Route::post('contabilidad/categoria/delete/{id}', 'ContabilidadController@deleteCategoria');
+
+
 
 });

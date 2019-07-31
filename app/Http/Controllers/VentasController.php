@@ -7,6 +7,7 @@ use App\AcuerdoPago;
 use App\ProductosVenta;
 use App\ComisionVenta;
 use App\Productos;
+use App\Contabilidad;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -52,8 +53,11 @@ class VentasController extends Controller
         $now = Carbon::now();
         $data=$request->all();
         $vendedor=$request->user()->id;
-        $total=0;
-        $periodo=0;
+        $total = 0;
+        $periodo = 0;
+        $comision = 0 ;
+
+
          if ($data['periodo'] =='Semanal'){
              $periodo = 7;
         }else if($data['periodo'] =='Quincenal'){
@@ -74,6 +78,9 @@ class VentasController extends Controller
             'descuento' => $data['descuento']
         ]);
 
+        
+        Contabilidad::create(['descripcion' => 'Transaccion generada por una venta', 'tipo' => 1, 'monto' => $data['total'] ]);
+
         if($venta->tipo_venta == 2){
             $acuerdoPago=AcuerdoPago::create(['venta_id' => $venta->id, 
                 'cliente_id' =>  $data['cliente']['id'], 
@@ -89,10 +96,13 @@ class VentasController extends Controller
             $producto=Productos::findOrFail($data['productosVendidos'][$i]['producto']['id']);
             $producto->cantidad = $producto->cantidad-$data['productosVendidos'][$i]['cantidad'];
             $producto->save();
-            $comision=$producto->comision*$data['productosVendidos'][$i]['cantidad'];
+            $comisionProducto=$producto->comision*$data['productosVendidos'][$i]['cantidad'];
+            $comision+=$comisionProducto;
+
             $precio = ($venta->tipo_venta == 1 ) ? $producto->precio_contado : $producto->precio_credito ;
             $total+=$data['productosVendidos'][$i]['cantidad']*$precio;
-            ComisionVenta::create(['item_id'=> $venta->id, 'user_id'=> $vendedor, 'tipo'=>1 , 'monto'=>$comision, 'estado'=> 'No pagada' ]);
+            
+            ComisionVenta::create(['item_id'=> $venta->id, 'user_id'=> $vendedor, 'tipo'=>1 , 'monto'=>$comisionProducto, 'estado'=> 'No pagada' ]);
             $productoVenta=['venta_id' => $venta->id,
                             'producto_id'=> $data['productosVendidos'][$i]['producto']['id'],
                             'producto' => $data['productosVendidos'][$i]['producto']['nombre'],
@@ -101,6 +111,7 @@ class VentasController extends Controller
 
             ProductosVenta::create($productoVenta);
         }
+        Contabilidad::create(['descripcion' => 'Comision generada en venta', 'tipo' => 2 , 'monto' => $comision ]);
         return response()->json(['response'=>'ok','producto'=>$productoVenta]);
        
 

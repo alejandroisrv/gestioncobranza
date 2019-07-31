@@ -15,12 +15,12 @@ import Cobros from './components/cobranza/cobros/cobros';
 import NotFoundComponent from './errors/NotFoundComponent'
 import Cartera from './components/cobranza/cartera/cartera';
 import Acuerdos from './components/cobranza/acuerdos/acuerdos_pagos'
+import Contabilidad from './components/contabilidad/contabilidad';
 Vue.use(VueRouter)
 
 export default new VueRouter({
     mode: 'history',
-    routes: [
-        {
+    routes: [{
             path: '/',
             name: 'Dashboard',
             component: Dashboard
@@ -69,7 +69,7 @@ export default new VueRouter({
             path: '/rutas',
             name: 'Rutas',
             component: Rutas
-            
+
         },
         {
             path: '/cobros',
@@ -86,7 +86,12 @@ export default new VueRouter({
             name: 'Acuerdos',
             component: Acuerdos
         },
+        {
+            path: '/contabilidad',
+            name: 'Contabilidad',
+            component: Contabilidad
 
+        },
         { path: '*', component: NotFoundComponent }
 
     ]

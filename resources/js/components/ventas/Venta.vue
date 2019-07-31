@@ -16,7 +16,7 @@
                   <p class="col-md-4 px-0 mb-1 text-muted">  Número de cuotas: <span style="font-weight:600;">{{ venta.acuerdo_pago.cuotas  }} </span>  </p>
                   <p class="col-md-4 px-0 text-muted">  Monto de las cuotas: {{ montoCuotas | currency }} </p>
                   <p class="col-md-4 px-0 mb-1 text-muted"> Abono: <span style="font-weight:600;">{{ venta.abono | currency  }} </span>  </p>                  
-                  <p class="col-md-4 px-0 mb-1 text-muted"> Descuento: <span style="font-weight:600;">{{ venta.abono | currency  }} </span>  </p>                  
+                  <p class="col-md-4 px-0 mb-1 text-muted"> Descuento: <span style="font-weight:600;">{{ venta.Descuento | currency  }} </span>  </p>                  
                 </template>  
               </div>
             </div>
@@ -59,7 +59,7 @@ export default {
     this.eventHub.$on("openDetalle", (venta) => {
       this.venta = venta;
       this.openTheModalVenta();
-      
+
     });
   },
   computed:{

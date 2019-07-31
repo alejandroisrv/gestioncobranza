@@ -32,6 +32,8 @@ Route::group(['middleware' => 'auth' ], function() {
     Route::get('/comisiones', 'HomeController@index')->name('home');
     Route::get('/cobros', 'HomeController@index')->name('home');
     Route::get('/acuerdos', 'HomeController@index')->name('home');
+    Route::get('/contabilidad', 'HomeController@index')->name('home');
+
 });
 
 

@@ -99,7 +99,7 @@ export default {
         periodo:null,
         tipo:null,
         abono: '',
-        descuento:','
+        descuento:'',
         monto:0,
         total:0,
         subtotal:0,
@@ -107,8 +107,6 @@ export default {
       }
     };
   },
-
-
   computed: {
     ...mapGetters({
       productoList:'productos/productosFormat',
@@ -148,7 +146,7 @@ export default {
         this.VentaGeneral.cuotas = (this.VentaGeneral.monto > 0 || this.VentaGeneral.monto !== '') ? total / this.VentaGeneral.monto : 0 ;
         return this.VentaGeneral.total;
       }
-  
+    }
   },
   components: {
     "bootstrap-modal": require("vue2-bootstrap-modal")
@@ -226,7 +224,7 @@ export default {
       this.$refs.theModal.close();
     }
   }
-};
+}
 </script>
 
 <style scoped>

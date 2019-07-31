@@ -16,14 +16,13 @@
           </div>
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Listado de Acuerdos de pago</h3>
+              <h3 class="box-title">Ca</h3>
             </div>
             <div class="box-body">
               <table v-if=" acuerdo_pagos.data && acuerdo_pagos.data.length > 0 " class="table table-bordered table-striped">
                 <thead>
                   <tr>
                     <th>Cliente</th>
-                    <th>Cuotas</th>
                     <th>Periodo de pago</th>
                     <th>Monto</th>
                     <th>Estado</th>
@@ -34,7 +33,6 @@
                 <tbody>
                   <tr v-for="item in acuerdo_pagos.data" :key="item.id">
                     <td>{{ item.cliente.nombre }} {{ item.cliente.apellido  }}  </td>
-                    <td>{{ item.cuotas }}</td>
                     <td>{{ item.periodo_pago  }}</td>
                     <td>{{ item.monto | currency }}</td>
                     <td>{{ item.estado  }} </td>
