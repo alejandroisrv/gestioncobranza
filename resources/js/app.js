@@ -1,4 +1,3 @@
-
 require('./bootstrap');
 window.Vue = require('vue');
 import 'babel-polyfill';
@@ -10,7 +9,7 @@ import Vue from 'vue';
 
 const eventHub = new Vue() // Single event hub
 Vue.mixin({
-    data: function () {
+    data: function() {
         return {
             eventHub: eventHub
         }
@@ -19,8 +18,8 @@ Vue.mixin({
 
 import axios from 'axios';
 const auth = JSON.parse(document.querySelector('meta[name="user"]').getAttribute('content'));
-localStorage.setItem('auth',JSON.stringify(auth));
-axios.defaults.headers.common['Authorization'] = 'Bearer '+ auth.api_token;
+localStorage.setItem('auth', JSON.stringify(auth));
+axios.defaults.headers.common['Authorization'] = 'Bearer ' + auth.api_token;
 
 import store from './store';
 import vSelect from 'vue-select'
@@ -29,7 +28,7 @@ import Vuetify from 'vuetify'
 import VueNoty from 'vuejs-noty'
 const moment = require('moment')
 require('moment/locale/es')
- 
+
 Vue.use(require('vue-moment'), {
     moment
 })
@@ -41,9 +40,9 @@ import DatePicker from 'vue2-datepicker'
 
 
 Vue.component('v-select', vSelect)
-Vue.component('date-picker',DatePicker);
-Vue.use(VueCurrencyFilter,{
-    symbol : '',
+Vue.component('date-picker', DatePicker);
+Vue.use(VueCurrencyFilter, {
+    symbol: '',
     thousandsSeparator: '.',
     fractionCount: 2,
     fractionSeparator: ',',
@@ -51,8 +50,16 @@ Vue.use(VueCurrencyFilter,{
     symbolSpacing: true
 })
 Vue.use(Vuetify)
-Vue.use(VueNoty, {timeout: 3500,rogressBar: true, theme:'metroui'})
-Vue.use(VuetifyConfirm)
+Vue.use(VueNoty, { timeout: 3500, rogressBar: true, theme: 'metroui' })
+Vue.use(VuetifyConfirm, {
+    buttonTrueText: 'Aceptar',
+    buttonFalseText: 'Cancelar',
+    color: 'warning',
+    icon: 'warning',
+    title: 'Warning',
+    width: 350,
+    property: '$confirm'
+})
 require('./filtros');
 const app = new Vue({
     el: '#app',
@@ -60,7 +67,7 @@ const app = new Vue({
     router: routes,
     render: (h) => h(main),
     beforeCreate() {
-		store.dispatch('initStore');
+        store.dispatch('initStore');
     }
 })
 const nav = new Vue({

@@ -8,6 +8,27 @@ use Illuminate\Http\Request;
 
 class ContabilidadController extends Controller
 {
+
+    public function add(Request $request){
+
+        $data = $request->all();
+        $tipo = isset($data['tipo']['id']) ? $data['tipo']['id'] : null;
+        
+        if($tipo == null || $tipo == 0 ){
+            return response(['response'=> 'Tipo no definido'], 422);
+        }
+
+        $Contabilidad = Contabilidad::create([
+            'user_id'=> auth()->user()->id,
+            'descripcion'=> $data['descripcion'],
+            'monto' => $data['monto'],
+            'tipo'=> $data['tipo']['id']
+        ]);
+    
+        return response()->json($Contabilidad, 201);
+
+    }
+
     public function getAll(Request $request){
         $data  = $request->all();
 
@@ -21,10 +42,10 @@ class ContabilidadController extends Controller
             return ($tipo !== null) ? $q->where('tipo',$tipo) : $q ;
         })
         ->where(function($q) use($desde) {
-            return ($desde !== null) ? $q->where('created_at','>=',$desde) : $q ;
+            return ($desde !== null) ? $q->whereDate('created_at','>=',$desde) : $q ;
         })
         ->where(function($q) use($hasta) {
-            return ($hasta !== null) ? $q->where('created_at','<=',$hasta) : $q ;
+            return ($hasta !== null) ? $q->whereDate('created_at','<=',$hasta) : $q ;
         })
         ->paginate(25);
 
@@ -38,10 +59,15 @@ class ContabilidadController extends Controller
         $data = $request->all();
 
         $categorias = ContabilidadCategoria::all();
+        $categorias->load('transacciones');
         $category = [];
         foreach ($categorias as $c) {
-            array_push($category,['id' => $c->id, 'label'=>$c->descripcion,
-                                 'operacion' => ['id' => $c->operacion,'label' => $c->operacion == 1 ? 'Abono': 'Cargo'] ]);
+            if($c->id != 1 && $c->id !=2){
+                array_push($category,['id' => $c->id, 'label'=>$c->descripcion,
+                                      'operacion' => ['id' => $c->operacion,'label' => $c->operacion == 1 ? 'Abono': 'Cargo'],
+                                      'transacciones' => $c->transacciones,'delete'=> !(count($c->transacciones)>0)
+                                      ]);
+            }
         }
 
         return response()->json($category,200);
@@ -51,8 +77,8 @@ class ContabilidadController extends Controller
     public function createCategoria(Request $request){
         
         $data = $request->all();
-        $categoria = ContabilidadCategoria::create(['descripcion' => $data['descripcion'], 'operacion' => $data['operacion']]);
-        return response()->json([$categoria],201);
+        $categoria = ContabilidadCategoria::create(['descripcion' => $data['descripcion'], 'operacion' => $data['operacion']['id']]);
+        return response()->json($categoria,201);
     }
 
 

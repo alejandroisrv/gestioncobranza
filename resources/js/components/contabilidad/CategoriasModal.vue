@@ -7,7 +7,7 @@
                       <div class="col-md-12" v-if="loading">
                           <div class="row">
                             <table class="table col-md-12">
-                                <tr v-for="(item,i) in categorias" :key="item.id" class="cat-row">
+                                <tr v-for="(item,i) in categorias" :key="item.id" class="cat-row" > 
                                     <template v-if="!item.editando">
                                         <td>{{ item.label || item.descripcion }}</td>
                                         <td>
@@ -17,7 +17,7 @@
                                         </td>
                                         <td class="text-right"> 
                                             <button class="btn btn-default btn-sm" @click="edit(item)"> <i class="fa fa-edit"></i> </button>
-                                            <button class="btn btn-danger btn-sm" @click="borrar(item,i)"> <i class="fa fa-trash"></i>  </button> 
+                                            <button class="btn btn-danger btn-sm" @click="borrar(item,i)" v-if="item.delete"> <i class="fa fa-trash"></i>  </button> 
                                         </td>
                                     </template>
                                     <template v-else>
@@ -29,6 +29,9 @@
                                             <button class="btn btn-primary m-1 btn-sm" style="margin-top: -4px;" @click="update"> <i class="fa fa-save"></i> </button>
                                         </td>
                                     </template>
+                                </tr>
+                                <tr v-if="categorias.length == 0">
+                                    <td colspan="3"> No hay categorias agregadas</td>
                                 </tr>
                             </table>
                         </div>
@@ -53,7 +56,7 @@
           </div>
       </div>
       <div slot="footer">
-          <button class="btn btn-primary"> Continuar</button>
+          <button class="btn btn-primary" @click="close"> Continuar</button>
       </div>
     </bootstrap-modal>
 
@@ -66,49 +69,54 @@ import Vue from 'vue'
 export default {
     components: { DatePicker },
     data(){
-        return{
-        categorias:[{}],
-        categoriaEdit:{
-            id:'',
-            descripcion:'',
-            label:'',
-            operacion:{}
-        },
-        categoria : {
-            id:0,
-            descripcion:'',
-            operacion:'',
-        },
-        loading:false
+        return {
+            categoriaEdit:{
+                id:'',
+                descripcion:'',
+                label:'',
+                operacion:{}
+            },
+            categoria : {
+                id:0,
+                descripcion:'',
+                label:'',
+                operacion:'',
+                delete:true,
+            },
+            loading:false
         }
     },
     components:{
         "bootstrap-modal": require("vue2-bootstrap-modal")
     },
+    computed:{
+        categorias:{
+            set(value){
+                this.$store.commit('contabilidad/SET_CATEGORIAS',value);
+            },
+            get(){
+                return this.$store.state.contabilidad.categorias;
+            }
+        }
+    },
     created(){
-        this.eventHub.$on('openCategorias', (categorias) =>{
-            this.categorias = categorias
+        this.eventHub.$on('openCategorias', () =>{
             this.$refs.CategoriasModal.open();
             this.loading = true;
         });
-
     },
     methods:{
         async update(){
             this.categorias.forEach(x=> {
-                
                 Vue.set(x,'editando',false)            
                 if(x.id == this.categoriaEdit.id){              
-                    
                     x.label = this.categoriaEdit.label ;
                     x.operacion.id = this.categoriaEdit.operacion.id ;
                     x.operacion.label = this.categoriaEdit.operacion.label ;
                 }
             });
-
             const rs = await ContabilidadService.updateCategory(this.categoriaEdit);
             this.$noty.success("Categoria actualizada con exito");
-
         },
         edit(item){
             this.categorias.forEach(x=> {
@@ -120,29 +128,25 @@ export default {
             this.categoriaEdit.label = item.label;
             this.categoriaEdit.operacion.id = item.operacion.id;
             this.categoriaEdit.operacion.label = item.operacion.label;
-
             Vue.set(item,'editando',true)
-            console.log(item); 
 
         },
         borrar(item,i){
-
+            this.$confirm('Estas seguro que desea borrar');
             ContabilidadService.deleteCategory(item.id).then(rs=>{
                 this.categorias.splice(i,1)
                 this.$noty.success('Categoria eliminada con exito');
-                console.log(rs);
+            }).catch(err=>{
+                this.$noty.error('Se ha producido un error');
             });
-           
-            
         },
-        save(){
+        async save(){
             if(this.validationDescripcion() && this.validationOperacion() ) {
-                let label  = this.categoria.operacion.label;
-                this.categoria.operacion = this.categoria.operacion.id;
-                ContabilidadService.addCategory(this.categoria)
-                this.categoria.operacion = {id: this.categoria.operacion, label:label };
-                this.categorias.push(this.categoria);
-                this.categoria  = { descripcion:'', operacion:undefined };
+                const cat = await ContabilidadService.addCategory(this.categoria);
+                this.categoria.id = cat.data.id;
+                this.categoria.label = cat.data.descripcion;
+                this.categorias.push(this.categoria );
+                this.categoria  = { descripcion:'', operacion:undefined,label:'',id:0};
             }
         },
         validationDescripcion(){
@@ -155,13 +159,22 @@ export default {
         },
         validationOperacion(){
             if(this.categoria.operacion.id !== undefined ){ 
-                
                 return true;
             }else { 
                 this.$noty.error('Debe colocar un tipo ');
                 return false;
             }
         },
+        close(){
+            this.categoria = {
+                id:0,
+                descripcion:'',
+                label:'',
+                operacion:'',
+                delete:true,
+            }
+            this.$refs.CategoriasModal.close();
+        }
     },
 
 }

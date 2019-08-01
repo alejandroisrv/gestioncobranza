@@ -6,6 +6,9 @@ export default {
         console.log(p.converParamters(params))
         return api().get('/contabilidad/all' + p.converParamters(params));
     },
+    add(params) {
+        return api().post('/contabilidad/add', params);
+    },
     getCategory(params) {
         return api().get('/contabilidad/categorias' + p.converParamters(params));
     },

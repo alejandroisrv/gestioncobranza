@@ -10,17 +10,17 @@
           <div class="box box-default">
             <div class="box-body justify-content-end">
               <div class="row justify-content-end">
-                <div class="col-md-12">
-                  <div class="col-md-5"></div>
-                  <span class="btn btn-default col-md-2 mx-1 col-xs-12 my-1">  Filtros </span>
-                  <button class="btn btn-primary col-md-2  mx-1 col-xs-12 my-1" @click="set()"><i class="fa fa-cog"></i></button>
+                <div class="col-md-12 text-right">  
+                  <span class="mx-3 my-1" @click="openFiltros()"> Filtros </span>
+                  <button class="btn btn-primary my-1" @click="set()"><i class="fa fa-cog"></i> Categorias </button>
+                  <button class="btn btn-primary my-1" @click="add()"><i class="fa fa-plus"></i> Nueva Transacción</button>                  
                 </div>
               </div>  
             </div>
           </div>
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Listado de transacciones</h3>
+              <h3 class="box-title">Listado de transacciones</h3> <small class="mx-2" style="cursor:pointer" v-if="busqueda" @click="mostrarTodo()">Mostrar todo</small>
             </div>
           <div class="box-body"> 
             <div class="col-md-12" v-if="loading"><i class="fa fa-spinner fa-spin loading-spinner"></i></div>
@@ -36,16 +36,32 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="item in contabilidad.data" :key="item.id" >
-                        <td>{{ item.descripcion }}</td>
-                        <td>
-                          <span :class="item.type.operacion == 1 ? 'label-success' : 'label-danger' ">
-                            {{ item.type.operacion | operacionFiltro }} 
-                          </span>
-                        </td>
-                        <td>{{ item.monto | currency }}</td>
-                        <td>{{ item.created_at | moment('DD/MM/YYYY') }}</td>
-                      </tr>
+                      <template v-for="item in contabilidad.data"> 
+                        <tr :key="item.id" @click="details = item.id" style="cursor:pointer">
+                          <td>{{ item.descripcion }}</td>
+                          <td>
+                            <span :class="item.type.operacion == 1 ? 'label label-success' : 'label label-danger' ">
+                              {{ item.type.operacion | operacionFiltro }} 
+                            </span>
+                          </td>
+                          <td>{{ item.monto | currency }}</td>
+                          <td>{{ item.created_at | moment('DD/MM/YYYY') }}</td>
+                        </tr>
+                        <tr :key="item.id+'details'" v-if="details == item.id">
+                          <td colspan="4">
+                            <div class="row">
+                              <div class="col-md-10" style="font-size:12px!important">
+                                {{ item.type.descripcion }}
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-10" style="font-size:12px!important">
+                                Creador por:
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </template>
                     </tbody>
                   </table>
                   <div v-else>
@@ -60,44 +76,67 @@
     </section>
     <filtro />
     <modal-categoria />
+    <add-transacciones />
   </div>
 </template>
 <script>
 import ContabilidadService from '../../services/contabilidad'
 import ModalCategoria from './CategoriasModal';
 import Filtro from './Filtros';
+import AddTransacciones from './AddTransacciones'
+
 export default {
   data(){
     return {
       loading:true,
+      details:'',
+      busqueda:false,
       contabilidad: [],
-      categorias : [],
-      parametros : { operacion:'' }
+      parametros :[]
     }
   },
-  components:{ModalCategoria, Filtro},
+  components:{ModalCategoria, Filtro,AddTransacciones},
+  computed:{
+    categorias:{
+      set(value){
+        this.$store.commit('contabilidad/SET_CATEGORIAS',value);
+      },
+      get(){
+        return this.$store.state.contabilidad.categorias;
+      }
+    }
+  },
   created(){
     this.getCategorias();
-    this.getContabilidad({});
+    this.getContabilidad();
     this.eventHub.$on('filtrarContabilidad', parametros => {
       this.parametros = parametros;
+      this.busqueda = true;
       this.getContabilidad();
+      this.getCategorias();
     });
   },
   methods:{
+    mostrarTodo(){
+      this.parametros = [];
+      this.busqueda = false;
+      this.getContabilidad();
+    },
     openFiltros(){
-      this.eventHub.$emit('openFiltrar',this.categorias);
+      this.eventHub.$emit('openFiltrar');
     },
     set(){
-      this.eventHub.$emit('openCategorias',this.categorias);
+      this.eventHub.$emit('openCategorias');
+    },
+    add(){
+      this.eventHub.$emit('AddTransacciones');
     },
     async getCategorias(){
       const rs = await ContabilidadService.getCategory({});
       this.categorias = rs.data;
-      console.log(this.categorias);
-
     },
     async getContabilidad(){
+      this.loading = true;
       const rs = await ContabilidadService.getAll(this.parametros);
       this.contabilidad = rs.data.body;
       this.loading = false;
@@ -107,10 +146,10 @@ export default {
     operacionFiltro(value){
       switch (value) {
         case 1:
-            return 'Ingreso'
+            return 'Abono'
           break;
         case -1:
-            return 'Egreso'
+            return 'Cargo'
           break;
         default:
             return ''

@@ -80,11 +80,12 @@ Route::group(['middleware' => 'auth:api'], function () {
   Route::get('users/all', 'UsersController@getUsers');
 
 
-  Route::get('contabilidad/all', 'ContabilidadController@getAll');
-  Route::get('contabilidad/categorias', 'ContabilidadController@getCategorias');
-  Route::post('contabilidad/categoria', 'ContabilidadController@createCategoria');
-  Route::post('contabilidad/categoria/edit', 'ContabilidadController@updateCategoria');
-  Route::post('contabilidad/categoria/delete/{id}', 'ContabilidadController@deleteCategoria');
+  Route::get('/contabilidad/all', 'ContabilidadController@getAll');
+  Route::post('/contabilidad/add', 'ContabilidadController@add');
+  Route::get('/contabilidad/categorias', 'ContabilidadController@getCategorias');
+  Route::post('/contabilidad/categoria', 'ContabilidadController@createCategoria');
+  Route::post('/contabilidad/categoria/edit', 'ContabilidadController@updateCategoria');
+  Route::post('/contabilidad/categoria/delete/{id}', 'ContabilidadController@deleteCategoria');
 
 
 

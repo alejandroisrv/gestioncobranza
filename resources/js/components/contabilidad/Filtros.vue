@@ -8,7 +8,7 @@
                             <table class="table col-md-12">
                                 <tr>
                                   <td class="td-label">Categoria:</td>
-                                  <td class="td-select" v-if="categorias.length > 0 "><v-select v-model="parametros.tipo" :options="categorias" placeholder="Selecciona el cobrador"></v-select></td>
+                                  <td class="td-select" v-if="categorias.length > 0 "><v-select v-model="parametros.tipo" :options="categorias" placeholder="Selecciona la categoria"></v-select></td>
                                 </tr>
                                 <tr>
                                   <td class="td-label">Fecha:</td>
@@ -24,7 +24,8 @@
                                   <td class="td-select"><date-picker v-model="parametros.hasta" :lang="'es'" width="220" format="DD/MM/YY"></date-picker></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2"> <button class="btn btn-primary" @click="filtrar()">  Buscar </button> </td>
+                                    <td class="td-label"></td>
+                                    <td class="td-select"> <button class="btn btn-primary" @click="filtrar()"> <i class="fa fa-search"></i> Buscar </button> </td>
                                 </tr>
                           </table>
                     </div>
@@ -35,14 +36,14 @@
 
 </template>
 <script>
-import DatePicker from 'vue2-datepicker'
-import { mapActions, mapGetters } from 'vuex';
+import DatePicker from 'vue2-datepicker';
+import moment from 'moment';
+
 export default {
     components: { DatePicker },
     data(){
         return{
-        fecha:{},
-        categorias:[{}],
+        fecha:'Todas',
         parametros : {
             desde:'',
             hasta:'',
@@ -54,19 +55,27 @@ export default {
     components:{
         "bootstrap-modal": require("vue2-bootstrap-modal")
     },
+    computed:{
+        categorias:{
+            set(value){
+                this.$store.commit('contabilidad/SET_CATEGORIAS',value);
+            },
+            get(){
+                return this.$store.state.contabilidad.categorias;
+            }
+        }
+    },
     created(){
-        this.eventHub.$on('openFiltrar', (categorias) =>{
+        this.eventHub.$on('openFiltrar', () =>{
             this.$refs.filtrosCobro.open();
-            this.categorias = categorias
         });
-
     },
     methods:{
         filtrar(){
             let desde = moment(this.parametros.desde ).format('DD/MM/YY');
             let hasta =  moment(this.parametros.hasta ).format('DD/MM/YY');
             let query = {
-                tipo:(this.parametros.tipo.id) ? this.parametros.tipo.id : '',
+                tipo:( this.parametros.tipo != undefined && this.parametros.tipo.id) ? this.parametros.tipo.id : '',
                 desde:(desde !='Invalid date') ? desde : '',
                 hasta:(hasta !='Invalid date') ? hasta : ''};
             this.eventHub.$emit('filtrarContabilidad',query);

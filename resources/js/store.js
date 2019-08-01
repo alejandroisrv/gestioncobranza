@@ -8,7 +8,7 @@ import clientes from './store/clientes';
 import ventas from './store/ventas'
 import cobros from './store/cobros';
 import rutas from './store/rutas';
-
+import contabilidad from './store/contabilidad'
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
@@ -17,11 +17,18 @@ const store = new Vuex.Store({
         perfilActual: JSON.parse(localStorage.getItem('auth'))
     },
     modules: {
-        users, bodegas, productos, municipios, clientes, ventas, cobros, rutas
+        users,
+        bodegas,
+        productos,
+        municipios,
+        clientes,
+        ventas,
+        cobros,
+        rutas,
+        contabilidad
     },
     mutations: {
-        INIT_STORE(state, value) {
-        }
+        INIT_STORE(state, value) {}
     },
     actions: {
         initStore({ dispatch, state }) {
