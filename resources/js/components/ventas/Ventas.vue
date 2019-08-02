@@ -43,7 +43,7 @@
                       <td>{{ item.tipos_ventas.descripcion }}</td>
                       <td>{{ item.acuerdo_pago.periodo_pago}}</td>
                       <td>{{ item.total | currency}}</td>
-                      <td>{{ item.created_at | dateFormat(item.created_at,"DD-MM-YYYY") }}</td>
+                      <td>{{ item.created_at | moment("DD/MM/YYYY") }}</td>
                       <td>
                         <button class="btn btn-default btn-sm" @click="verVenta(item)">
                           <i class="fa fa-eye"></i>

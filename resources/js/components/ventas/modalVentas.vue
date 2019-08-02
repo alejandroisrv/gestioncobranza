@@ -22,16 +22,16 @@
                   <label>Periodo de pago</label>
                   <v-select v-model="VentaGeneral.periodo" :options="['Semanal','Quincenal','Mensual']" placeholder="Seleciona el periodo de pago"></v-select>
                 </div>
-              <div class="form-group col-md-4">
+              <div class="form-group col-md-3">
                 <label>Monto de las cuotas</label>
                 <input type="text" name="monto" class="form-control" v-model="VentaGeneral.monto" placeholder="Introduce el monto de las cuotas">
               </div>
-              <div class="form-group col-md-4">
+              <div class="form-group col-md-3">
                 <label>Abono</label>
                 <input type="text" name="cuotas" class="form-control" v-model="VentaGeneral.abono" placeholder="Introduce el monto a abonar">
               </div>
               </template>
-              <div class="form-group col-md-4">
+              <div class="form-group col-md-3">
                 <label>Descuento</label>
                 <input type="text" name="monto" class="form-control" v-model="VentaGeneral.descuento" placeholder="Descuento">
               </div>

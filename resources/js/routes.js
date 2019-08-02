@@ -77,7 +77,7 @@ export default new VueRouter({
             component: Cobros
         },
         {
-            path: '/cartera',
+            path: '/cartera/:ruta',
             name: 'Cartera',
             component: Cartera
         },

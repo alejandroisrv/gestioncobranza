@@ -27,8 +27,12 @@
                   <tr v-for='item in venta.productos_venta' :key="item.id+'a'"> 
                     <td>{{ item.producto }} <b>x{{ item.cantidad }}</b> </td>  
                   </tr>
-                  <th style="font-size:16px"> Sub-total: {{ venta.subtotal | currency }}</th>
-                  <th style="font-size:16px"> Total: {{ venta.total | currency }}</th>
+                  <tr>
+                    <th style="font-size:16px"> Sub-total: {{ venta.subtotal | currency }}</th>
+                  </tr>
+                  <tr>
+                    <th style="font-size:16px"> Total: {{ venta.total | currency }}</th>
+                  </tr>
                 </table>
               </div>
             </div>

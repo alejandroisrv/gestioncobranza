@@ -2,96 +2,109 @@
 <template>
   <div>
     <section class="content-header">
-      <h1>Acuerdos de</h1>
+      <h1>Cartera</h1>
     </section>
     <section class="content">
       <div class="row">
         <div class="col-xs-12">
           <div class="box box-default">
             <div class="box-body text-right">
-              <button class="btn btn-primary" @click="PagoCliente()">
-                <i class="fa fa-plus mr-2"></i> Registrar nuevo pago
-              </button>
+
             </div>
           </div>
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Ca</h3>
+              <h3 class="box-title">Lista de clientes</h3>
             </div>
             <div class="box-body">
-              <table v-if=" acuerdo_pagos.data && acuerdo_pagos.data.length > 0 " class="table table-bordered table-striped">
+              <table v-if=" cartera.data && cartera.data.length > 0 " class="table table-bordered table-striped">
                 <thead>
                   <tr>
                     <th>Cliente</th>
-                    <th>Periodo de pago</th>
-                    <th>Monto</th>
-                    <th>Estado</th>
-                    <th>Fecha</th>
+                    <th>Abonado</th>
+                    <th>Total</th>
                     <th></th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in acuerdo_pagos.data" :key="item.id">
-                    <td>{{ item.cliente.nombre }} {{ item.cliente.apellido  }}  </td>
-                    <td>{{ item.periodo_pago  }}</td>
-                    <td>{{ item.monto | currency }}</td>
-                    <td>{{ item.estado  }} </td>
-                    <td> {{ item.created_at | moment('DD/MM/YYYY')  }} </td>
-                    <td>
-                      <button class="btn btn-default btn-sm" @click="verDetalle(item)">
-                        <i class="fa fa-eye"></i>
-                      </button>
-                      <button class="btn btn-danger btn-sm" @click="eliminarCliente(item.id)">
-                        <i class="fa fa-trash"></i>
-                      </button>
-                    </td>
+                  <tr v-for="item in cartera.data" :key="item.id">
+                    <td>{{ item.nombre }} {{ item.apellido  }}  </td>
+                    <td>{{ CalcularAbonado(item.pagos_clientes) | currency }}</td>
+                    <td>{{ CalcularTotal(item) | currency }}</td>
+                    <td>  <button class="btn-primary"><i class="fa fa-eye"></i></button> </td>
                   </tr>
                 </tbody>
               </table>
               <div v-else>
-                <p class="py-4">No se han encontrado acuerdos de pagos</p>
+                <p class="py-4">No se han encontrado informacion</p>
               </div>
             </div>
           </div>
         </div>
       </div>
       <!-- <modal-acuerdo :acuerdo="acuerdo"></modal-acuerdo> -->
-
-      <acuerdo/>
     </section>
   </div>
 </template>
 <script>
 import modalAcuerdoPago from "../acuerdos/modalAcuerdo";
-import Acuerdo from "../acuerdos/acuerdo";
-import AcuerdoService from '../../../services/acuerdos_pagos'
-import { log } from "util";
+import CarteraService from '../../../services/cartera'
+
 export default {
   data() {
     return {
       loading:false,
-      acuerdo_pagos:{}
+      cartera:[],
+      ruta:0,
+      parametros:{
+        ruta:'',
+        desde:'',
+        hasta:''
+      }
     };
   },
-  components: {
-    modalAcuerdoPago,Acuerdo
+  watch:{
+    "$route.params.ruta"(){
+      this.parametros.ruta  = this.$route.params.ruta;
+      this.parametros.desde = this.$route.query.desde
+      this.parametros.hasta = this.$route.query.hasta
+      this.getCartera();
+    }
   },
+  components: {},
   created() {
-    this.getAcuerdos();
-    this.eventHub.$on("sendCliente", rs => {
-      this.getClientes();
-    });
+      this.parametros.ruta  = this.$route.params.ruta;
+      this.parametros.desde = this.$route.query.desde
+      this.parametros.hasta = this.$route.query.hasta
+    this.getCartera();
   },
   methods: {
-
-    async getAcuerdos(){
-      this.loading = true;
-      const rs = await AcuerdoService.getAll();
-      this.acuerdo_pagos = rs.data.body;
-      this.loading = false;
+    showAll(){
+      this.parametros = {ruta: this.$route.params.ruta}
+      this.getCartera();
     },
-    PagoCliente() {
-     this.eventHub.$emit('PagoCliente');
+    CalcularAbonado(pagos){
+      let abonos = 0;
+      pagos.forEach(p => {
+        abonos += p.monto;
+      });
+      return abonos;
+
+    },
+    CalcularTotal(item){
+      let total = 0;
+      let abonos = 0;
+      item.venta.forEach(v=>{
+        total += v.total
+      })
+      abonos = this.CalcularAbonado(item.pagos_clientes);
+      return total-abonos;
+    },
+    async getCartera(){
+      this.loading = true;
+      const rs = await CarteraService.get(this.parametros);
+      this.cartera = rs.data.body;
+      this.loading = false;
     },
     verDetalle(item) {
       this.eventHub.$emit('verAcuerdo',item);

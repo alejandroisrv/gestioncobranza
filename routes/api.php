@@ -87,6 +87,10 @@ Route::group(['middleware' => 'auth:api'], function () {
   Route::post('/contabilidad/categoria/edit', 'ContabilidadController@updateCategoria');
   Route::post('/contabilidad/categoria/delete/{id}', 'ContabilidadController@deleteCategoria');
 
+  Route::get('/cartera/all', 'CarteraController@getAll');
+
+
+
 
 
 });

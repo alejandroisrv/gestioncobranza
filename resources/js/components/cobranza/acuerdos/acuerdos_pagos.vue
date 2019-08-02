@@ -2,7 +2,7 @@
 <template>
   <div>
     <section class="content-header">
-      <h1>Acuerdos de</h1>
+      <h1>Acuerdos de pago</h1>
     </section>
     <section class="content">
       <div class="row">

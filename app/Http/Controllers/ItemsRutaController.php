@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use DB;
 use Validator;
 use App\Ruta;
+use App\Cliente;
 use App\RutaItem;
 use Illuminate\Http\Request;
 
@@ -47,7 +48,8 @@ class ItemsRutaController extends Controller
         }
 
         $ruta = Ruta::create([ 'municipio_id' => $data['municipio']['id'], 'nombre' =>  $data['nombre']]);
-        for ($i=0; $i < count($data['seleccionados']); $i++) { 
+        for ($i=0; $i < count($data['seleccionados']); $i++) {
+            Cliente::where('id',$data['seleccionados'][$i]['id'])->update('ruta',$ruta->id);
             RutaItem::create(['ruta_id'=> $ruta->id, 'cliente_id' => $data['seleccionados'][$i]['id'], 'orden' => $i+1 ]);
         }
 
@@ -77,6 +79,7 @@ class ItemsRutaController extends Controller
         $status = 0 ;
 
         for ($i=0; $i < count($data['seleccionados']); $i++) { 
+            Cliente::where('id',$data['seleccionados'][$i]['id'])->update(['ruta' => $id]);
             $ruta_item = RutaItem::create(['ruta_id'=> $id, 'cliente_id' => $data['seleccionados'][$i]['id'], 'orden' => $i+1 ]);
             if($ruta_item) {
                 $status++;

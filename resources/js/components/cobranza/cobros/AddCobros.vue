@@ -14,8 +14,8 @@
                             <v-select v-model="cobrador" :options="cobradores" placeholder="Selecciona el cobrador"></v-select>
                         </div>
                         <div class="col-md-6 my-2">
-                            <label for="">Ruta</label>
-                            <v-select v-model="ruta" :options="rutas" placeholder="Selecciona la ruta"></v-select>
+                            <label for="">Minicipios</label>
+                            <v-select v-model="ruta" :multiple="true" :options="rutas" placeholder="Selecciona los minicipios"></v-select>
                         </div>
                     </div>
                     <div class="form-row">
@@ -36,6 +36,7 @@
             <button class="btn btn-primary" @click="sendCobro"> Guardar </button>
         </div>
     </bootstrap-modal>
+
 
 </template>
 <script>

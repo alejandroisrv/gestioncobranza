@@ -33,6 +33,7 @@ Route::group(['middleware' => 'auth' ], function() {
     Route::get('/cobros', 'HomeController@index')->name('home');
     Route::get('/acuerdos', 'HomeController@index')->name('home');
     Route::get('/contabilidad', 'HomeController@index')->name('home');
+    Route::get('/cartera/{ruta}', 'HomeController@index')->name('home');
 
 });
 
