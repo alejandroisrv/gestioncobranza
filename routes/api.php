@@ -89,6 +89,11 @@ Route::group(['middleware' => 'auth:api'], function () {
 
   Route::get('/cartera/all', 'CarteraController@getAll');
 
+  Route::get('/movimientos/all','MovimientosController@get');
+  
+  Route::get('/reportes/all','ReportesController@get');
+
+
 
 
 

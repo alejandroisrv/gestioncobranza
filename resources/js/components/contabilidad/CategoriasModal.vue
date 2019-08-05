@@ -3,63 +3,62 @@
         <div slot="title"> Categorias </div>
         <div slot="body">
           <div class="box-body">
-                  <div class="row">
-                      <div class="col-md-12" v-if="loading">
-                          <div class="row">
-                            <table class="table col-md-12">
-                                <tr v-for="(item,i) in categorias" :key="item.id" class="cat-row" > 
-                                    <template v-if="!item.editando">
-                                        <td>{{ item.label || item.descripcion }}</td>
-                                        <td>
-                                            <span :class="item.operacion.id == 1 ? 'label label-success' : 'label label-danger'"> 
-                                                {{  item.operacion.label }} 
-                                            </span>
-                                        </td>
-                                        <td class="text-right"> 
-                                            <button class="btn btn-default btn-sm" @click="edit(item)"> <i class="fa fa-edit"></i> </button>
-                                            <button class="btn btn-danger btn-sm" @click="borrar(item,i)" v-if="item.delete"> <i class="fa fa-trash"></i>  </button> 
-                                        </td>
-                                    </template>
-                                    <template v-else>
-                                        <td>
-                                            <input type="text" class="form-control m-1" v-model="categoriaEdit.label" placeholder="Introduce la descripción"></td>
-                                        <td style="width:200px;">
-                                            <v-select v-model="categoriaEdit.operacion"  :options="[{id:1,label:'Abono'},{id:-1, label:'Cargo'}]" placeholder="Selecciona una tipo"></v-select></td>
-                                        <td class="text-right">
-                                            <button class="btn btn-primary m-1 btn-sm" style="margin-top: -4px;" @click="update"> <i class="fa fa-save"></i> </button>
-                                        </td>
-                                    </template>
-                                </tr>
-                                <tr v-if="categorias.length == 0">
-                                    <td colspan="3"> No hay categorias agregadas</td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="row">
-                            <table class="table col-md-12">
-                                <tr class="add-row">
-                                    <th colspan="3" style="padding:10px;">Nueva Categoria</th>
-                                </tr>
-                                <tr class="add-row">
-                                    <td style="width:40%">
-                                        <input type="text" class="form-control m-1" v-model="categoria.descripcion" placeholder="Introduce la descripción"></td>
-                                    <td style="width:40%">
-                                        <v-select v-model="categoria.operacion"  :options="[{id:1,label:'Abono'},{id:-1, label:'Cargo'}]" placeholder="Selecciona una tipo"></v-select></td>
-                                    <td style="width:20%;text-aling:right;">
-                                        <button class="btn btn-primary m-1 btn-block" style="margin-top: -4px;" @click="save"> Agregar </button>
-                                    </td>
-                                </tr>
-                            </table>                        
-                        </div>
-                    </div>
-              </div>
-          </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table col-md-12">
+                        <tr v-for="(item,i) in categorias" :key="item.id" class="cat-row" > 
+                            <template v-if="!item.editando">
+                                <td>{{ item.label || item.descripcion }}</td>
+                                <td>
+                                    <span :class="item.operacion.id == 1 ? 'label label-success' : 'label label-danger'"> 
+                                        {{  item.operacion.label }} 
+                                    </span>
+                                </td>
+                                <td class="text-right"> 
+                                    <button class="btn btn-default btn-sm" @click="edit(item)"> <i class="fa fa-edit"></i> </button>
+                                    <button class="btn btn-danger btn-sm" @click="borrar(item,i)" v-if="item.delete"> <i class="fa fa-trash"></i>  </button> 
+                                </td>
+                            </template>
+                            <template v-else>
+                                <td>
+                                    <input type="text" class="form-control m-1" v-model="categoriaEdit.label" placeholder="Introduce la descripción"></td>
+                                <td style="width:200px;">
+                                    <v-select v-model="categoriaEdit.operacion"  :options="[{id:1,label:'Abono'},{id:-1, label:'Cargo'}]" placeholder="Selecciona una tipo"></v-select></td>
+                                <td class="text-right">
+                                    <button class="btn btn-primary m-1 btn-sm" style="margin-top: -4px;" @click="update"> <i class="fa fa-save"></i> </button>
+                                </td>
+                            </template>
+                        </tr>
+                        <tr v-if="categorias.length == 0">
+                            <td colspan="3"> No hay categorias agregadas</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table col-md-12">
+                        <tr class="add-row">
+                            <th colspan="3" style="padding-bottom:10px;">Nueva Categoria</th>
+                        </tr>
+                        <tr class="add-row">
+                            <td style="width:40%;padding-left:0px!important;">
+                                <input type="text" class="form-control" v-model="categoria.descripcion" placeholder="Introduce la descripción"></td>
+                            <td style="width:40%">
+                                <v-select v-model="categoria.operacion"  :options="[{id:1,label:'Abono'},{id:-1, label:'Cargo'}]" placeholder="Selecciona una tipo"></v-select></td>
+                            <td style="width:20%;text-aling:right;">
+                                <button class="btn btn-primary m-1 btn-block" style="margin-top: -4px;" @click="save"> Agregar </button>
+                            </td>
+                        </tr>
+                    </table>                        
+                </div>
+            </div>
+        </div>
       </div>
       <div slot="footer">
           <button class="btn btn-primary" @click="close"> Continuar</button>
       </div>
     </bootstrap-modal>
-
 </template>
 <script>
 import ContabilidadService from '../../services/contabilidad';
@@ -180,45 +179,9 @@ export default {
 }
 </script>
 <style>
-tr{
-    max-width: 100px !important;
-}
-
-.td-label{
-    text-align: right;
-}
-.td-select{
-    min-width: 220px;
-    max-width: 220px;
-}
-
-.td-label-sm{
-    max-width: 50px;
-    min-width: 50px;
-    text-align: right;
-}
-
-.td-select-sm{
-    max-width: 50px;
-    min-width: 50px;
-}
-
-.mx-input-append {
-    height: inherit !important;
-}
-.mx-input-wrapper {
-    max-width: 235px;
-    min-width: 235px;
-    width: 233px;
-}   
 .cat-row{
     box-shadow:0px 0px 1px gray;
     padding: 10px;
-}
-.add-row{
-
-    padding: 10px;
-
 }
 @media (min-width: 768px){
     .modal-sm {    

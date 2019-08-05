@@ -6,10 +6,10 @@
     </section>
     <section class="content">
       <div class="row">
-        <div class="col-xs-12">
+        <div class="col-xs-12" v-if="!loading">
           <div class="box box-default">
             <div class="box-body text-right">
-
+              Ruta: {{ rutaName }}
             </div>
           </div>
           <div class="box">
@@ -31,7 +31,7 @@
                     <td>{{ item.nombre }} {{ item.apellido  }}  </td>
                     <td>{{ CalcularAbonado(item.pagos_clientes) | currency }}</td>
                     <td>{{ CalcularTotal(item) | currency }}</td>
-                    <td>  <button class="btn-primary"><i class="fa fa-eye"></i></button> </td>
+                    <td>  <button class="btn btn-primary" @click="VerDetalle(item)"><i class="fa fa-eye"></i></button> </td>
                   </tr>
                 </tbody>
               </table>
@@ -53,8 +53,9 @@ import CarteraService from '../../../services/cartera'
 export default {
   data() {
     return {
-      loading:false,
+      loading:true,
       cartera:[],
+      rutaName:'',
       ruta:0,
       parametros:{
         ruta:'',
@@ -104,10 +105,11 @@ export default {
       this.loading = true;
       const rs = await CarteraService.get(this.parametros);
       this.cartera = rs.data.body;
+      this.rutaName = rs.data.ruta.nombre;
       this.loading = false;
     },
-    verDetalle(item) {
-      this.eventHub.$emit('verAcuerdo',item);
+    VerDetalle(item) {
+      this.eventHub.$emit('VerDetalle',item);
     },
   }
 };

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Movimientos;
+use App\Movimiento;
 use Illuminate\Http\Request;
 
 class MovimientosController extends Controller
@@ -12,74 +12,52 @@ class MovimientosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
+    public function get(Request $request){
+
+        $data = $request->all();
+
+        $desde = isset($data['desde']) ? $data['desde'] : null ;
+        $hasta = isset($data['hasta']) ? $data['hasta'] : null ;
+        $producto = isset($data['producto']) ? $data['producto'] : null ;
+        $tipo = isset($data['tipo']) ? $data['tipo'] : null ;
+
+        try {
+
+            if($desde != null) {
+                $desde = explode('/', $desde);
+                $desde = $desde[2].'-'.$desde[1].'-'.$desde[0];
+            }
+    
+            if($hasta != null) {
+                $hasta = explode('/', $hasta);
+                $hasta = $hasta[2].'-'.$hasta[1].'-'.$hasta[0];
+            }
+            
+            $movimientos = Movimiento::with('producto')
+            ->where(function($q) use($tipo) {
+                return ($tipo !== null) ? $q->where('operacion',$tipo) : $q ;
+            })
+            ->where(function($q) use($producto) {
+                return ($producto !== null) ? $q->where('producto_id',$producto) : $q ;
+            })
+            ->where(function($q) use($desde) {
+                return ($desde !== null) ? $q->whereDate('created_at','>=',$desde) : $q ;
+            })
+            ->where(function($q) use($hasta) {
+                return ($hasta !== null) ? $q->whereDate('created_at','<=',$hasta) : $q ;
+            })
+            ->paginate(25);
+
+
+            return response()->json(['body'=> $movimientos],200);
+
+        } catch (\Exception $e) {
+
+            return response()->json(['error'=> $e->getMessage()], 422);
+        
+        }
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Movimientos  $movimientos
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Movimientos $movimientos)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Movimientos  $movimientos
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Movimientos $movimientos)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Movimientos  $movimientos
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Movimientos $movimientos)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Movimientos  $movimientos
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Movimientos $movimientos)
-    {
-        //
-    }
 }

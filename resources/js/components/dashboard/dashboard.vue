@@ -14,7 +14,7 @@
       </ol>
     </section>
     <!-- Main content -->
-    <section class="content">
+    <section class="content" v-if="!loading">
       <!-- Default box -->
       <div class="row">
         <div class="col-lg-4 col-xs-6" v-for="(item,idx) in items" :key="idx">
@@ -47,6 +47,7 @@ export default {
     return {
       items:[{
         total:15,
+        loading:true,
         color:'bg-aqua',
         text:'Productos',
         title:'Ver productos',
@@ -71,11 +72,10 @@ export default {
   },
   methods:{
       async getData(){
-       const rs = await api().get('/dashboard/all');
-      this.items = rs.data.body;
-      console.log(rs);
-      
-        
+        this.loading = true; 
+        const rs = await api().get('/dashboard/all');
+        this.items = rs.data.body;
+        this.loading = false;   
       }
     }
 };

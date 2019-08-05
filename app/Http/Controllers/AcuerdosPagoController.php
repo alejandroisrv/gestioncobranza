@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\AcuerdoPago;
 
+use App\AcuerdoPago;
 use Illuminate\Http\Request;
 
 class AcuerdosPagoController extends Controller

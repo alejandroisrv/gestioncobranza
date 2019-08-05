@@ -7,11 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Contabilidad extends Model
 {
     public $table="contabilidad";
-    protected $fillable = ['tipo','monto','descripcion','monto'];
+    protected $fillable = ['tipo','user_id','monto','descripcion','monto'];
 
     public function type(){
-        return $this->belongsTo('App\ContabilidadCategoria','tipo');
-    
+        return $this->belongsTo('App\ContabilidadCategoria','tipo');    
+    }
+
+    public function usuario(){
+        return $this->belongsTo('App\User','user_id');    
     }
 
 

@@ -16,6 +16,8 @@ import NotFoundComponent from './errors/NotFoundComponent'
 import Cartera from './components/cobranza/cartera/cartera';
 import Acuerdos from './components/cobranza/acuerdos/acuerdos_pagos'
 import Contabilidad from './components/contabilidad/contabilidad';
+import Historial from './components/Inventario/historial';
+
 Vue.use(VueRouter)
 
 export default new VueRouter({
@@ -90,6 +92,12 @@ export default new VueRouter({
             path: '/contabilidad',
             name: 'Contabilidad',
             component: Contabilidad
+
+        },
+        {
+            path: '/historial',
+            name: 'Historial',
+            component: Historial
 
         },
         { path: '*', component: NotFoundComponent }

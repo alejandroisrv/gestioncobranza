@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\Productos;
 use App\ProductosVendedores;
 use App\ProductosEntregadas;
@@ -52,7 +53,7 @@ class ProductosController extends Controller
         $producto->bodega_id=$request->user()->bodega_id;
         $producto->sucursal_id=$request->user()->sucursal_id;
         $producto->save();
-        return $producto;
+        return response()->json($producto, 201);
     }
 
     public function update(Request $request,$id)
@@ -64,42 +65,55 @@ class ProductosController extends Controller
     public function abastecer(Request $request){
 
         $data=$request->all();
+        $vendedor = auth()->user();
         for($i=0;$i<count($data);$i++){
-            $producto=Productos::find($data[$i]['producto']['id']);
-            $producto->cantidad +=$data[$i]['cantidad'];
-            $producto->save();
+          $idProducto=$data[$i]['producto']['id'];
+          $cantidad = $data[$i]['cantidad'];
+          $producto=Productos::find($idProducto);
+          $producto->cantidad += $cantidad;
+          $producto->save();
+          $this->addHistory($idProducto,$cantidad,+1,"Abastecimiento de productos",$vendedor->id);
         }
-
-        return $data;
+          
+        return response()->json(['response' => true],200);
 
     }
     public function entregar(Request $request){
 
       $datos=$request->all();
-
-      for ($j=0; $j < count($datos['vendedores']) ; $j++) {
-        $productosEntregadas= new ProductosEntregadas;
-        $productosEntregadas->vendedor_id=$datos['vendedores'][$j]['id'];
-        $productosEntregadas->bodega_id=$datos['bodega']['id'];
-        $is_saved=$productosEntregadas->save();
-          for ($i=0; $i < count($datos['productosEntregar']); $i++) {
-            $idProducto=$datos['productosEntregar'][$i]['producto']['id'];
-            $productoEntregar=new ProductosVendedores;
-            $productoEntregar->detalle=$productosEntregadas->id;
-            $productoEntregar->producto_id=$idProducto;
-            $productoEntregar->cantidad=$datos['productosEntregar'][$i]['cantidad'];
-            $is_savedEntregar=$productoEntregar->save();
-
+      try {
+        for ($j=0; $j < count($datos['vendedores']) ; $j++) {
+          $vendedor = User::find($datos['vendedores'][$j]['id']);
+          $productosEntregadas=ProductosEntregadas::create([
+              'vendedor_id' => $datos['vendedores'][$j]['id'],
+              'bodega_id' =>  $datos['bodega']['id'],
+          ]);
+            for ($i=0; $i < count($datos['productosEntregar']); $i++) {
+              $idProducto=$datos['productosEntregar'][$i]['producto']['id'];
+              $cantidad = $datos['productosEntregar'][$i]['cantidad'];
+              $productoEntregar=ProductosVendedores::create([
+                'detalle' => $productosEntregadas->id,
+                'producto_id' => $idProducto,
+                'cantidad'=> $cantidad,
+              ]);
+              if($productoEntregar){
+                $this->addHistory($idProducto,$cantidad,-1,"Entrega de productos a {$vendedor->name}",auth()->user()->id);
+              }
+           }
          }
-       }
+  
+         for ($i=0; $i < count($datos['productosEntregar']); $i++) {
+           $idProducto=$datos['productosEntregar'][$i]['producto']['id'];
+           $producto=Productos::find($idProducto);
+           $producto->cantidad=$producto->cantidad-$datos['productosEntregar'][$i]['cantidad'];
+           $producto->save();
+         }
+         return response()->json(['response'=> true ],201);
 
-       for ($i=0; $i < count($datos['productosEntregar']); $i++) {
-         $idProducto=$datos['productosEntregar'][$i]['producto']['id'];
-         $producto=Productos::find($idProducto);
-         $producto->cantidad=$producto->cantidad-$datos['productosEntregar'][$i]['cantidad'];
-         if($is_savedEntregar){$producto->save();}
-
-       }
+      } catch (\Exception $e) {
+          return response()->json(['error'=> $e->getMessage()], 422);
+      }
+      
 
       return response()->json($is_saved);
 

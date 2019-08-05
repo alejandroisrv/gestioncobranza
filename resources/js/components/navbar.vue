@@ -143,7 +143,7 @@
             </router-link>
             <ul class="treeview-menu">
               <li>
-                <router-link to="/devoluciones">
+                <router-link to="/historial">
                   <i class="fa fa-circle-o"></i> Historial
                 </router-link>
               </li>
@@ -234,18 +234,27 @@
               <span>Contabilidad</span>
             </router-link>
           </li>
+          <li>
+            <a href="#" @click="reportes">
+              <i class="fa fa-pie-chart"></i>
+              <span>Reportes</span>
+            </a>
+          </li>
         </ul>
-            <select-cartera />
+            
       </section>
       <!-- /.sidebar -->
   
     </aside>
+    <select-cartera />
+    <reporte />
   </div>
 </template>
 <script>
 import SelectCartera from './cobranza/cartera/SelectCartera';
+import Reporte from './reportes/reportes';
 export default {
-  components:{SelectCartera },
+  components:{SelectCartera,Reporte},
   data() {
     return {
       user: ""
@@ -257,6 +266,9 @@ export default {
   methods:{
     selectCartera(){
       this.eventHub.$emit('SelectCartera');
+    },
+    reportes(){
+      this.eventHub.$emit('Reportes');
     }
   }
 };

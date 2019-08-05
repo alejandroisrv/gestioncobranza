@@ -11,7 +11,7 @@
             <div class="box-body justify-content-end">
               <div class="row justify-content-end">
                 <div class="col-md-12 text-right">  
-                  <span class="mx-3 my-1" @click="openFiltros()"> Filtros </span>
+                  <span class="mx-3 my-1" @click="openFiltros()" style="cursor:pointer"> Filtros </span>
                   <button class="btn btn-primary my-1" @click="set()"><i class="fa fa-cog"></i> Categorias </button>
                   <button class="btn btn-primary my-1" @click="add()"><i class="fa fa-plus"></i> Nueva Transacción</button>                  
                 </div>
@@ -33,11 +33,12 @@
                         <th>Operación</th>
                         <th>Monto</th>
                         <th>Fecha</th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
-                      <template v-for="item in contabilidad.data"> 
-                        <tr :key="item.id" @click="details = item.id" style="cursor:pointer">
+                      <template > 
+                        <tr v-for="item in contabilidad.data" :key="item.id">
                           <td>{{ item.descripcion }}</td>
                           <td>
                             <span :class="item.type.operacion == 1 ? 'label label-success' : 'label label-danger' ">
@@ -46,20 +47,7 @@
                           </td>
                           <td>{{ item.monto | currency }}</td>
                           <td>{{ item.created_at | moment('DD/MM/YYYY') }}</td>
-                        </tr>
-                        <tr :key="item.id+'details'" v-if="details == item.id">
-                          <td colspan="4">
-                            <div class="row">
-                              <div class="col-md-10" style="font-size:12px!important">
-                                {{ item.type.descripcion }}
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div class="col-md-10" style="font-size:12px!important">
-                                Creador por:
-                              </div>
-                            </div>
-                          </td>
+                          <td><button class="btn btn-primary" @click="verDetalle(item)"><i class="fa fa-eye"></i></button></td>
                         </tr>
                       </template>
                     </tbody>
@@ -77,6 +65,7 @@
     <filtro />
     <modal-categoria />
     <add-transacciones />
+    <detalle />
   </div>
 </template>
 <script>
@@ -84,7 +73,7 @@ import ContabilidadService from '../../services/contabilidad'
 import ModalCategoria from './CategoriasModal';
 import Filtro from './Filtros';
 import AddTransacciones from './AddTransacciones'
-
+import Detalle from './DetalleContabilidad';
 export default {
   data(){
     return {
@@ -95,7 +84,7 @@ export default {
       parametros :[]
     }
   },
-  components:{ModalCategoria, Filtro,AddTransacciones},
+  components:{ModalCategoria, Filtro,AddTransacciones,Detalle},
   computed:{
     categorias:{
       set(value){
@@ -130,6 +119,9 @@ export default {
     },
     add(){
       this.eventHub.$emit('AddTransacciones');
+    },
+    verDetalle(item){
+      this.eventHub.$emit('VerDetalle',item);
     },
     async getCategorias(){
       const rs = await ContabilidadService.getCategory({});

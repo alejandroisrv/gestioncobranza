@@ -48,6 +48,7 @@
                         <button class="btn btn-default btn-sm" @click="verVenta(item)">
                           <i class="fa fa-eye"></i>
                         </button>
+                        <button class="btn btn-danger btn-sm" role="tooltip" title="Devolucicicion"><i class="fa fa-undo"></i></button>
                       </td>
                     </tr>
                   </tbody>
@@ -64,6 +65,7 @@
       </div>
       <modal-venta></modal-venta>
       <venta :venta="ventaDetalle"></venta>
+      <devoluciones /> 
     </section>
   </div>
 </template>

@@ -37,7 +37,18 @@ class ContabilidadController extends Controller
         $hasta = isset($data['hasta']) ? $data['hasta'] : null ;
 
 
-        $Contabilidad = Contabilidad::with('type')
+        if($desde != null) {
+            $desde = explode('/', $desde);
+            $desde = $desde[2].'-'.$desde[1].'-'.$desde[0];
+        }
+
+        if($hasta != null) {
+            $hasta = explode('/', $hasta);
+            $hasta = $hasta[2].'-'.$hasta[1].'-'.$hasta[0];
+        }
+
+
+        $Contabilidad = Contabilidad::with(['type','usuario'])
         ->where(function($q) use($tipo) {
             return ($tipo !== null) ? $q->where('tipo',$tipo) : $q ;
         })
@@ -47,6 +58,7 @@ class ContabilidadController extends Controller
         ->where(function($q) use($hasta) {
             return ($hasta !== null) ? $q->whereDate('created_at','<=',$hasta) : $q ;
         })
+        ->orderBy('created_at','DESC')
         ->paginate(25);
 
         return response()->json(['body'=> $Contabilidad]);

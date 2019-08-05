@@ -1,41 +1,37 @@
 <template>
-    <bootstrap-modal ref="AddTransacciones" :need-header="true" :need-footer="true" :size="'medium'">
-    <div slot="title"> Añadir transaccion</div>
-    <div slot="body">
-        <div class="box-body">
-            <div class="row">
-                <div class="col-md-12" v-if="loading">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <p>Nueva Transacción</p>
-                        </div>
+   <bootstrap-modal ref="AddTransacciones" :need-header="true" :need-footer="true" :size="'medium'">
+        <div slot="title"> Contabilidad </div>
+        <div slot="body">
+          <div class="box-body" style="padding-top:0px;">
+                <div class="row" v-if="loading">
+                    <div class="col-md-12">
+                        <p style="font-size:18px;margin-bottom:5px;"> Transacción </p>
+                        <p class="text-muted">Añade una nueva transacción</p>
                     </div>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <label>Descripción</label>
+                    <div class="form-row">
+                        <div class="col-md-6 my-2">
+                            <label for="">Descripción</label>
                             <input type="text" v-model="transaccion.descripcion" class="form-control" placeholder="Introduce una descripcion de la transaccion">
                         </div>
-                    </div>
-                    <div class="row" style="margin-top:10px;">
-                        <div class="col-md-4">
-                            <label>Monto</label>
+                        <div class="col-md-6 my-2">
+                            <label for="">Monto</label>
                             <input type="text" v-model="transaccion.monto" class="form-control" placeholder="Introduce el monto">
                         </div>
-                        <div class="col-md-6">
-                            <label>Tipo de transacción</label>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-6 my-2">
+                            <label for="">Categoria</label>
                             <v-select v-model="transaccion.tipo" :options="categorias" placeholder="Selecciona un tipo"></v-select>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div slot="footer">
-        <button class="btn btn-danger"> Cancelar</button>
-        <button class="btn btn-primary" @click="save">Guardar</button>
-    </div>
+        <div slot="footer">
+            <button class="btn btn-danger" @click="close">Cancelar</button>
+            <button class="btn btn-primary" @click="save"> Guardar </button>
+        </div>
     </bootstrap-modal>
-
 </template>
 <script>
 import ContabilidadService from '../../services/contabilidad'
@@ -67,8 +63,6 @@ export default {
         this.eventHub.$on('AddTransacciones', () =>{
             this.$refs.AddTransacciones.open();
             this.loading = true;
-            console.log(this.categorias);
-            
         });
     },
     methods:{
@@ -81,6 +75,9 @@ export default {
                 this.$noty.error('Se ha producido un error: '+ error);
             }
             
+        },
+        close(){
+            this.$refs.AddTransacciones.close();
         }
     },
 }

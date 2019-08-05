@@ -35,8 +35,8 @@
                     <th>Empleado</th>
                     <th>Tipo </th>
                     <th>Monto</th>
-                    <th>Fecha</th>
                     <th>Estado</th>
+                    <th>Fecha</th>
                     <th></th>
                   </tr>
                 </thead>   

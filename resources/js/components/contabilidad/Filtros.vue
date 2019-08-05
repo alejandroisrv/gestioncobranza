@@ -6,9 +6,9 @@
                       <div class="col-md-12" v-if="loading">
                           <p style="font-size:18px">Selecciona el filtro</p>
                             <table class="table col-md-12">
-                                <tr>
+                                <tr v-if="categorias.length > 0 ">
                                   <td class="td-label">Categoria:</td>
-                                  <td class="td-select" v-if="categorias.length > 0 "><v-select v-model="parametros.tipo" :options="categorias" placeholder="Selecciona la categoria"></v-select></td>
+                                  <td class="td-select"><v-select v-model="parametros.tipo" :options="categorias" placeholder="Selecciona la categoria"></v-select></td>
                                 </tr>
                                 <tr>
                                   <td class="td-label">Fecha:</td>

@@ -10,21 +10,21 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-6 my-2">
-                            <label for="">Cobrador</label>
+                            <label for="">Cobrador:</label>
                             <v-select v-model="cobrador" :options="cobradores" placeholder="Selecciona el cobrador"></v-select>
                         </div>
                         <div class="col-md-6 my-2">
-                            <label for="">Minicipios</label>
-                            <v-select v-model="ruta" :multiple="true" :options="rutas" placeholder="Selecciona los minicipios"></v-select>
+                            <label for="">Ruta:</label>
+                            <v-select v-model="ruta" :options="rutas" placeholder="Selecciona los minicipios"></v-select>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-6 my-2">
-                            <label for="">Fecha de inicio</label>
+                            <label for="">Fecha de inicio:</label>
                             <date-picker v-model="inicio" :lang="'es'" type="datetime" format="MM/DD/YYYY [a las] HH:mm" ></date-picker>
                         </div>
                         <div class="col-md-6 my-2">
-                            <label for="">Fecha de culminacion</label>
+                            <label for="">Fecha de culminacion:</label>
                             <date-picker v-model="culminacion" :lang="'es'" type="datetime" format="MM/DD/YYYY [a las] HH:mm" ></date-picker>
                         </div>
                     </div>
@@ -32,7 +32,7 @@
             </div>
         </div>
         <div slot="footer">
-            <button class="btn btn-default">Cancelar</button>
+            <button class="btn btn-danger" @click="close" >Cancelar</button>
             <button class="btn btn-primary" @click="sendCobro"> Guardar </button>
         </div>
     </bootstrap-modal>
@@ -86,20 +86,15 @@ export default {
             this.getRutas();
         },
         sendCobro(){
-            let inicio  = moment(this.inicio).format('YYYY-MM-DD HH:mm:ss');
-            let culminacion = moment(this.culminacion).format('YYYY-MM-DD HH:mm:ss');
-
             if(this.cobrador==null){
                 return this.$noty.error('Debes seleccionar una cobrador');
             }
-
             if(this.ruta==null){
                 return this.$noty.error('Debes seleccionar una ruta');
             }
-
-
+            let inicio  = moment(this.inicio).format('YYYY-MM-DD HH:mm:ss');
+            let culminacion = moment(this.culminacion).format('YYYY-MM-DD HH:mm:ss');
             let query = {ruta: this.ruta, cobrador: this.cobrador.id,inicio:inicio,culminacion:culminacion};
-            
             CobroService.add(query).then(rs=>{
                 this.$noty.success("Se ha creado la jornada de cobro con exito");
                 this.$refs.nuevaJornada.close();
@@ -107,6 +102,9 @@ export default {
                 this.$noty.error("Se ha producido un error")
             })
 
+        },
+        close(){
+            this.$refs.nuevaJornada.close();
         },
         resetModal(){
             this.ruta = null;
