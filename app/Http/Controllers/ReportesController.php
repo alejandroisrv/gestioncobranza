@@ -37,7 +37,8 @@ class ReportesController extends Controller
             $datos = Movimiento::with('producto')->where('operacion',$tipo)->whereDate('created_at','>=',$desde)->whereDate('created_at','<=',$hasta)->orderBy('created_at','DESC')->get();
             $datos->map(function ($i){
                 $i['label'] = ($i['operacion']==1) ? 'Entrada' : 'Salida' ;
-                $i['fecha'] = Carbon::createFromFormat('Y-m-d', $i['created_at'])->format('d/m/Y');
+                $fecha = new \DateTime($i['created_at']);
+                $i['fecha'] = $fecha->format('d/m/Y');
             });
             
             $fields = [
@@ -47,14 +48,15 @@ class ReportesController extends Controller
                 'Operacion' => 'label',
                 'Fecha' => 'fecha',
             ];
-            $tipoMovimiento ($tipo == 1 ) ? 'entradas' : 'salidas' ;
+            $tipoMovimiento = ($tipo == 1 ) ? 'entradas' : 'salidas' ;
             $filename = "Movimientos de {$tipoMovimiento}";
             
         }else if ($modulo == 'ac') {
 
             $datos = AcuerdoPago::with(['cliente'])->whereDate('created_at','>=',$desde)->whereDate('created_at','<=',$hasta)->orderBy('created_at','DESC')->get();
             $datos->map(function ($i){
-                $i['fecha'] = Carbon::createFromFormat('Y-m-d', $i['created_at'])->format('d/m/Y');
+                $fecha = new \DateTime($i['created_at']);
+                $i['fecha'] = $fecha->format('d/m/Y');
                 $i['nombre'] = $i['cliente']['nombre']." ".$i['cliente']['apellido'];
             });
             $fields = [
@@ -69,10 +71,11 @@ class ReportesController extends Controller
             $filename = "Acuerdos de pago";
             
         }else if ($modulo == 'cm') {
-            $datos = ComsionVenta::with('usuario')->where('estado',$tipo)->whereDate('created_at','>=',$desde)->whereDate('created_at','<=',$hasta)->orderBy('created_at','DESC')->get();
+            $datos = ComisionVenta::with('usuario')->where('estado',$tipo)->whereDate('created_at','>=',$desde)->whereDate('created_at','<=',$hasta)->orderBy('created_at','DESC')->get();
             $datos->map(function ($i){
-                $i['clase'] = ($i['tipo']) ? 'Venta' : 'Cobranza';
-                $i['fecha'] = Carbon::createFromFormat('Y-m-d', $i['created_at'])->format('d/m/Y');
+                $i['clase'] = ($i['tipo']==1) ? 'Venta' : 'Cobranza';
+                $fecha = new \DateTime($i['created_at']);
+                $i['fecha'] = $fecha->format('d/m/Y');
             });
             $fields = [
                 'Empleado'=>'usuario.name',
@@ -82,12 +85,12 @@ class ReportesController extends Controller
                 'Fecha' => 'fecha',
             ];
 
-            $filename = "Acuerdos de pago";
+            $filename = "Comisiones ";
             
         }else if ($modulo == 'ls') {
             
             if($tipo == 1 ){
-                $datos = Producto::all();
+                $datos = Productos::all();
                 $fields = [
                     'Nombre'=>'nombre',
                     'Cantidad' => 'cantidad',
@@ -99,7 +102,8 @@ class ReportesController extends Controller
             }else{
                 $datos = ProductosVenta::whereDate('created_at','>=',$desde)->whereDate('created_at','<=',$hasta)->orderBy('created_at','DESC')->get();
                 $datos->map(function ($i){
-                    $i['fecha'] = Carbon::createFromFormat('Y-m-d', $i['created_at'])->format('d/m/Y');
+                    $fecha = new \DateTime($i['created_at']);
+                    $i['fecha'] = $fecha->format('d/m/Y');
                 });
 
                 $fields = [
@@ -118,7 +122,8 @@ class ReportesController extends Controller
             ->get();
             $datos->map(function ($i){
                 $i['cliente'] = $i['cliente']['nombre']." ".$i['cliente']['apellido'];
-                $i['fecha'] = Carbon::createFromFormat('Y-m-d', $i['created_at'])->format('d/m/Y');
+                $fecha = new \DateTime($i['created_at']);
+                $i['fecha'] = $fecha->format('d/m/Y');
             });
 
             $fields = [

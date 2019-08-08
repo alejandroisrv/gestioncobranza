@@ -36,7 +36,7 @@
         <div class="row">
           <div class="col-md-4 col-lg-4 my-1">
             <label>Sucursal</label>
-            <v-select v-model="trabajador.sucursal_id" v-if="sucursales.data && sucursales.data.length>0" :options="sucursales.data" placeholder="Seleccione una sucursal para este usuario"></v-select>
+            <v-select v-model="trabajador.sucursal_id" v-if="sucursales.length>0" :options="sucursales" placeholder="Seleccione una sucursal para este usuario"></v-select>
           </div>
           <div class="col-md-4 col-lg-4 my-1">
             <label>Rol</label>
@@ -111,11 +111,11 @@ export default {
     },
     async getSucursales(){
       const rs = await SucursalService.getAll();
-      rs.data.body.data.forEach(e => {
+      rs.data.forEach(e => {
         e.label = e.direccion;
       });
       console.log(rs);
-      this.sucursales = rs.data.body
+      this.sucursales = rs.data
     },
     async send() {
       const rs = await NominaService.add(this.trabajador);

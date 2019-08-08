@@ -184,11 +184,6 @@
                   <i class="fa fa-circle-o"></i> Comisiones
                 </router-link>
               </li>
-              <li>
-                <router-link to="/comisiones/reportes">
-                  <i class="fa fa-circle-o"></i> Reportes
-                </router-link>
-              </li>
             </ul>
           </li>
           <li class="treeview">

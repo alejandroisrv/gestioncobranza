@@ -33,6 +33,13 @@ class NominaController extends Controller
 
     }
 
+    
+    public function getData(Request $request){
+        $data = $request->all();
+
+
+    }
+
 
     public function create(Request $request)
     {
