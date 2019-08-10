@@ -17,27 +17,30 @@
               <h3 class="box-title">Lista de clientes</h3>
             </div>
             <div class="box-body">
-              <table v-if=" cartera.data && cartera.data.length > 0 " class="table table-bordered table-striped">
-                <thead>
-                  <tr>
-                    <th>Cliente</th>
-                    <th>Abonado</th>
-                    <th>Total</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in cartera.data" :key="item.id">
-                    <td>{{ item.nombre }} {{ item.apellido  }}  </td>
-                    <td>{{ CalcularAbonado(item.pagos_clientes) | currency }}</td>
-                    <td>{{ CalcularTotal(item) | currency }}</td>
-                    <td>  <button class="btn btn-primary" @click="VerDetalle(item)"><i class="fa fa-eye"></i></button> </td>
-                  </tr>
-                </tbody>
-              </table>
-              <div v-else>
-                <p class="py-4">No se han encontrado informacion</p>
-              </div>
+              <div class="col-md-12" v-if="loading"><i class="fa fa-spinner fa-spin loading-spinner"></i></div>
+              <template v-else>
+                <table v-if=" cartera.data && cartera.data.length > 0 " class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>Cliente</th>
+                      <th>Abonado</th>
+                      <th>Total</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="item in cartera.data" :key="item.id">
+                      <td>{{ item.nombre }} {{ item.apellido  }}  </td>
+                      <td>{{ CalcularAbonado(item.pagos_clientes) | currency }}</td>
+                      <td>{{ CalcularTotal(item) | currency }}</td>
+                      <td>  <button class="btn btn-primary" @click="VerDetalle(item)"><i class="fa fa-eye"></i></button> </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div v-else>
+                  <p class="py-4">No se han encontrado informacion</p>
+                </div>
+              </template>
             </div>
           </div>
         </div>
@@ -56,6 +59,7 @@ export default {
       loading:true,
       cartera:[],
       rutaName:'',
+
       ruta:0,
       parametros:{
         ruta:'',

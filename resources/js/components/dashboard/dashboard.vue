@@ -45,14 +45,8 @@ export default {
   components:{LineChart},
   data(){
     return {
-      items:[{
-        total:15,
-        loading:true,
-        color:'bg-aqua',
-        text:'Productos',
-        title:'Ver productos',
-        link:'/inventario'
-      }],
+      loading:true,
+      items:[],
       chartData:{
         labels: ['Lunes', 'Martes','Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'],
         datasets: [

@@ -19,34 +19,37 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table v-if=" sucursales.length > 0 " class="table table-bordered table-striped" >
-                <thead>
-                  <tr>
-                    <th>Dirección</th>
-                    <th>Telefono</th>
-                    <th>Municipio</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in sucursales" :key="item.id+'a'">
-                    <td>{{ item.direccion }}</td>
-                    <td>{{ item.telefono}}</td>
-                    <td>{{ item.municipio.municipio }}</td>
-                    <td>
-                      <button class="btn btn-primary btn-sm" @click="editarSucursal(item)">
-                        <i class="fa fa-edit"></i>
-                      </button>
-                      <button class="btn btn-danger btn-sm" @click="eliminarSucursal(item.id)">
-                        <i class="fa fa-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <div v-else>
-                <p class="py-4">No se han encontrado sucursaless</p>
-              </div>
+              <div class="col-md-12" v-if="loading"><i class="fa fa-spinner fa-spin loading-spinner"></i></div>
+              <template v-else>
+                <table v-if=" sucursales.length > 0 " class="table table-bordered table-striped" >
+                  <thead>
+                    <tr>
+                      <th>Dirección</th>
+                      <th>Telefono</th>
+                      <th>Municipio</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="item in sucursales" :key="item.id+'a'">
+                      <td>{{ item.direccion }}</td>
+                      <td>{{ item.telefono}}</td>
+                      <td>{{ item.municipio.municipio }}</td>
+                      <td>
+                        <button class="btn btn-primary btn-sm" @click="editarSucursal(item)">
+                          <i class="fa fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm" @click="eliminarSucursal(item.id)">
+                          <i class="fa fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div v-else>
+                  <p class="py-4">No se han encontrado sucursaless</p>
+                </div>
+              </template>
             </div>
             <!-- /.box-body -->
           </div>

@@ -20,6 +20,8 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
+              <div class="col-md-12" v-if="loading"><i class="fa fa-spinner fa-spin loading-spinner"></i></div>
+              <template v-else>
               <table v-if=" acuerdo_pagos.data && acuerdo_pagos.data.length > 0 " class="table table-bordered table-striped">
                 <thead>
                   <tr>
@@ -54,6 +56,7 @@
               <div v-else>
                 <p class="py-4">No se han encontrado acuerdos de pagos</p>
               </div>
+              </template>
             </div>
             <!-- /.box-body -->
           </div>

@@ -19,39 +19,42 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table v-if=" clientes.data && clientes.data.length > 0 " class="table table-bordered table-striped">
-                <thead>
-                  <tr>
-                    <th>Nombre</th>
-                    <th>Direccion</th>
-                    <th>Telefono</th>
-                    <th>E-mail</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in clientes.data" :key="item.id">
-                    <td>{{ item.nombre }}</td>
-                    <td>{{ item.direccion }}</td>
-                    <td>{{ item.telefono}}</td>
-                    <td>{{ item.email }}</td>
-                    <td>
-                      <button class="btn btn-default btn-sm" @click="verCliente(item)">
-                        <i class="fa fa-eye"></i>
-                      </button>
-                      <button class="btn btn-primary btn-sm" @click="editarCliente(item)">
-                        <i class="fa fa-edit"></i>
-                      </button>
-                      <button class="btn btn-danger btn-sm" @click="eliminarCliente(item.id)">
-                        <i class="fa fa-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <div v-else>
-                <p class="py-4">No se han encontrado clientes</p>
-              </div>
+              <div class="col-md-12" v-if="loading"><i class="fa fa-spinner fa-spin loading-spinner"></i></div>
+              <template v-else>
+                <table v-if=" clientes.data && clientes.data.length > 0 " class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Direccion</th>
+                      <th>Telefono</th>
+                      <th>E-mail</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="item in clientes.data" :key="item.id">
+                      <td>{{ item.nombre }}</td>
+                      <td>{{ item.direccion }}</td>
+                      <td>{{ item.telefono}}</td>
+                      <td>{{ item.email }}</td>
+                      <td>
+                        <button class="btn btn-default btn-sm" @click="verCliente(item)">
+                          <i class="fa fa-eye"></i>
+                        </button>
+                        <button class="btn btn-primary btn-sm" @click="editarCliente(item)">
+                          <i class="fa fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm" @click="eliminarCliente(item.id)">
+                          <i class="fa fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div v-else>
+                  <p class="py-4">No se han encontrado clientes</p>
+                </div>
+              </template>
             </div>
             <!-- /.box-body -->
           </div>
