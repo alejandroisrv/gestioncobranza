@@ -25,8 +25,8 @@
           </div>
       </div>
       <div slot="footer" class="text-right">
-           <button class="btn btn-danger" @click="cancel()"> Cancelar </button>
-           <button class="btn btn-primary" @click="send()" :disabled="error"> Guardar </button>
+           <button class="btn btn-danger my-2" @click="cancel()"> Cancelar </button>
+           <button class="btn btn-primary my-2" @click="send()" :disabled="error"> Guardar </button>
       </div>
     </bootstrap-modal>
 </template>
