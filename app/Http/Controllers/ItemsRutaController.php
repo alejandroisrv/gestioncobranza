@@ -35,19 +35,20 @@ class ItemsRutaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create(Request $request)
-    {    
+    {
         $data=$request->all();
+        $sucursal = $request->user()->sucursal_id;
         $validator = Validator::make($data, [
             'municipio.id' => 'integer|required',
             'nombre' => 'string|required',
             'seleccionados' => 'array|required',
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json(['response' => $validator->errors()], 422);
         }
 
-        $ruta = Ruta::create([ 'municipio_id' => $data['municipio']['id'], 'nombre' =>  $data['nombre']]);
+        $ruta = Ruta::create([ 'sucursal_id' => $sucursal,'municipio_id' => $data['municipio']['id'], 'nombre' =>  $data['nombre']]);
         for ($i=0; $i < count($data['seleccionados']); $i++) {
             Cliente::where('id',$data['seleccionados'][$i]['id'])->update('ruta',$ruta->id);
             RutaItem::create(['ruta_id'=> $ruta->id, 'cliente_id' => $data['seleccionados'][$i]['id'], 'orden' => $i+1 ]);
@@ -78,7 +79,7 @@ class ItemsRutaController extends Controller
         DB::table('ruta_items')->where('ruta_id',$id)->delete();
         $status = 0 ;
 
-        for ($i=0; $i < count($data['seleccionados']); $i++) { 
+        for ($i=0; $i < count($data['seleccionados']); $i++) {
             Cliente::where('id',$data['seleccionados'][$i]['id'])->update(['ruta' => $id]);
             $ruta_item = RutaItem::create(['ruta_id'=> $id, 'cliente_id' => $data['seleccionados'][$i]['id'], 'orden' => $i+1 ]);
             if($ruta_item) {
@@ -86,7 +87,7 @@ class ItemsRutaController extends Controller
             }
         }
 
-        if(count($data['seleccionados']) == $status){ 
+        if(count($data['seleccionados']) == $status){
             return response()->json(['message' =>'ok']);
         }else{
             return response()->json(['message' =>'error']);
@@ -102,13 +103,13 @@ class ItemsRutaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request,$id)
-    {   
+    {
         $ruta = Ruta::find($id);
-        if($ruta->delete()){ 
+        if($ruta->delete()){
             return response()->json(['message' =>'ok']);
         }else{
             return response()->json(['message' =>'error']);
         }
-        
+
     }
 }
