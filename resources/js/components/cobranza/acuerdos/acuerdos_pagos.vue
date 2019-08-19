@@ -9,9 +9,9 @@
         <div class="col-xs-12">
           <div class="box box-default">
             <div class="box-body text-right">
-              <button class="btn btn-primary" @click="PagoCliente()">
+              <!-- <button class="btn btn-primary" @click="PagoCliente()">
                 <i class="fa fa-plus mr-2"></i> Registrar nuevo pago
-              </button>
+              </button> -->
             </div>
           </div>
           <div class="box">
@@ -106,4 +106,3 @@ export default {
   }
 };
 </script>
-
