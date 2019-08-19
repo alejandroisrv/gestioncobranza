@@ -10,7 +10,7 @@ class ClientesController extends Controller
 {
 
 
-    public function index(Request $request){   
+    public function index(Request $request){
         $data = $request->all();
         $municipio = isset($data['municipio']) ? $data['municipio'] : null ;
         $direccion = isset($data['direccion']) ? $data['direccion'] : null ;
@@ -27,7 +27,8 @@ class ClientesController extends Controller
         ->where(function($q) use($ruta){
             return ($ruta!=null) ? $q->where('ruta', $ruta) : $q ;
         })
-        ->where('sucursal_id',$sucursal)->paginate(25); 
+        ->where('sucursal_id',$sucursal)
+        ->paginate(25);
         $clientes->map(function($item){
             $item['select']=false;
         });
@@ -38,10 +39,8 @@ class ClientesController extends Controller
     public function create(Request $request)
     {
         $cliente = new Cliente($request->all());
-        $cliente->sucursal_id=1;
+        $cliente->sucursal_id=$request()->user()->sucursal_id;
         $cliente->save();
-
-
         return $cliente;
 
     }
@@ -49,8 +48,8 @@ class ClientesController extends Controller
 
     public function pagos_clientes(Request $request)
     {
-       
-        
+
+
 
 
     }

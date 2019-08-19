@@ -10,7 +10,7 @@
             <div class="box-body justify-content-end">
               <div class="row justify-content-end">
                 <div class="col-md-12">
-                  <div class="col-md-5"></div>
+                  <div class="col-md-5 text-left"></div>
                   <span class="text-right col-md-7" @click="Filtros">Filtros </span>
                 </div>
               </div>
@@ -59,6 +59,7 @@
 </template>
 <script>
 
+
 import MovimientoService from '../../services/movimientos';
 
 export default {
@@ -77,7 +78,7 @@ export default {
     },
     methods:{
       Filtros(){
-        this.eventHub.$emit('openFiltrar');
+          this.eventHub.$emit('openFiltrar');
       },
         async getHistorial(parametros){
             this.loading= true;

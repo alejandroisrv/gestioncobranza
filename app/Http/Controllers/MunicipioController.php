@@ -12,9 +12,8 @@ class MunicipioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
-    {   $sucursal = isset($request->user()->sucursal_id) ? $request->user()->sucursal_id : null ;
-        $municipios= Municipio::where('sucursal_id',$sucursal)->get();
+    public function index(Request $request){
+        $municipios= Municipio::withCount(['sucursales','clientes','bodegas'])->paginate(25);
         return response()->json(['body'=>$municipios]);
     }
 
@@ -23,64 +22,14 @@ class MunicipioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
+    public function create(Request $request){
+        $data = $request->all();
+
+        $municipio = Municipio::create([
+          'municipio' => $data['municipio']
+        ]);
+
+        return response()->json($municipio,201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\municipio  $municipio
-     * @return \Illuminate\Http\Response
-     */
-    public function show(municipio $municipio)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\municipio  $municipio
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(municipio $municipio)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\municipio  $municipio
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, municipio $municipio)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\municipio  $municipio
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(municipio $municipio)
-    {
-        //
-    }
 }

@@ -29,18 +29,18 @@ class ReportesController extends Controller
             $hasta = explode('/', $hasta);
             $hasta = $hasta[2].'-'.$hasta[1].'-'.$hasta[0];
         }
-        
+
 
 
         if($modulo == 'mv'){
-            
+
             $datos = Movimiento::with('producto')->where('operacion',$tipo)->whereDate('created_at','>=',$desde)->whereDate('created_at','<=',$hasta)->orderBy('created_at','DESC')->get();
             $datos->map(function ($i){
                 $i['label'] = ($i['operacion']==1) ? 'Entrada' : 'Salida' ;
                 $fecha = new \DateTime($i['created_at']);
                 $i['fecha'] = $fecha->format('d/m/Y');
             });
-            
+
             $fields = [
                 'Producto'=>'producto.nombre',
                 'Cantidad' => 'cantidad',
@@ -50,7 +50,7 @@ class ReportesController extends Controller
             ];
             $tipoMovimiento = ($tipo == 1 ) ? 'entradas' : 'salidas' ;
             $filename = "Movimientos de {$tipoMovimiento}";
-            
+
         }else if ($modulo == 'ac') {
 
             $datos = AcuerdoPago::with(['cliente'])->whereDate('created_at','>=',$desde)->whereDate('created_at','<=',$hasta)->orderBy('created_at','DESC')->get();
@@ -69,7 +69,7 @@ class ReportesController extends Controller
             ];
 
             $filename = "Acuerdos de pago";
-            
+
         }else if ($modulo == 'cm') {
             $datos = ComisionVenta::with('usuario')->where('estado',$tipo)->whereDate('created_at','>=',$desde)->whereDate('created_at','<=',$hasta)->orderBy('created_at','DESC')->get();
             $datos->map(function ($i){
@@ -86,9 +86,9 @@ class ReportesController extends Controller
             ];
 
             $filename = "Comisiones ";
-            
+
         }else if ($modulo == 'ls') {
-            
+
             if($tipo == 1 ){
                 $datos = Productos::all();
                 $fields = [
@@ -136,7 +136,27 @@ class ReportesController extends Controller
                 'Fecha' => 'fecha'
             ];
             $filename = 'Listado de ventas';
-        }
+        } else if ($modulo == 'ms') {
+
+        $datos = AcuerdoPago::with(['cliente'])
+        ->where('cuotas','>','cuotas_pagadas')
+        ->where('updated_at','>',date('Y-m-d', strtotime("-30 days")))
+        ->whereDate('created_at','>=',$desde)
+        ->whereDate('created_at','<=',$hasta)
+        ->orderBy('created_at','DESC')
+        ->get();
+
+        $datos->map(function($item){
+          $item->deuda = $item->monto/($item->cuotas-$item->cuotas_pagadas);
+        });
+
+          $fields = [
+              'Cliente'=>'cliente.nombre',
+              'Deuda' => 'deuda',
+              'Ultimo pago' => 'update_at',
+          ];
+          $filename = 'Listado de morosos';
+      }
 
 
         return response()->json(['data'=> $datos,'fields'=>$fields,'filename'=>$filename]);

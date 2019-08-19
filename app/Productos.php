@@ -7,22 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 class Productos extends Model
 {
 
-    protected $table = "productos";    
-    protected $fillable=['nombre','descripcion','precio_costo','precio_contado','precio_credito','comision','cantidad',];
+    protected $table = "productos";
+    protected $fillable=['sucursal_id','bodega_id','nombre','descripcion','precio_costo','precio_contado','precio_credito','comision','cantidad',];
 
 
     public function bodega(){
-        
         return $this->belongsTo('App\Bodega');
 
     }
     public function sucursal(){
-        
         return $this->belongsTo('App\Sucursal');
-
     }
-    public function productos_venta(){
 
+    public function productos_venta(){
         return $this->hasMany('App\ProductosVenta');
     }
 }

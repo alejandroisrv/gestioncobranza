@@ -93,8 +93,7 @@ export default {
     },
     async pagarComision(item){
       const rs = await ComisionService.pay(item.id);
-      console.log(rs);
-      
+      this.getComisiones();
     }
   },
   filters:{

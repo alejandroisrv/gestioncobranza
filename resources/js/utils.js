@@ -1,8 +1,8 @@
 
 export default {
     converParamters (object) {
-    
-        
+
+
         let query = ''
         if(object===null) return query;
         let arr = Object.entries(object)
@@ -35,7 +35,7 @@ export default {
       try {
         let format=[];
         for(let i=0;i < datos.length; i++){
-            format.push({id:datos[i].id,label:datos[i].nombre || datos[i].direccion || datos[i].name })
+            format.push({id:datos[i].id,label:datos[i].nombre || datos[i].name || datos[i].direccion })
         }
         return format;
       } catch (e) {

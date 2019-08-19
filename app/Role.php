@@ -9,8 +9,6 @@ class Role extends Model
     //
 
     public function users(){
-
-        return $this->belognsToMany('App\User');
-        
+        return $this->hasMany('App\User','id','role');
     }
 }

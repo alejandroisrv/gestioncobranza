@@ -1,6 +1,6 @@
 <template>
   <div>
-    <bootstrap-modal ref="theModal" :need-header="true" :need-footer="true" :size="'large'">
+    <bootstrap-modal ref="NuevaBodega" :need-header="true" :need-footer="true" :size="'large'">
       <div slot="title">{{ titulo }}</div>
       <div slot="body">
         <form @submit.prevent="send">
@@ -22,8 +22,8 @@
             <div class="form-group col-md-4">
               <label>Municipio</label>
               <select name="mi" class="form-control" v-model="bodega.municipio_id">
-                <option value="0">Selecione el minucipio</option>
-                <option v-for="muni in municipios" :key="muni.id" :value="muni.id">{{muni.municipio}}</option>
+                <option value="">Selecione el minucipio</option>
+                <option  v-if="muni.id !='all'"  v-for="(muni,idx) in municipios" :key="idx+'municipio'" :value="muni.id">{{muni.label}}</option>
               </select>
             </div>
           </div>
@@ -40,6 +40,9 @@
 <script>
 import axios from "axios";
 import {mapGetters,mapActions } from 'vuex';
+
+import api from '../../services/api';
+
 export default {
   props: ["bodega", "titulo", "url", "notificacion"],
   data() {
@@ -51,7 +54,7 @@ export default {
     "bootstrap-modal": require("vue2-bootstrap-modal")
   },
   computed:{
-    ...mapGetters({encargados:'users/usersFormat',municipios:'municipios/municipios'})
+    ...mapGetters({encargados:'users/usersFormat',municipios:'municipios/municipiosFormat'})
   },
   created() {
     this.getEncargados();
@@ -62,17 +65,17 @@ export default {
   methods: {
     ...mapActions({getEncargados:'users/getUsersFormat'}),
     send() {
-      axios.post(this.url, this.bodega).then(rs => {
+      api().post(this.url, this.bodega).then(rs => {
         this.closeTheModal();
         this.eventHub.$emit("sendBodegas");
         this.$noty.success(this.notificacion);
       });
     },
     openTheModal() {
-      this.$refs.theModal.open();
+      this.$refs.NuevaBodega.open();
     },
     closeTheModal() {
-      this.$refs.theModal.close();
+      this.$refs.NuevaBodega.close();
     }
   }
 };

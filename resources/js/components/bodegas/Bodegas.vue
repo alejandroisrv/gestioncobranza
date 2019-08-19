@@ -1,15 +1,15 @@
 <template>
   <div>
     <section class="content-header">
-      <h1>Inventario</h1>
+      <h1>Bodegas</h1>
     </section>
     <section class="content">
       <div class="row">
         <div class="col-xs-12">
           <div class="box box-default">
             <div class="box-body text-right">
-              <button class="btn btn-primary" @click="nuevoBodega">
-                <i class="fa fa-plus mr-2"></i> Nuevo bodega
+              <button class="btn btn-primary" @click="nuevoBodega()">
+                <i class="fa fa-plus mr-2"></i> Nueva bodega
               </button>
             </div>
           </div>
@@ -36,7 +36,7 @@
                     <td>{{ item.sucursal.direccion  }}</td>
                     <td>{{ item.direccion }}</td>
                     <td>{{ item.telefono}}</td>
-                    <td>{{ item.municipio.municipio }}</td>
+                    <td v-if="item.municipio != null ">{{ item.municipio.municipio }}</td>
                     <td>
                       <button class="btn btn-primary btn-sm" @click="editarBodega(item)">
                         <i class="fa fa-edit"></i>
@@ -52,8 +52,8 @@
                 <p class="py-4">No se han encontrado bodegas</p>
               </div>
               </template>
-   
-          
+
+
             </div>
             <!-- /.box-body -->
           </div>
@@ -66,7 +66,6 @@
 <script>
 import modalBodega from "./modalBodegas";
 import BodegaService from '../../services/bodegas';
-import { log } from "util";
 export default {
   data() {
     return {
@@ -95,30 +94,31 @@ export default {
         this.loading=false;
     },
     nuevoBodega() {
-      this.openModal();
+
       this.bodegaModal = {
-        encargado_id: "",
+        encargado_id: undefined,
         direccion: "",
-        minicipio: "",
+        minicipio: undefined,
         telefono: ""
       };
       this.tituloModal = "Nueva bodega";
-      this.urlModal = "/api/bodega/";
+      this.urlModal = "bodega/";
       this.notificacionModal = "Bodega agregada con éxito!";
+      this.openModal();
     },
     editarBodega(bodega) {
       this.bodegaModal = bodega;
       this.tituloModal = "Editar bodega";
-      this.urlModal = "/api/bodegas/update/" + bodega.id;
+      this.urlModal = "bodegas/update/" + bodega.id;
       this.openModal();
       this.notificacionModal = "La bodega ha sido editada!";
     },
-    verBodega(bodega) {},
+
     eliminarBodega(id) {
       this.$confirm("¿Estas seguro que deseas eliminar la bodega?").then(
         res => {
           if (res) {
-            axios.get(`/api/bodega/delete/${id}`);
+            axios.get(`bodega/delete/${id}`);
             this.getBodegas();
             this.notificacion("Bodega Eliminado");
           }

@@ -16,9 +16,9 @@
                       <i class="fa fa-truck mr-2"></i>  Entregar productos
                   </button>
                   <button class="btn btn-default col-md-2  mx-1 col-xs-12 my-1" @click="openAbastercer">Abastecer inventario</button>
-                  <button class="btn btn-primary col-md-2  mx-1 col-xs-12 my-1" @click="nuevoProducto"><i class="fa fa-plus"></i></button>
+                  <button class="btn btn-primary col-md-1 mx-1 col-xs-12 my-1" @click="nuevoProducto"><i class="fa fa-plus"></i></button>
                 </div>
-              </div>  
+              </div>
             </div>
           </div>
           <div class="box">

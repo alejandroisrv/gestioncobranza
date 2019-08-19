@@ -1,6 +1,6 @@
 <template>
   <div>
-    <bootstrap-modal ref="theModal" :need-header="true" :need-footer="true" :size="'large'" :opened="myOpenFunc">
+    <bootstrap-modal ref="ClienteModal" :need-header="true" :need-footer="true" :size="'large'" :opened="myOpenFunc">
       <div slot="title">{{ titulo }}</div>
       <div slot="body">
         <form @submit.prevent="send">
@@ -27,7 +27,7 @@
               <label>Municipio</label>
               <select name="mi" class="form-control" v-model="cliente.municipio_id">
                   <option value="0">Selecione el minucipio</option>
-                <option v-for="(muni,idx) in municipios" :key="idx" :value="idx">{{muni.nombre}}</option>
+                <option v-for="(muni,idx) in municipios" :key="idx" :value="idx">{{muni.label}}</option>
               </select>
             </div>
             <div class="form-row">
@@ -53,13 +53,16 @@
 </template>
 <script>
 import axios from "axios";
+import { mapGetters } from 'vuex';
 export default {
   props: ["cliente", "titulo", "url", "notificacion"],
   data() {
     return {
       show: false,
-      municipios:[{ id: 0, nombre: "Bogota" }]
     };
+  },
+  computed:{
+    ...mapGetters({municipios:'municipios/municipiosFormat'})
   },
   components: {
     "bootstrap-modal": require("vue2-bootstrap-modal")
@@ -75,18 +78,18 @@ export default {
         this.closeTheModal();
         this.eventHub.$emit("sendCliente");
         this.$noty.success(this.notificacion);
-      }).catch(err => {      
+      }).catch(err => {
         this.$noty.error("Ha ocurrido un error al intentar agregar al cliente "+err.response.data.message);
       });
     },
     openTheModal() {
-      this.$refs.theModal.open();
+      this.$refs.ClienteModal.open();
     },
     myOpenFunc() {
       console.log("hello");
     },
     closeTheModal() {
-      this.$refs.theModal.close();
+      this.$refs.ClienteModal.close();
     }
   }
 };

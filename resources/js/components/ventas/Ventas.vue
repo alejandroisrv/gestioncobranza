@@ -65,7 +65,7 @@
       </div>
       <modal-venta></modal-venta>
       <venta :venta="ventaDetalle"></venta>
-      <devoluciones /> 
+      <!-- <devoluciones />  -->
     </section>
   </div>
 </template>

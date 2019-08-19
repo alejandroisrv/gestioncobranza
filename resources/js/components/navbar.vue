@@ -2,7 +2,7 @@
   <div>
     <header class="main-header">
       <!-- Logo -->
-      <router-link to="plugins/index2" class="logo">
+      <router-link to="/" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
         <span class="logo-mini">
           <b>CTG</b>
@@ -52,22 +52,25 @@
             <!-- User Account: style can be found in dropdown.less -->
             <li class="dropdown user user-menu">
               <router-link to="#" class="dropdown-toggle" data-toggle="dropdown">
-                <img src="plugins/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                <img src="img/user-no.jpg" class="user-image" alt="User Image">
                 <span class="hidden-xs"></span>
               </router-link>
               <ul class="dropdown-menu">
                 <!-- User image -->
                 <li class="user-header">
-                  <img src="plugins/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                  <img src="img/user-no.jpg" class="img-circle" alt="User Image">
                   <p>
                     {{ user.name }}
-                    <small>{{user.email}}</small>
+                    <small class="d-block"> {{ user.rol.name }}</small>
                   </p>
                 </li>
                 <!-- Menu Footer-->
                 <li class="user-footer">
+                  <div class="pull-left">
+                    <a href="#" class="btn btn-default btn-flat" @click="changePassword()">Cambiar contraseña</a>
+                  </div>
                   <div class="pull-right">
-                    <a href="/auth/logout" class="btn btn-default btn-flat">Sign out</a>
+                    <a href="/auth/logout" class="btn btn-default btn-flat">Cerrar sesión</a>
                   </div>
                 </li>
               </ul>
@@ -86,13 +89,13 @@
     <!-- =============================================== -->
 
     <!-- Left side column. contains the sidebar -->
-    <aside class="main-sidebar">
+    <aside class="main-sidebar" v-if="error">
       <!-- sidebar: style can be found in sidebar.less -->
       <section class="sidebar">
         <!-- Sidebar user panel -->
         <div class="user-panel">
           <div class="pull-left image">
-            <img src="plugins/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+            <img src="img/user-no.jpg" class="img-circle" alt="User Image">
           </div>
           <div class="pull-left info">
             <p>{{ user.name}}</p>
@@ -112,7 +115,7 @@
               <span>Dashboard</span>
             </router-link>
           </li>
-          <li>
+          <li v-if="$isVendedor() || $isCobrador()">
             <router-link to="/clientes">
               <i class="fa fa-users"></i>
               <span>Clientes</span>
@@ -121,19 +124,19 @@
               </span> -->
             </router-link>
           </li>
-          <li>
+          <li v-if="$isAdmin()">
             <router-link to="/bodegas">
               <i class="fa fa-home"></i>
               <span>Bodegas</span>
             </router-link>
           </li>
-          <li>
-            <router-link to="/sucursales">
+          <li v-if="$isAdmin()">
+            <router-link to="/sucursales" >
               <i class="fa fa-home"></i>
               <span>Sucursales</span>
             </router-link>
           </li>
-          <li class="treeview">
+          <li class="treeview" v-if="$isAdminBodega()">
             <router-link to="/inventario">
               <i class="fa fa-archive"></i>
               <span>Inventario</span>
@@ -150,7 +153,7 @@
             </ul>
           </li>
           <li class="treeview">
-            <router-link to="/ventas">
+            <router-link to="/ventas" v-if="$isVendedor()">
               <i class="fa fa-bar-chart"></i>
               <span>Ventas</span>
               <span class="pull-right-container">
@@ -170,7 +173,7 @@
               </li>
             </ul>-->
           </li>
-          <li class="treeview">
+          <li class="treeview" v-if="$isAdmin()">
             <router-link to="/nomina">
               <i class="fa fa-newspaper-o"></i>
               <span>Nomina</span>
@@ -186,7 +189,7 @@
               </li>
             </ul>
           </li>
-          <li class="treeview">
+          <li class="treeview" v-if="$isCobrador()">
             <router-link to="#">
               <i class="fa fa-money"></i>
               <span>Cobranza</span>
@@ -217,46 +220,81 @@
               </li>
             </ul>
           </li>
-          <li>
+          <li v-if="$isCobrador()">
             <router-link to="/rutas">
               <i class="fa fa-map-o"></i>
               <span>Rutas</span>
             </router-link>
           </li>
-          <li>
+          <li v-if="$isAdmin()">
             <router-link to="/contabilidad">
               <i class="fa fa-pie-chart"></i>
               <span>Contabilidad</span>
             </router-link>
           </li>
-          <li>
+          <li v-if="$isAdmin()">
             <a href="#" @click="reportes">
               <i class="fa fa-pie-chart"></i>
               <span>Reportes</span>
             </a>
           </li>
+          <li v-if="$isAdmin()">
+            <router-link to="/municipios">
+              <i class="fa fa-globe"></i>
+              <span>Municipios</span>
+            </router-link>
+          </li>
         </ul>
-            
+
       </section>
       <!-- /.sidebar -->
-  
+
     </aside>
     <select-cartera />
     <reporte />
+    <user-change />
   </div>
 </template>
 <script>
 import SelectCartera from './cobranza/cartera/SelectCartera';
 import Reporte from './reportes/reportes';
+import UserChange from './nomina/UserChangePassword';
 export default {
-  components:{SelectCartera,Reporte},
+  components:{SelectCartera,Reporte,UserChange},
   data() {
     return {
       user: ""
     };
   },
+  computed:{
+    error(){
+      if(this.$route.name == '401' || this.$route.name == '404' ){
+        return false;
+      }
+      return true;
+    }
+  },
   created() {
     this.user = localStorage.getItem("auth") ? JSON.parse(localStorage.getItem("auth")) : {};
+  },
+  filters:{
+    role(value){
+        switch(value){
+          case 1:
+            return 'Administrador';
+          break;
+          case 2:
+            return 'Administrador de bodegas';
+          break;
+          case 3:
+            return 'Administrador de bodegas';
+          break;
+          case 4:
+            return 'Vendedor';
+          break;
+        }
+
+    }
   },
   methods:{
     selectCartera(){
@@ -264,6 +302,9 @@ export default {
     },
     reportes(){
       this.eventHub.$emit('Reportes');
+    },
+    changePassword(){
+      this.eventHub.$emit('changePassword');
     }
   }
 };

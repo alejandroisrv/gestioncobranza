@@ -52,7 +52,7 @@
                   <p class="py-4">No se han encontrado cobros</p>
                 </div>
               </div>
-           
+
             </div>
           </div>
         </div>
@@ -77,7 +77,6 @@ export default {
   data() {
     return {
       clienteModal: "",
-      cobros:[{data:{}}]
     };
   },
   components: { NuevoCobro ,Cobro, Filtros },
@@ -91,7 +90,7 @@ export default {
   created() {
     this.getCobros({});
   },
-  methods: {  
+  methods: {
     ...mapActions({getCobros:'cobros/getCobrosAll'}),
     nuevaJornada(){
       this.eventHub.$emit('nuevaJornada');

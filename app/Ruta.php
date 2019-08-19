@@ -9,9 +9,9 @@ class Ruta extends Model
     //
     protected $cascadeDeletes = ['items'];
 
-    protected $fillable= ['municipio_id','nombre'];
-   
-    public function items() { 
+    protected $fillable= ['sucursal_id','municipio_id','nombre'];
+
+    public function items() {
         return $this->hasMany('App\RutaItem');
     }
 

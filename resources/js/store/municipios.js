@@ -26,11 +26,11 @@ const mutations = {
 
 const actions = {
     async initMunicipios({ commit, dispatch }) {
-        
+
         const rs = await MunicipioService.getAll();
         commit('SET_MUNICIPIOS', rs.data.body);
         dispatch('municipiosFormat');
-  
+
     },
     async getMunicipiosAll({ commit }, query) {
 
@@ -39,7 +39,7 @@ const actions = {
     },
     async municipiosFormat({ commit }, query) {
         const rs = await MunicipioService.getAll(query);
-        let datos = rs.data.body;
+        let datos = rs.data.body.data;
         let municipios = [{id:'all',label:'Todos'}];
         for (let i = 0; i < datos.length; i++) {
             municipios.push({ id: datos[i].id, label: datos[i].municipio })

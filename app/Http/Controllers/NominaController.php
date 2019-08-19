@@ -23,29 +23,21 @@ class NominaController extends Controller
         $rol     = isset($data['rol']) ? $data['rol'] : null;
         $sucursal= isset($data['sucursal']) ? $data['sucursal'] : null;
         $limite  = isset($data['limite']) ? $data['limite'] : 20 ;
-        
-        $trabajadores= User::with(['roles','comisiones'])->where(function($q) use($sucursal) {
-                return ($sucursal!==null) ? $q->where('sucursal_id',$sucursal) :$q ;
-            })->paginate($limite);
-    
-     
+
+        $trabajadores= User::with(['rol','comisiones'])
+        ->where(function($q) use($sucursal) {
+              return ($sucursal !== null) ? $q->where('sucursal_id',$sucursal) :$q ;
+          })
+          ->paginate($limite);
+
+
         return response()->json(['body'=>$trabajadores]);
 
     }
 
-    
-    public function getData(Request $request){
+    public function create(Request $request){
+
         $data = $request->all();
-
-
-    }
-
-
-    public function create(Request $request)
-    {
-        
-        $data = $request->all();
- 
         $validator = Validator::make($data, [
             'name' => 'string|required',
             'cedula' => 'string|required',
@@ -53,24 +45,27 @@ class NominaController extends Controller
             'telefono' => 'string|required',
             'email' => 'string|required',
         ]);
-        
 
         if ($validator->fails()) {
             return response()->json(['response' => $validator->errors()], 422);
         }
+
         $role = Role::where('slug',$data['rol']['slug'])->first();
         $trabajador = User::create([
+            'sucursal_id'=>$data['sucursal_id']['id'],
+            'bodega_id'=>$data['bodega_id']['id'],
             'name' => $data['name'],
             'cedula' => $data['cedula'],
             'direccion' =>$data['direccion'],
             'telefono' =>$data['telefono'],
             'email' => $data['email'],
+            'role' =>$data['rol']['id'],
+            'password' => bcrypt('123456'),
             'api_token'=>0
         ]);
-        $trabajador->roles()->attach($role);
-
-
         return response()->json(['response'=> 'ok']);
+
+
     }
 
 
@@ -83,7 +78,7 @@ class NominaController extends Controller
         $trabajador->roles()->attach($rol);
 
         return response()->json(['response'=> 'ok']);
-        
+
 
     }
 

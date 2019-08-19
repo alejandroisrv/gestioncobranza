@@ -1,11 +1,11 @@
 <template>
   <div>
-    <bootstrap-modal ref="theModal" :need-header="true" :need-footer="true" :size="'large'">
+    <bootstrap-modal ref="VentaNueva" :need-header="true" :need-footer="true" :size="'large'">
       <div slot="title">Nueva Venta</div>
       <div slot="body">
         <form @submit.prevent="generateVenta" id="ventaFrom">
           <div class="box-body">
-            <p> Vendedor: <small>{{ $store.state.perfilActual.name}}</small></p> 
+            <p> Vendedor: <small>{{ $store.state.perfilActual.name}}</small></p>
             <div class="row">
               <div class="form-group col-md-6">
                 <label>Cliente</label>
@@ -31,7 +31,7 @@
                 <input type="text" name="cuotas" class="form-control" v-model="VentaGeneral.abono" placeholder="Introduce el monto a abonar">
               </div>
               </template>
-              <div class="form-group col-md-3">
+              <div class="form-group col-md-2">
                 <label>Descuento</label>
                 <input type="text" name="monto" class="form-control" v-model="VentaGeneral.descuento" placeholder="Descuento">
               </div>
@@ -68,6 +68,8 @@
                       </tr>
                       <tr>
                         <th style="font-size:16px;">Sub-total: <span>{{ subtotal | currency }} </span></th>
+                      </tr>
+                      <tr>
                         <th style="font-size:17px;">Total: <span>{{ total | currency }} </span></th>
                       </tr>
                     </tbody>
@@ -75,7 +77,7 @@
                 </div>
               </div>
             </div>
-            
+
           </div>
         </form>
       </div>
@@ -90,6 +92,9 @@
 import axios from "axios";
 import {mapGetters,mapActions } from 'vuex';
 export default {
+  components: {
+    "bootstrap-modal": require("vue2-bootstrap-modal")
+  },
   data() {
     return {
       url: "/api/ventas",
@@ -99,7 +104,7 @@ export default {
         periodo:null,
         tipo:null,
         abono: '',
-        descuento:'',
+        descuento:0,
         monto:0,
         total:0,
         subtotal:0,
@@ -118,9 +123,8 @@ export default {
       this.productoList.forEach(e=>{
         if(e.cantidad>0){
             list.push(e);
-        } 
+        }
       })
-
       return list;
     },
     subtotal: {
@@ -141,16 +145,14 @@ export default {
         this.VentaGeneral.total = value;
       },
       get() {
-        let total = this.VentaGeneral.subtotal - this.VentaGeneral.descuento;
+        let total = this.subtotal - this.VentaGeneral.descuento;
         this.VentaGeneral.total = total;
-        this.VentaGeneral.cuotas = (this.VentaGeneral.monto > 0 || this.VentaGeneral.monto !== '') ? total / this.VentaGeneral.monto : 0 ;
+        this.VentaGeneral.cuotas = total / this.VentaGeneral.monto ;
         return this.VentaGeneral.total;
       }
     }
   },
-  components: {
-    "bootstrap-modal": require("vue2-bootstrap-modal")
-  },
+
   created() {
     this.loadData();
     this.eventHub.$on("openModal", rs => {
@@ -165,10 +167,9 @@ export default {
     }),
     generateVenta() {
       axios.post(this.url, this.VentaGeneral).then(rs => {
-        //this.closeTheModal();
         this.eventHub.$emit("sendVentas");
         this.$noty.success("Nueva venta realizada con exito");
-      }).catch(err => {      
+      }).catch(err => {
         this.$noty.error("Ha ocurrido un error al intentar procesar la venta "+err.response.data.message);
       });
     },
@@ -192,13 +193,13 @@ export default {
 
         }
       });
-      
+
       if(this.item.producto.nombre=='') return this.$noty.warning('Selecciona un producto');
       if(this.item.producto!=='') {
         this.VentaGeneral.productosVendidos.push(this.item)
         this.item = { producto: '', cantidad: '',subtotal:0 };
       }
-      
+
     },
     deleteProductoVendido(idx) {
       this.VentaGeneral.productosVendidos.splice(idx, 1);
@@ -218,10 +219,10 @@ export default {
       this.getClientes();
     },
     openTheModal() {
-      this.$refs.theModal.open();
+      this.$refs.VentaNueva.open();
     },
     closeTheModal() {
-      this.$refs.theModal.close();
+      this.$refs.VentaNueva.close();
     }
   }
 }
@@ -232,4 +233,3 @@ export default {
   padding: 10px !important;
 }
 </style>
-

@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Cliente extends Model
 {
     protected $table="clientes";
-    protected $fillable=['nombre','apellido','direccion','cedula','municipio_id','telefono','email'];
+    protected $fillable=['sucursal_id','nombre','apellido','direccion','cedula','municipio_id','telefono','email'];
+
+    public function sucursal(){
+      return $this->belongsTo('App\Sucursal');
+    }
     
     public function venta() {
         return $this->hasMany('App\Venta');
@@ -20,9 +24,7 @@ class Cliente extends Model
     public function acuerdos_pagos(){
       return $this->hasMany('App\AcuerdoPago');
     }
-    public function sucursal(){
-      return $this->belongsTo('App\Sucursal');
-    }
+
     public function pagos_clientes(){
       return $this->hasMany('App\PagoCliente');
     }

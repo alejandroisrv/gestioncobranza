@@ -5,7 +5,7 @@
 
       <div slot="body">
         <form @submit.prevent="send">
-          <div class="box-body">
+          <div class="box-body" v-if="show">
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label>Administrador</label>
@@ -22,9 +22,9 @@
             </div>
             <div class="form-group col-md-4">
               <label>Municipio</label>
-              <select name="mi" class="form-control" v-model="sucursal.municipio_id">
-                <option value="0">Selecione el minucipio</option>
-                <option v-for="(muni,idx) in municipios" :key="idx" :value="muni.id">{{muni.nombre}}</option>
+              <select name="mi" class="form-control" v-model="sucursal.municipio">
+                <option value="0" selected>Selecione el minucipio</option>
+                <option  v-if="muni.id !='all'"  v-for="(muni,idx) in municipios" :key="idx+'municipio'" :value="muni.id">{{muni.label}}</option>
               </select>
             </div>
           </div>
@@ -42,22 +42,29 @@
 import axios from "axios";
 import {mapGetters,mapActions} from 'vuex';
 export default {
-  props: ["sucursal", "titulo", "url", "notificacion"],
+  props: ["titulo", "url", "notificacion"],
   data() {
     return {
+      sucursal:{
+        encargado: "",
+        direccion: "",
+        minicipio: "",
+        telefono: ""
+      },
       show: false,
-      municipios: [{ id: 0, nombre: "Bogota" }]
     };
   },
   components: {
     "bootstrap-modal": require("vue2-bootstrap-modal")
   },
   computed:{
-    ...mapGetters({encargados:'users/usersFormat'}),
+    ...mapGetters({encargados:'users/usersFormat',municipios:'municipios/municipiosFormat'}),
   },
   created() {
     this.getEncargados();
     this.eventHub.$on("openModal", rs => {
+      this.show = true;
+      this.sucursal = rs;
       this.openTheModal();
     });
   },
@@ -65,9 +72,9 @@ export default {
     ...mapActions({getEncargados:'users/getUsersFormat'}),
     send() {
       axios.post(this.url, this.sucursal).then(rs => {
-        this.closeTheModal();
         this.eventHub.$emit("sendSucursal");
         this.$noty.success(this.notificacion);
+        this.closeTheModal();
       });
     },
     openTheModal() {

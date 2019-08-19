@@ -1,7 +1,7 @@
 <template>
   <div>
     <bootstrap-modal
-      ref="theModal"
+      ref="NuevoProducto"
       :need-header="true"
       :need-footer="true"
       :size="'large'"
@@ -75,13 +75,13 @@ export default {
       });
     },
     openTheModal() {
-      this.$refs.theModal.open();
+      this.$refs.NuevoProducto.open();
     },
     myOpenFunc() {
       console.log("hello");
     },
     closeTheModal() {
-      this.$refs.theModal.close();
+      this.$refs.NuevoProducto.close();
     }
   }
 };

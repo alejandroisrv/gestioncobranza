@@ -1,7 +1,7 @@
 <template>
   <div>
     <section class="content-header">
-      <h1>Inventario</h1>
+      <h1>Morosos</h1>
     </section>
     <section class="content">
       <div class="row">
@@ -10,7 +10,7 @@
             <div class="box-body text-left align-self-center">
               <div class="col-md-2">Filtrar por municipios</div>
               <div class="col-md-4">
-                <v-select v-model="municipio" :options="municipiosFormat" placeholder="Selecciona el municipio" />
+                <v-select v-model="municipio" :options="municipios" placeholder="Selecciona el municipio" />
               </div>
             </div>
           </div>
@@ -20,32 +20,38 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table v-if="clientes.data.length > 0 " class="table table-bordered table-striped">
-                <thead>
-                  <tr>
-                    <th>Nombre</th>
-                    <th>Deuda</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in clientes.data" :key="item.id">
-                    <td>{{ item.nombre }}</td>
-                    <td>{{ item.deuda }}</td>
-                    <td>
-                      <button class="btn btn-default btn-sm" @click="verCliente(item)">
-                        <i class="fa fa-eye"></i>
-                      </button>
-                      <button class="btn btn-danger btn-sm" @click="suspenderCliente(item.id)">
-                        <i class="fa fa-ban"></i>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <div v-else>
-                <p class="py-4">No se han encontrado clientes</p>
-              </div>
+              <div class="col-md-12" v-if="loading"><i class="fa fa-spinner fa-spin loading-spinner"></i></div>
+              <template v-else>
+                  <table v-if="clientes.data && clientes.data.length > 0 " class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th>Nombre</th>
+                        <th>Deuda</th>
+                        <th>Último pago</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="item in clientes.data" :key="item.id">
+                      <td>{{ item.nombre }}</td>
+                      <td>{{ item.deuda }}</td>
+                      <td>{{ item.updated_at | moment('DD/MM/YYYY') }}</td>
+                      <td>
+                        <button class="btn btn-default btn-sm" @click="verCliente(item)">
+                          <i class="fa fa-eye"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm" @click="suspenderCliente(item.id)">
+                          <i class="fa fa-ban"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div v-else>
+                  <p class="py-4">No se han encontrado clientes</p>
+                </div>
+              </template>
+
             </div>
             <!-- /.box-body -->
           </div>
@@ -57,41 +63,33 @@
 </template>
 <script>
 import modalCliente from "../clientes/Cliente";
-import { mapGetters, mapActions } from "vuex";
-import { log } from "util";
-
+import { mapGetters } from "vuex";
+import api from '../../services/api';
 export default {
   data() {
     return {
-      clienteModal: "",
-      notificacionModal: "",
-      municipio: ""
+      municipio:'',
+      clientes:[],
+      clienteModal:'',
+      loading:true,
     };
   },
-  components: {
-    modalCliente
-  },
+  components: {  modalCliente },
   computed: {
-    ...mapGetters({
-      clientes: "clientes/clientes",
-      clientesFormat: "clientes/clientesFormat",
-      municipiosFormat: "municipios/municipiosFormat"
-    })
+    ...mapGetters({ municipios: "municipios/municipiosFormat"})
   },
   created() {
-    this.initClientes();
+    this.getMorosos();
     this.eventHub.$on("sendCliente", rs => {
-      this.initClientes();
+      this.getMorosos();
     });
   },
   methods: {
-    ...mapActions({
-      initClientes: "clientes/initClientes"
-    }),
-    getMorosos(){
-
-      
-
+    async getMorosos(){
+      this.loading = true;
+      const rs = await api().get('morosos/all');
+      this.loading = false;
+      this.clientes = rs.data.body
     },
     verCliente(cliente) {
       this.clienteModal = cliente;

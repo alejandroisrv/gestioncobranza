@@ -13,10 +13,11 @@
 
 
 Route::get('/login','Auth\LoginController@showLoginForm')->name('login')->middleware('guest');
-Route::get('/auth/logout', 'Auth\LoginController@logout')->name('logout')->middleware('guest');
-Route::post('/login','Auth\LoginController@login');  
+
+Route::post('/login','Auth\LoginController@login');
 
 Route::group(['middleware' => 'auth' ], function() {
+    Route::get('/auth/logout', 'Auth\LoginController@LogOut')->name('logout');
     Route::get('/', 'HomeController@index')->name('home');
     Route::get('/dashboard', 'HomeController@index')->name('home');
     Route::get('/inventario', 'HomeController@index')->name('home');
@@ -35,9 +36,6 @@ Route::group(['middleware' => 'auth' ], function() {
     Route::get('/contabilidad', 'HomeController@index')->name('home');
     Route::get('/cartera/{ruta}', 'HomeController@index')->name('home');
     Route::get('/historial', 'HomeController@index')->name('home');
-    
+    Route::get('/municipios', 'HomeController@index')->name('home');
+
 });
-
-
-
-

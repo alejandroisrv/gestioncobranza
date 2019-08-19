@@ -13,19 +13,19 @@ class BodegaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
-    public function __construct()
-    {
+    public function __construct(){
 
     }
     public function index(Request $request)
     {
 
+      $bodega_id = $request->user()->sucursal_id;
 
+      $bodegas=Bodega::with(['sucursal','municipio'])
+      ->where('id',$bodega_id)
+      ->paginate(20);
 
-        $bodegas=Bodega::find($request->user()->bodega_id)->with(['sucursal','municipio'])->paginate(20);
-
-        return response()->json(['body'=> $bodegas]);
+      return response()->json(['body'=> $bodegas]);
 
     }
 
@@ -34,6 +34,8 @@ class BodegaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
     public function create(Request $request)
     {   $data = $request->all();
         $bodega = new Bodega($request->all());

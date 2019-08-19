@@ -17,9 +17,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name','cedula','telefono','direccion','email', 'password','api_token'
+        'sucursal_id','bodega_id','name','cedula','direccion','telefono','email','role','password','api_token',
     ];
-
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -42,8 +41,12 @@ class User extends Authenticatable
         return $this->hasMany('App\Venta');
     }
 
-    public function roles(){
-        return $this->belongsToMany('App\Role');
+    public function sucursal(){
+        return $this->belongsTo('App\Sucursal');
+    }
+
+    public function rol(){
+        return $this->belongsTo('App\Role','role');
     }
 
     public function comisiones(){
@@ -53,4 +56,33 @@ class User extends Authenticatable
     public function cobros(){
         return $this->hasMany('App\Cobro');
     }
+
+    public function isAdmin (){
+        if($this->role == 1 ){
+            return true;
+        }
+        return false;
+    }
+
+    public function isAdminBodega (){
+        if($this->role == 1 || $this->role == 2){
+            return true;
+        }
+        return false;
+    }
+
+    public function isCobrador (){
+        if($this->role == 1 || $this->role == 3){
+            return true;
+        }
+        return false;
+    }
+
+    public function isVendedor(){
+        if($this->role == 1 || $this->role == 4){
+            return true;
+        }
+        return false;
+    }
+
 }

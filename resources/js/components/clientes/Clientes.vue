@@ -72,6 +72,7 @@ import { log } from "util";
 export default {
   data() {
     return {
+      loading:true,
       clienteModal: "",
       tituloModal: "",
       urlModal: "",
@@ -90,8 +91,10 @@ export default {
   },
   methods: {
     getClientes() {
+      this.loading = true;
       axios.get("/api/clientes").then(rs => {
           this.clientes = rs.data.body;
+          this.loading = false;
         }).catch(err => {
           this.$noty.error("Ha ocurrido un error al intentar agregar al cliente "+err.response.data.message);
         });

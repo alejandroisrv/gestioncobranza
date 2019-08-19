@@ -13,9 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::group(['middleware' => 'auth:api'], function () {
   Route::get('/example','ExampleController@show');
@@ -36,8 +36,8 @@ Route::group(['middleware' => 'auth:api'], function () {
   Route::post('/clientes/update/{id}','ClientesController@update');
   Route::get('/cliente/delete/{id}','ClientesController@destroy');
 
-  Route::get('/bodegas','BodegaController@index');
   Route::post('/bodega','BodegaController@create');
+  Route::get('/bodegas','BodegaController@index');
   Route::post('/bodegas/update/{id}','BodegaController@update');
   Route::get('/bodega/delete/{id}','BodegaController@destroy');
 
@@ -57,10 +57,11 @@ Route::group(['middleware' => 'auth:api'], function () {
 
   Route::post('/pagos_clientes','PagoClienteController@index');
   Route::post('/pagos_clientes','PagoClienteController@create');
- 
+
   Route::get('/nomina/all','NominaController@index');
   Route::get('/nomina/roles/all','NominaController@roles');
   Route::post('/nomina/add','NominaController@create');
+  Route::post('/user/change-password','UsersController@changePassword');
   Route::post('/nomina/edit','NominaController@edit');
   Route::post('/nomina/delete/{id}','NominaController@delete');
 
@@ -76,8 +77,9 @@ Route::group(['middleware' => 'auth:api'], function () {
   Route::post('/cobros/add','CobroController@create');
 
   Route::get('/municipios','MunicipioController@index');
-
+  Route::post('/municipio','MunicipioController@create');
   Route::get('users/all', 'UsersController@getUsers');
+
 
 
   Route::get('/contabilidad/all', 'ContabilidadController@getAll');
@@ -88,14 +90,11 @@ Route::group(['middleware' => 'auth:api'], function () {
   Route::post('/contabilidad/categoria/delete/{id}', 'ContabilidadController@deleteCategoria');
 
   Route::get('/cartera/all', 'CarteraController@getAll');
+  Route::get('/morosos/all', 'CarteraController@getMorosos');
 
   Route::get('/movimientos/all','MovimientosController@get');
-  
+
   Route::get('/reportes/all','ReportesController@get');
-
-
-
-
 
 
 });

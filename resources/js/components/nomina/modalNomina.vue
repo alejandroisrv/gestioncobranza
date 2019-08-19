@@ -24,13 +24,17 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-6 col-lg-6 my-1">
+          <div class="col-md-5 col-lg-5 my-1">
             <label>Direccion</label>
             <input type="text" name="cuotas" class="form-control" v-model="trabajador.direccion">
           </div>
           <div class="col-md-4 col-lg-4 my-1">
             <label>E-mail</label>
             <input type="text" name="cuotas" class="form-control" v-model="trabajador.correo">
+          </div>
+          <div class="col-md-3 col-lg-3 my-1">
+            <label>Usuario</label>
+            <input type="text" name="cuotas" class="form-control" v-model="trabajador.email">
           </div>
         </div>
         <div class="row">
@@ -39,18 +43,12 @@
             <v-select v-model="trabajador.sucursal_id" v-if="sucursales.length>0" :options="sucursales" placeholder="Seleccione una sucursal para este usuario"></v-select>
           </div>
           <div class="col-md-4 col-lg-4 my-1">
-            <label>Rol</label>
-            <v-select v-model="trabajador.rol" v-if="roles && roles.length>0" :options="roles" placeholder="Seleccione un rol para este usuario"></v-select>
-          </div>
-          <div class="col-md-4 col-lg-4 my-1">
             <label>Bodega</label>
             <v-select v-model="trabajador.bodega_id" v-if="bodegas.data && bodegas.data.length>0" :options="bodegas.data" placeholder="Seleccione una bodega para este usuario"></v-select>
           </div>
-        </div>
-        <div class="row">
           <div class="col-md-4 col-lg-4 my-1">
-            <label>Usuario</label>
-            <input type="text" name="cuotas" class="form-control" v-model="trabajador.email">
+            <label>Rol</label>
+            <v-select v-model="trabajador.rol" v-if="roles && roles.length>0" :options="roles" placeholder="Seleccione un rol para este usuario"></v-select>
           </div>
         </div>
       </div>
@@ -77,9 +75,9 @@ export default {
         direccion: "",
         telefono: "",
         cedula: "",
-        rol: "",
-        sucursal_id:'',
-        bodega_id:'',
+        rol: undefined,
+        sucursal_id:undefined,
+        bodega_id:undefined,
         email: ""
       },
       loading: true,
@@ -90,8 +88,9 @@ export default {
   },
   created() {
     //ABRIR
-    this.getRoles();
+    this.getRoles(null);
     this.getSucursales();
+    this.getBodegas();
     this.eventHub.$on("addTrabajador", () => {
       this.open();
     });
@@ -101,21 +100,26 @@ export default {
   },
   computed: {},
   methods: {
+    async getBodegas(sucursal){
+      const rs  = await BodegaService.getAll({ sucursal: sucursal });
+      rs.data.body.data.forEach(e => {
+        e.label = e.direccion;
+      });
+      this.bodegas=rs.data.body
+    },
     async getRoles() {
       const rs = await NominaService.roles();
       rs.data.forEach(e => {
         e.label = e.name;
       });
       this.roles = rs.data;
-      this.loading = false;
     },
     async getSucursales(){
       const rs = await SucursalService.getAll();
-      rs.data.forEach(e => {
+      rs.data.body.data.forEach(e => {
         e.label = e.direccion;
       });
-      console.log(rs);
-      this.sucursales = rs.data
+      this.sucursales = rs.data.body.data;
     },
     async send() {
       const rs = await NominaService.add(this.trabajador);
@@ -125,17 +129,6 @@ export default {
         this.$noty.error("Error al intentar añadir" + rs.data.response);
       }
     },
-    async getBodegas(sucursal){
-      let query = { sucursal: sucursal };
-      const rs= await BodegaService.getAll(query);
-      rs.data.body.data.forEach(e => {
-        e.label = e.direccion;
-      });
-      console.log(rs);
-      
-      this.bodegas=rs.data.body
-    },
-
     open() {
       this.$refs.addtrabajador.open();
     },
@@ -144,10 +137,8 @@ export default {
     }
   },
   watch:{
-    "tabajador.rol"(){
-      if(this.trabajador.rol.slug="administrador-de-bodegas"){
-        this.getBodegas(this.trabajador.sucursal_id);
-      }
+    "trabajador.sucursal_id"(){
+      this.getBodegas(this.trabajador.sucursal_id);
     }
   }
 };

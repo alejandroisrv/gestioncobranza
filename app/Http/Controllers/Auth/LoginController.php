@@ -34,32 +34,24 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('guest')->except('logout');
+    public function __construct(){
     }
     public function login(Request $request){
-      $credentials= $this->validate(request(), [
-        'email' => 'required|string',
-        'password'=> 'required|string'
-
-      ]);
+      $data = $request->all();
+      $credentials= ['email'=>$data['email'],'password'=>$data['password']];
       if (auth()->attempt($credentials)) {
-      // Authentication passed...
-      $user = auth()->user();
-      $user->api_token = str_random(60);
-      $user->save();
-      return redirect('/');
+        // Authentication passed...
+        $user = auth()->user();
+        $user->api_token = str_random(60);
+        $user->save();
+        return redirect('/');
     }
 
       return back()->withErrors(['email'=> 'Ha ocurrido un error, el usuario o la contraseña son incorrectos']);
     }
 
-
-
-    public function logout(Request $request){
-      auth()->logout();
-      return redirect('/login');
+    public function LogOut(Request $request){
+      return redirect('login')->with(Auth::logout());
     }
 
 }

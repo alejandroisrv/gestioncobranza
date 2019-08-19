@@ -1,7 +1,7 @@
 <template>
   <div>
     <section class="content-header">
-      <h1>Inventario</h1>
+      <h1>Sucursales</h1>
     </section>
     <section class="content">
       <div class="row">
@@ -21,7 +21,7 @@
             <div class="box-body">
               <div class="col-md-12" v-if="loading"><i class="fa fa-spinner fa-spin loading-spinner"></i></div>
               <template v-else>
-                <table v-if=" sucursales.length > 0 " class="table table-bordered table-striped" >
+                <table v-if=" sucursales.data && sucursales.data.length > 0 " class="table table-bordered table-striped" >
                   <thead>
                     <tr>
                       <th>Dirección</th>
@@ -31,10 +31,10 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="item in sucursales" :key="item.id+'a'">
+                    <tr v-for="item in sucursales.data" :key="item.id+'a'">
                       <td>{{ item.direccion }}</td>
                       <td>{{ item.telefono}}</td>
-                      <td>{{ item.municipio.municipio }}</td>
+                      <td v-if="item.municipio">{{ item.municipio.municipio }}</td>
                       <td>
                         <button class="btn btn-primary btn-sm" @click="editarSucursal(item)">
                           <i class="fa fa-edit"></i>
@@ -65,6 +65,7 @@ import { log } from "util";
 export default {
   data() {
     return {
+      loading:true,
       sucursalModal: "",
       tituloModal: "",
       urlModal: "",
@@ -83,24 +84,16 @@ export default {
   },
   methods: {
     getSucursales() {
-      axios
-        .get("/api/sucursales")
-        .then(rs => {
-          this.sucursales = rs.data;
-          console.log(rs);
-        })
-        .catch(err => {
+      axios.get("/api/sucursales").then(rs => {
+          this.sucursales = rs.data.body;
+        }).catch(err => {
           console.log(err);
+        }).finally(fl=>{
+          this.loading = false;
         });
     },
     nuevoSucursal() {
-      this.openModal();
-      this.sucursalModal = {
-        encargado: "",
-        direccion: "",
-        minicipio: "",
-        telefono: ""
-      };
+      this.openModal({encargado: "",direccion: "", minicipio: "",telefono: ""});
       this.tituloModal = "Nueva sucursal";
       this.urlModal = "/api/sucursal/";
       this.notificacionModal = "Sucursal agregada con éxito!";
@@ -109,7 +102,7 @@ export default {
       this.sucursalModal = sucursal;
       this.tituloModal = "Editar sucursal";
       this.urlModal = "/api/sucursales/update/" + sucursal.id;
-      this.openModal();
+      this.openModal(sucursal);
       this.notificacionModal = "La sucursal ha sido editada!";
     },
     verSucursal(sucursal) {},
@@ -127,8 +120,8 @@ export default {
     notificacion(texto) {
       this.$noty.success(texto);
     },
-    openModal() {
-      this.eventHub.$emit("openModal");
+    openModal(sucursal) {
+      this.eventHub.$emit("openModal",sucursal);
     }
   }
 };

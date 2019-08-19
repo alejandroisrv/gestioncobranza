@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
@@ -16,5 +18,27 @@ class UsersController extends Controller
       })->get();
 
       return response()->json(['data'=> $users]);
+    }
+
+    public function changePassword(Request $request){
+      $data = $request->all();
+      try {
+
+        $id = $request->user()->id;
+        $user = User::find($id);
+
+        if (Hash::check($data['password'], $user->password)){
+            $user->password = bcrypt($data['newPassword']);
+            $user->save();
+            return response()->json(['response' => true],201);
+        }
+
+        return response()->json(['response'=> false ]);
+
+      } catch (\Exception $e) {
+          return response()->json(['error'=> $e->getMessage()],422);
+      }
+
+
     }
 }

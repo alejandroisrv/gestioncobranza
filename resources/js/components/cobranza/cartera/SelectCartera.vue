@@ -5,10 +5,11 @@
                   <div class="row">
                       <div class="col-md-12" v-if="loading">
                           <p style="font-size:18px">Selecciona la cartera</p>
-                            <table class="table col-md-12">
+                          <span @click="closeModal" class="close-modal"> &times; </span>
+                            <table class="table col-md-12" v-if="rutas.length > 0 ">
                                 <tr>
                                   <td class="td-label">Ruta:</td>
-                                  <td class="td-select" v-if="rutas.length > 0 "><v-select v-model="parametros.ruta" :options="rutas" placeholder="Selecciona la ruta"></v-select></td>
+                                  <td class="td-select"><v-select v-model="parametros.ruta" :options="rutas" placeholder="Selecciona la ruta"></v-select></td>
                                 </tr>
                                 <tr>
                                   <td class="td-label">Fecha:</td>
@@ -27,6 +28,7 @@
                                     <td class="td-select"> <button class="btn btn-primary" @click="filtrar()"> <i class="fa fa-search"></i> Buscar </button> </td>
                                 </tr>
                           </table>
+                          <span class="text-danger" v-else> Debes tener al menos una ruta</span>
                     </div>
               </div>
           </div>
@@ -51,7 +53,7 @@ export default {
         }
     },
     components:{
-        "bootstrap-modal": require("vue2-bootstrap-modal"), DatePicker 
+        "bootstrap-modal": require("vue2-bootstrap-modal"), DatePicker
     },
     computed:{
         ...mapGetters({rutas:'rutas/rutasFormat'}),
@@ -64,6 +66,9 @@ export default {
     },
     methods:{
         ...mapActions({getRutas:'rutas/getRutasFormat'}),
+        closeModal(){
+          this.$refs.SelectCartera.close();
+        },
         filtrar(){
             let desde = (this.parametros.desde != null) ? moment(this.parametros.desde ).format('DD/MM/YY') : '' ;
             let hasta = (this.parametros.hasta != null) ? moment(this.parametros.hasta ).format('DD/MM/YY') : '';
@@ -77,6 +82,15 @@ export default {
 <style>
 tr{
     max-width: 100px !important;
+}
+
+
+.close-modal{
+  position: absolute;
+  top: -15px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
 }
 
 .td-label{
@@ -105,10 +119,10 @@ tr{
     max-width: 235px;
     min-width: 235px;
     width: 233px;
-}   
+}
 
 @media (min-width: 768px){
-    .modal-sm {    
+    .modal-sm {
         width: 400px;
     }
 }

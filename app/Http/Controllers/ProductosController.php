@@ -8,52 +8,61 @@ use App\ProductosVendedores;
 use App\ProductosEntregadas;
 use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class ProductosController extends Controller
 {
-    protected $user;
-
-    public function __construct(Request $request)
-    {
-
-    }
 
     public function index(Request $request)
     {
       $data = $request->all();
-      $sucursal_id=$request->user()->sucursal_id;
       $bodega = (isset($data['bodega'])) ? $data['bodega'] : null ;
-      $productos = Productos::where('sucursal_id',$sucursal_id)->where(function($q)use($bodega){
-        return ($bodega!==null) ? $q->where('bodega_id',$bodega) :$q ;
-      })->paginate(30);
+      $sucursal_id = $request->user()->sucursal_id;
+      $productos = Productos::with(['bodega'])->where('sucursal_id',$sucursal_id)
+      ->where(function($q) use ($bodega,$request){
+        if($request->user()->isAdmin()){
+          return ($bodega !== null) ? $q->where('bodega_id',$bodega) : $q ;
+        }else{
+          return $q->where('bodega_id',$request->user()->bodega_id);
+        }
+      })
+      ->orderBy('cantidad','DESC')
+      ->paginate(30);
 
       return response()->json($productos);
+
     }
 
-
-    public function getProducto(Request $request,$id)
-    {
-        return $producto=Productos::find($id);
-    }
     public function getProductos(Request $request){
       $data = $request->all();
+      return $request->user()->isAdmin();
       $bodega = (isset($data['bodega'])) ? $data['bodega'] : null ;
-      $productos = Productos::where('sucursal_id',$sucursal_id)->where(function(){
-        return ($bodega!=null) ? $q->where('bodega_id',$bodega) :$q ;
-      })->paginate(30);
+      $sucursal_id = $request->user()->sucursal_id;
+      $productos = Productos::where('sucursal_id',$sucursal_id)
+      ->where(function($q) use ($bodega,$request){
+        if($request->user()->isAdmin()){
+          return ($bodega!=null) ? $q->where('bodega_id',$bodega) : $q ;
+        }else{
+          return $q->where('bodega_id',$request->user()->bodega_id);
+        }
+      })
+      ->orderBy('cantidad','DESC')
+      ->paginate(30);
 
       return response()->json([$productos]);
 
     }
     public function create(Request $request)
     {
+      if($request->user()->isAdminBodega()){
+          $producto=new Productos($request->all());
+          $producto->bodega_id=$request->user()->bodega_id;
+          $producto->sucursal_id=$request->user()->sucursal_id;
+          $producto->save();
+          return response()->json($producto, 201);
+      }
 
-        $producto=new Productos($request->all());
-        $producto->bodega_id=$request->user()->bodega_id;
-        $producto->sucursal_id=$request->user()->sucursal_id;
-        $producto->save();
-        return response()->json($producto, 201);
+      return response()->json(['response'=>'Unauthorized'],401);
+
     }
 
     public function update(Request $request,$id)
@@ -74,7 +83,7 @@ class ProductosController extends Controller
           $producto->save();
           $this->addHistory($idProducto,$cantidad,+1,"Abastecimiento de productos",$vendedor->id);
         }
-          
+
         return response()->json(['response' => true],200);
 
     }
@@ -101,7 +110,7 @@ class ProductosController extends Controller
               }
            }
          }
-  
+
          for ($i=0; $i < count($datos['productosEntregar']); $i++) {
            $idProducto=$datos['productosEntregar'][$i]['producto']['id'];
            $producto=Productos::find($idProducto);
@@ -113,7 +122,7 @@ class ProductosController extends Controller
       } catch (\Exception $e) {
           return response()->json(['error'=> $e->getMessage()], 422);
       }
-      
+
 
       return response()->json($is_saved);
 

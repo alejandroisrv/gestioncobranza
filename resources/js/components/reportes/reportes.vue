@@ -11,13 +11,13 @@
                                   <td class="td-label">Modulo:</td>
                                   <td class="td-select"><v-select v-model="parametros.modulos" :options="modulos" placeholder="Selecciona el modulo"></v-select></td>
                                 </tr>
-                                                        
+
                                 <template v-if="parametros.modulos !== undefined ">
                                     <tr v-if="parametros.modulos.id == 'mv'">
                                         <td class="td-label">Tipo:</td>
                                         <td class="td-select"><v-select v-model="parametros.tipo" :options="[{id:-1,label:'Salidas'},{id:1,label:'Entradas'}]" placeholder="Selecciona la categoria"></v-select></td>
                                     </tr>
-                                    
+
                                     <tr v-if="parametros.modulos.id == 'ls'">
                                         <td class="td-label">Tipo:</td>
                                         <td class="td-select"><v-select v-model="parametros.tipo" :options="[{id:'all',label:'Todos'},{id:1,label:'Vendidos'}]" placeholder="Selecciona la categoria"></v-select></td>
@@ -43,13 +43,13 @@
                                     </tr>
                                     <tr>
                                         <td class="td-label"></td>
-                                        <td class="td-select" v-if="download && json_data.length>0"> 
-                                            <downloadexcel class="btn btn-success" :data="json_data" :fields="json_fields" :name="filename+'.xls'" :title="filename"> 
-                                                <i class="fa fa-download"></i> Descargar Excel  
+                                        <td class="td-select" v-if="download && json_data.length>0">
+                                            <downloadexcel class="btn btn-success" :data="json_data" :fields="json_fields" :name="filename+'.xls'" :title="filename">
+                                                <i class="fa fa-download"></i> Descargar Excel
                                             </downloadexcel>
                                         </td>
-                                        <td class="td-select" v-else> 
-                                            <button class="btn btn-success" @click="filtrar()" :disabled="loading"> 
+                                        <td class="td-select" v-else>
+                                            <button class="btn btn-success" @click="filtrar()" :disabled="loading">
                                                 <i class="fa fa-search"></i> <span v-if="loading"><i> Buscando...</i></span><span v-else>Buscar</span>
                                             </button>
                                         </td>
@@ -80,7 +80,8 @@ export default {
                 {id:'ac',label:'Acuerdos de pago'},
                 {id:'cm',label:'Comisiones'},
                 {id:'ls',label:'Listado de productos'},
-                {id:'vn',label:'Ventas'}
+                {id:'vn',label:'Ventas'},
+                {id:'ms',label:'Listado de morosos'}
             ],
             parametros : {
                 modulos:undefined,
@@ -125,7 +126,7 @@ export default {
             this.loading = true;
             const rs = await ReporteService.get(query);
             this.loading=false;
-            
+
             this.json_data = rs.data.data;
             this.json_fields = rs.data.fields;
             this.filename = rs.data.filename;
@@ -182,10 +183,10 @@ tr{
     max-width: 235px;
     min-width: 235px;
     width: 233px;
-}   
+}
 
 @media (min-width: 768px){
-    .modal-sm {    
+    .modal-sm {
         width: 400px;
     }
 }
