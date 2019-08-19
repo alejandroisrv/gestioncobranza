@@ -39,7 +39,7 @@ class ClientesController extends Controller
     public function create(Request $request)
     {
         $cliente = new Cliente($request->all());
-        $cliente->sucursal_id=$request()->user()->sucursal_id;
+        $cliente->sucursal_id=$request->user()->sucursal_id;
         $cliente->save();
         return $cliente;
 
