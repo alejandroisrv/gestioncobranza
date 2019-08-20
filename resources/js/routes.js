@@ -22,62 +22,60 @@ import Municipios from './components/sucursales/Municipios';
 
 
 Vue.use(VueRouter)
-const user =  JSON.parse(localStorage.getItem('auth'));
+const user = JSON.parse(localStorage.getItem('auth'));
 
-const isAdmin = (to,from,next) =>{
-  if(user && user.role == 1){
-    next();
-  }else {
-    next({name:'401'})
-  }
+const isAdmin = (to, from, next) => {
+    if (user && user.role == 1) {
+        next();
+    } else {
+        next({ name: '401' })
+    }
 }
 
-const isAdminBodega = (to,from,next) =>{
-  if(user && (user.role == 2 || user.role == 1)){
-    next();
-  }else {
-    next({name:'401'})
-  }
+const isAdminBodega = (to, from, next) => {
+    if (user && (user.role == 2 || user.role == 1)) {
+        next();
+    } else {
+        next({ name: '401' })
+    }
 }
 
-const isCobrador = (to,from,next) =>{
-  if(user && (user.role == 3 || user.role == 1 )){
-    next();
-  }else {
-    next({name:'401'})
-  }
+const isCobrador = (to, from, next) => {
+    if (user && (user.role == 3 || user.role == 1)) {
+        next();
+    } else {
+        next({ name: '401' })
+    }
 }
 
-const isVendedor = (to,from,next) =>{
-  if(user && user.role == 4 || user.role == 1){
-    next();
-  }else {
-    next({name:'401'})
-  }
+const isVendedor = (to, from, next) => {
+    if (user && user.role == 4 || user.role == 1) {
+        next();
+    } else {
+        next({ name: '401' })
+    }
 }
 
-const isAuth = (to,from,next) => {
-  if(user){
-    next();
-  }else{
-    next({name:'401'})
-  }
+const isAuth = (to, from, next) => {
+    if (user) {
+        next();
+    } else {
+        next({ name: '401' })
+    }
 }
 
 const router = new VueRouter({
     mode: 'history',
-    routes: [
-        {
-          path: '/',
-          name: 'Dashboard',
-          component: Dashboard,
-          beforeEnter: isAuth
+    routes: [{
+            path: '/',
+            name: 'Dashboard',
+            component: Dashboard,
         },
         {
-          path: '/inventario',
-          name: 'Inventario',
-          component: Inventario,
-          beforeEnter: isAdminBodega
+            path: '/inventario',
+            name: 'Inventario',
+            component: Inventario,
+            beforeEnter: isAdminBodega
         },
         {
             path: '/clientes',
@@ -88,7 +86,7 @@ const router = new VueRouter({
             path: '/bodegas',
             name: 'bodegas',
             component: Bodegas,
-            beforeEnter:isAdminBodega
+            beforeEnter: isAdminBodega
         },
         {
             path: '/ventas',
@@ -153,8 +151,8 @@ const router = new VueRouter({
             component: Historial
 
         },
-        { path: '*', name:'404', component: NotFoundComponent },
-        { path: '/401', name:'401',component: Unauthorized }
+        { path: '*', name: '404', component: NotFoundComponent },
+        { path: '/401', name: '401', component: Unauthorized }
 
     ]
 })
