@@ -21,23 +21,23 @@ class VentasController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {   
+    {
         $data=$request->all();
         $limite = (isset($data['limite'])) ? $data['limite'] : 20 ;
         $sucursal=(isset($data['sucursal'])) ? $data['sucursal']: $request->user()->sucursal_id ;
         $tipoventa = (isset($data['tipoventa'])) ? $data['tipoventa'] : null ;
         $acuerdoPago = (isset($data['acuerdo_pago'])) ? $data['acuerdo_pago'] : null ;
-        $cliente=(isset($data['cliente'])) ?  $data['cliente'] : null ; 
+        $cliente=(isset($data['cliente'])) ?  $data['cliente'] : null ;
         $vendedor = (isset($data['vendedor'])) ? $data['vendedor'] : null  ;
         $desde = (isset($data['desde'])) ? $data['desde'] : null ;
         $hasta = (isset($data['hasta'])) ? $data['hasta'] : null ;
-        
+
 
         $ventas = Venta::with('tipos_ventas','vendedor','acuerdo_pago','persona','productos_venta')
         ->whereHas('acuerdo_pago', function($q) use($acuerdoPago){
-            return ($acuerdoPago!=null) ? $q->where('id',$acuerdoPago) : $q ; 
+            return ($acuerdoPago!=null) ? $q->where('id',$acuerdoPago) : $q ;
         })->where(function($q)use($cliente){
-            return ($cliente!=null) ? $q->where('cliente_id',$cliente) : $q ; 
+            return ($cliente!=null) ? $q->where('cliente_id',$cliente) : $q ;
         })->where(function($q) use ($tipoventa){
             return ($tipoventa!=null) ? $q->where('tipo_venta',$tipoventa) : $q ;
 
@@ -65,8 +65,11 @@ class VentasController extends Controller
         }else {
             $periodo = 30;
         }
-      
+
         $ciclo = $periodo*$data['cuotas'];
+
+        $abono = isset($data['abono']) ? $data['abono'] : 0 ;
+        $descuento = isset($data['descuento']) ? $data['descuento'] : 0 ;
 
         $venta = Venta::create([
             'cliente_id'=> $data['cliente']['id'],
@@ -74,20 +77,20 @@ class VentasController extends Controller
             'tipo_venta'=>$data['tipo']['id'],
             'total'=> $data['total'],
             'subtotal' => $data['subtotal'],
-            'abono' => $data['abono'],
-            'descuento' => $data['descuento']
+            'abono' => $abono ,
+            'descuento' => $descuento
         ]);
 
-        
+
         Contabilidad::create(['descripcion' => 'Transaccion generada por una venta', 'tipo' => 1, 'monto' => $data['total'] ]);
 
         if($venta->tipo_venta == 2){
-            $acuerdoPago=AcuerdoPago::create(['venta_id' => $venta->id, 
-                'cliente_id' =>  $data['cliente']['id'], 
-                'cuotas'=> $data['cuotas'], 
-                'periodo_pago'=>$data['periodo'], 
+            $acuerdoPago=AcuerdoPago::create(['venta_id' => $venta->id,
+                'cliente_id' =>  $data['cliente']['id'],
+                'cuotas'=> $data['cuotas'],
+                'periodo_pago'=>$data['periodo'],
                 'monto'=> $data['total'],
-                'finished_at' => $now->add($ciclo,'day')->toDateTimeString()   
+                'finished_at' => $now->add($ciclo,'day')->toDateTimeString()
             ]);
         }
 
@@ -101,7 +104,7 @@ class VentasController extends Controller
 
             $precio = ($venta->tipo_venta == 1 ) ? $producto->precio_contado : $producto->precio_credito ;
             $total+=$data['productosVendidos'][$i]['cantidad']*$precio;
-            
+
             ComisionVenta::create(['item_id'=> $venta->id, 'user_id'=> $vendedor, 'tipo'=>1 , 'monto'=>$comisionProducto, 'estado'=> 'No pagada' ]);
             $productoVenta=['venta_id' => $venta->id,
                             'producto_id'=> $data['productosVendidos'][$i]['producto']['id'],
@@ -113,7 +116,7 @@ class VentasController extends Controller
         }
         Contabilidad::create(['descripcion' => 'Comision generada en venta', 'tipo' => 2 , 'monto' => $comision ]);
         return response()->json(['response'=>'ok','producto'=>$productoVenta]);
-       
+
 
     }
 
