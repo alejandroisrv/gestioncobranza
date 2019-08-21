@@ -23,7 +23,7 @@
               </div>
             </div>
             <div class="form-group">
-              <label>Descripcion</label>
+              <label>Descripción</label>
               <input required v-model="producto.descripcion" type="text" class="form-control">
             </div>
             <div class="form-row">
