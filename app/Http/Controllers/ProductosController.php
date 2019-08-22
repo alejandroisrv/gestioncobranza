@@ -139,10 +139,30 @@ class ProductosController extends Controller
           return response()->json(['error'=> $e->getMessage()], 422);
       }
 
-
       return response()->json($is_saved);
 
     }
+
+
+    public function getTipos(Request $request){
+      $tipos = TiposProductos::all();
+
+      return response()->json($tipos);
+    }
+
+
+    public function addTipo(Request $request){
+      $data = $request->all();
+
+      $tipo = TipoProducto::create([
+        'nombre' => $data['nombre'],
+        'alias' => str_slug($data['nombre']),
+      ]);
+
+      return response()->json(['response'=> true, 'item'=>$tipo],201);
+
+    }
+
     public function destroy($id)
     {
         return Productos::destroy($id);
