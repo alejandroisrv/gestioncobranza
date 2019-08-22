@@ -21,6 +21,12 @@ export default {
     deleteProducto(id) {
         return api().get('/producto/delete/' + id);
     },
+    addTipos(params) {
+        return api().post('/productos/tipo', params);
+    },
+    getTipos(params) {
+        return api().get('/productos/tipos' + p.converParamters(params));
+    },
     entregarProductos(params) {
         if (params == null || params == '' || params.length < 2) return false
         return api().post('/producto/entregar', params);

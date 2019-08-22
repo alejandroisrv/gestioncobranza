@@ -30,6 +30,9 @@ Route::group(['middleware' => 'auth:api'], function () {
   Route::post('/producto/abastecer','ProductosController@abastecer');
   Route::post('/producto/entregar','ProductosController@entregar');
 
+  Route::post('/productos/tipo','ProductosController@addTipo');
+  Route::get('/products/tipos','ProductosController@getTipos');
+  Route::post('/producto/entregar','ProductosController@entregar');
 
   Route::get('/clientes','ClientesController@index');
   Route::post('/cliente/add','ClientesController@create');
