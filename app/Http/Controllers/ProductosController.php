@@ -53,12 +53,28 @@ class ProductosController extends Controller
     }
     public function create(Request $request)
     {
-      if($request->user()->isAdminBodega()){
-          $producto=new Productos($request->all());
-          $producto->bodega_id=$request->user()->bodega_id;
-          $producto->sucursal_id=$request->user()->sucursal_id;
-          $producto->save();
-          return response()->json($producto, 201);
+      $data = $request->all();
+      $user = $request->user();
+      if($user->isAdminBodega()){
+        if($request->hasFile('productoImagen')){
+          $file = $request->file('productoImagen');
+          $imagenName = time().$file->getClientOriginalName();
+          $file->move(public_path('img/productos/'),$imagenName);
+        }
+
+        $producto = Productos::create([
+            'bodega_id'=> $user->bodega_id,
+            'sucursal_id'=> $user->sucursal_id,
+            'nombre' => $data['nombre'],
+            'descripcion' => $data['descripcion'], 
+            'comision' => $data['comision'],
+            'precio_contado' => $data['precio_contado'],
+            'precio_costo' => $data['precio_costo'],
+            'precio_credito'=> $data['precio_credito'],
+            'imagen' => $imagenName
+        ]);
+
+          return response()->json([$producto, 201]);
       }
 
       return response()->json(['response'=>'Unauthorized'],401);

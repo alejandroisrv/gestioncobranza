@@ -10,7 +10,7 @@
       <div slot="title">{{ titulo }}</div>
 
       <div slot="body">
-        <form @submit.prevent="send">
+        <form @submit.prevent="send()">
           <div class="box-body">
             <div class="form-row">
               <div class="form-group col-md-6">
@@ -40,6 +40,12 @@
                 <input required v-model="producto.precio_credito" type="text" class="form-control">
               </div>
             </div>
+            <div class="form-row">
+              <div class="form-group col">
+                  <input @change="previewFiles(e)" type="file" name="productoImagen" ref="inputImg" style="display:none;">
+                  <button class="btn btn-primary" @click="loadImg" type="button">Selecciona una imagen <i class="fa fa-image"></i> </button>
+              </div>
+            </div>
           </div>
           <button type="submit" style="visibility:hidden;"></button>
         </form>
@@ -56,7 +62,7 @@ import axios from "axios";
 export default {
   props: ["producto", "titulo", "url","notificacion"],
   data() {
-    return { show: false };
+    return { img:'',show: false };
   },
   components: {
     "bootstrap-modal": require("vue2-bootstrap-modal")
@@ -68,11 +74,27 @@ export default {
   },
   methods: {
     send() {
-      axios.post(this.url, this.producto).then(rs => {
+      let formData = new FormData();
+      formData.append('nombre', this.producto.nombre);
+      formData.append('comision', this.producto.comision);
+      formData.append('descripcion', this.producto.descripcion);
+      formData.append('precio_costo', this.producto.precio_costo);
+      formData.append('precio_contado', this.producto.precio_contado);
+      formData.append('precio_credito', this.producto.precio_credito);
+      formData.append('productoImagen', this.img);
+      
+      axios.post(this.url,formData,{ headers:{'Content-Type': 'multipart/form-data'}}).then(rs => {
         this.eventHub.$emit("initProductos");
         this.closeTheModal();
         this.$noty.success(this.notificacion);
       });
+    },
+    previewFiles(e) {
+      const file = e.target.files[0];
+      this.img = file;
+    },
+    loadImg() {
+      this.$refs.inputImg.click();
     },
     openTheModal() {
       this.$refs.NuevoProducto.open();
