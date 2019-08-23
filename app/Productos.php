@@ -8,7 +8,7 @@ class Productos extends Model
 {
 
     protected $table = "productos";
-    protected $fillable=['sucursal_id','bodega_id','nombre','descripcion','precio_costo','precio_contado','precio_credito','comision','cantidad','imagen'];
+    protected $fillable=['cod','sucursal_id','bodega_id','nombre','descripcion','tipo_id','precio_costo','precio_contado','precio_credito','comision','cantidad','imagen'];
 
 
     public function bodega(){
@@ -17,6 +17,10 @@ class Productos extends Model
     }
     public function sucursal(){
         return $this->belongsTo('App\Sucursal');
+    }
+
+    public function tipo(){
+        return $this->belongsTo('App\TipoProducto');
     }
 
     public function productos_venta(){

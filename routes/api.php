@@ -24,15 +24,14 @@ Route::group(['middleware' => 'auth:api'], function () {
   Route::get('/dashboard/all','DashboardController@index');
   Route::post('/producto','ProductosController@create');
   Route::get('/productos','ProductosController@index');
-  Route::get('/producto/{id}','ProductosController@getProducto');
   Route::post('/producto/update/{id}','ProductosController@update');
   Route::get('/producto/delete/{id}','ProductosController@destroy');
   Route::post('/producto/abastecer','ProductosController@abastecer');
   Route::post('/producto/entregar','ProductosController@entregar');
 
   Route::post('/productos/tipo','ProductosController@addTipo');
-  Route::get('/products/tipos','ProductosController@getTipos');
-  Route::post('/producto/entregar','ProductosController@entregar');
+  Route::get('/productos/tipos','ProductosController@getTipos');
+
 
   Route::get('/clientes','ClientesController@index');
   Route::post('/cliente/add','ClientesController@create');

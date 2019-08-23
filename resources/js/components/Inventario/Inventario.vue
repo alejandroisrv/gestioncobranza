@@ -33,29 +33,37 @@
                   <table v-if="productos && productos.length > 0 " class="col-md-12 table table-bordered table-striped">
                     <thead>
                       <tr>
-                        <th>Nombre</th>
-                        <th>Cantidad</th>
-                        <th>Precio de contado</th>
-                        <th>Precio a credito</th>
-                        <th></th>
+                        <th>Imágen</th>
+                        <th>Código</th>
+                        <th>Descripción</th>
+                        <th>Categoria</th>
+                        <th>Stock</th>
+                        <th>Precio de compra</th>
+                        <th>Precio de venta</th>
+                        <th>Agregado</th>
+                        <th>Acciones</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr v-for="item in productos" :key="item.id" >
-                        <td>{{ item.nombre }}</td>
-                        <td :class="item.cantidad == 0 ? 'text-danger' : ''" >{{item.cantidad}}</td>
-                        <td>{{ item.precio_contado}}</td>
-                        <td>{{ item.precio_credito }}</td>
+                        <td><img :src="'img/productos/'+ item.imagen"  class="img-producto" /></td>
+                        <td> <b> {{ item.cod }}</b></td>
+                        <td> {{ item.descripcion }} </td>
+                        <td> {{ item.tipo.nombre }} </td>
+                        <td class="text-center"><span v-if="item.cantidad > 15 " class="label stock label-success"> {{item.cantidad}}</span> <span v-else-if="item.cantidad < 5" class="label stock label-danger">{{item.cantidad}}</span> <span v-else-if="item.cantidad > 5 && item.cantidad < 15 " class="label stock label-warning">{{item.cantidad}}</span> </td>
+                        <td>{{ item.precio_costo | currency }}</td>
+                        <td>{{ item.precio_credito | currency  }}</td>
+                        <td> {{ item.created_at | moment('DD/MM/YYYY h:m a') }}</td>
                         <td>
                           <button class="btn btn-default btn-sm" @click="verProducto(item)">
                                 <i class="fa fa-eye"></i>
-                              </button>
+                          </button>
                           <button class="btn btn-primary btn-sm" @click="editarProducto(item)">
                                 <i class="fa fa-edit"></i>
-                              </button>
+                          </button>
                           <button class="btn btn-danger btn-sm" @click="eliminarProducto(item.id)">
                                 <i class="fa fa-trash"></i>
-                              </button>
+                          </button>
                         </td>
                       </tr>
                     </tbody>
@@ -70,10 +78,7 @@
           </div>
         </div>
       </div>
-      <modal-producto :producto="productoModal"
-                      :titulo="tituloModal"
-                      :url="urlModal"
-                      :notificacion="notificacionModal"></modal-producto>
+      <modal-producto :titulo="tituloModal" :url="urlModal" :notificacion="notificacionModal"></modal-producto>
       <modal-entregar></modal-entregar>
       <modal-abastecer :productoList="productList"></modal-abastecer>
       <producto :producto="productoDetalle"></producto>
@@ -128,7 +133,7 @@
     }),
       nuevoProducto() {
         this.openModal()
-        this.productoModal = { nombre: '', descripcion: '', precioContado: '', precioCredito: '', precioCosto: '', comision: ''}
+        this.productoModal = { nombre: '', descripcion: '', precioContado: '', precioCredito: '', precioCosto: '', comision: '', tipo : undefined}
         this.tituloModal = 'Nuevo producto'
         this.urlModal = '/api/producto/'
         this.notificacionModal = 'Producto agregado con éxito!'
@@ -158,7 +163,7 @@
         this.$noty.success(texto)
       },
       openModal() {
-        this.eventHub.$emit('openModal')
+        this.eventHub.$emit('openModal',this.productoModal);
       },
       openAbastercer() {
         this.eventHub.$emit('openAbastercer')
@@ -172,4 +177,6 @@
 </script>
 <style>
 .loading-spinner{font-size: 2.5rem;text-align: center;display: block;margin: 20px 0px;}
+.stock{font-size:14px!important;}
+.img-producto{ width:70px; height:60px;  }
 </style>

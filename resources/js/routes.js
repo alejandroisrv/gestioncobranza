@@ -18,7 +18,7 @@ import Cartera from './components/cobranza/cartera/cartera';
 import Acuerdos from './components/cobranza/acuerdos/acuerdos_pagos'
 import Contabilidad from './components/contabilidad/contabilidad';
 import Historial from './components/Inventario/historial';
-import Municipios from './components/sucursales/Municipios';
+import Municipios from './components/generales/Municipios';
 
 
 Vue.use(VueRouter)
@@ -91,64 +91,74 @@ const router = new VueRouter({
         {
             path: '/ventas',
             name: 'ventas',
-            component: Ventas
+            component: Ventas,
+            beforeEnter: isVendedor
         },
         {
             path: '/sucursales',
             name: 'sucursales',
-            component: Sucursales
+            component: Sucursales,
+            beforeEnter: isAdmin
         },
         {
             path: '/municipios',
             name: 'municipios',
-            component: Municipios
+            component: Municipios,
+            beforeEnter: isAdmin
         },
         {
             path: '/morosos',
             name: 'Morosos',
-            component: Morosos
+            component: Morosos,
+            beforeEnter: isCobrador
         },
         {
             path: '/nomina',
             name: 'Nomina',
-            component: Nomina
+            component: Nomina,
+            beforeEnter: isCobrador
         },
         {
             path: '/comisiones',
             name: 'Comisiones',
-            component: Comisiones
+            component: Comisiones,
+            beforeEnter: isCobrador
         },
         {
             path: '/rutas',
             name: 'Rutas',
-            component: Rutas
-
+            component: Rutas,
+            beforeEnter: isCobrador
         },
         {
             path: '/cobros',
             name: 'Cobros',
-            component: Cobros
+            component: Cobros,
+            beforeEnter: isCobrador
         },
         {
             path: '/cartera/:ruta',
             name: 'Cartera',
-            component: Cartera
+            component: Cartera,
+            beforeEnter: isCobrador
         },
         {
             path: '/acuerdos',
             name: 'Acuerdos',
-            component: Acuerdos
+            component: Acuerdos,
+            beforeEnter: isCobrador
         },
         {
             path: '/contabilidad',
             name: 'Contabilidad',
-            component: Contabilidad
-
+            component: Contabilidad,
+            beforeEnter: isAdmin
         },
         {
             path: '/historial',
             name: 'Historial',
-            component: Historial
+            component: Historial,
+            beforeEnter: isAdmin
 
         },
         { path: '*', name: '404', component: NotFoundComponent },

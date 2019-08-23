@@ -8,7 +8,7 @@ use App\ProductosVendedores;
 use App\ProductosEntregadas;
 use App\User;
 use Illuminate\Http\Request;
-
+use App\TipoProducto;
 class ProductosController extends Controller
 {
 
@@ -17,7 +17,7 @@ class ProductosController extends Controller
       $data = $request->all();
       $bodega = (isset($data['bodega'])) ? $data['bodega'] : null ;
       $sucursal_id = $request->user()->sucursal_id;
-      $productos = Productos::with(['bodega'])->where('sucursal_id',$sucursal_id)
+      $productos = Productos::with(['bodega','tipo'])->where('sucursal_id',$sucursal_id)
       ->where(function($q) use ($bodega,$request){
         if($request->user()->isAdmin()){
           return ($bodega !== null) ? $q->where('bodega_id',$bodega) : $q ;
@@ -32,49 +32,43 @@ class ProductosController extends Controller
 
     }
 
-    public function getProductos(Request $request){
-      $data = $request->all();
-      return $request->user()->isAdmin();
-      $bodega = (isset($data['bodega'])) ? $data['bodega'] : null ;
-      $sucursal_id = $request->user()->sucursal_id;
-      $productos = Productos::where('sucursal_id',$sucursal_id)
-      ->where(function($q) use ($bodega,$request){
-        if($request->user()->isAdmin()){
-          return ($bodega!=null) ? $q->where('bodega_id',$bodega) : $q ;
-        }else{
-          return $q->where('bodega_id',$request->user()->bodega_id);
-        }
-      })
-      ->orderBy('cantidad','DESC')
-      ->paginate(30);
 
-      return response()->json([$productos]);
-
-    }
-    public function create(Request $request)
-    {
+    public function create(Request $request){
       $data = $request->all();
       $user = $request->user();
       if($user->isAdminBodega()){
-        if($request->hasFile('productoImagen')){
-          $file = $request->file('productoImagen');
-          $imagenName = time().$file->getClientOriginalName();
-          $file->move(public_path('img/productos/'),$imagenName);
-        }
 
-        $producto = Productos::create([
-            'bodega_id'=> $user->bodega_id,
-            'sucursal_id'=> $user->sucursal_id,
-            'nombre' => $data['nombre'],
-            'descripcion' => $data['descripcion'], 
-            'comision' => $data['comision'],
-            'precio_contado' => $data['precio_contado'],
-            'precio_costo' => $data['precio_costo'],
-            'precio_credito'=> $data['precio_credito'],
-            'imagen' => $imagenName
-        ]);
+        try {
 
-          return response()->json([$producto, 201]);
+          $imagenName = null;
+          if($request->hasFile('productoImagen')){
+            $file = $request->file('productoImagen');
+            $imagenName = time().$file->getClientOriginalName();
+            $file->move(public_path('img/productos/'),$imagenName);
+          }
+
+          $producto = Productos::create([
+              'bodega_id' => $user->bodega_id,
+              'sucursal_id'=> $user->sucursal_id,
+              'nombre' => $data['nombre'],
+              'descripcion' => $data['descripcion'], 
+              'tipo_id' => $data['tipo'],
+              'comision' => $data['comision'],
+              'precio_contado' => $data['precio_contado'],
+              'precio_costo' => $data['precio_costo'],
+              'precio_credito'=> $data['precio_credito'],
+              'imagen' => $imagenName
+          ]);
+
+          $producto->cod = "0{$producto->tipo_id}0{$producto->id}";
+          $producto->save();
+  
+          return response()->json([$producto],201);
+
+          } catch (\Exception $e) {
+            return response()->json(['response'=> $e->getMessage()],422);
+          }
+
       }
 
       return response()->json(['response'=>'Unauthorized'],401);
@@ -83,8 +77,24 @@ class ProductosController extends Controller
 
     public function update(Request $request,$id)
     {
+        $data = $request->all();
         $producto = Productos::find($id);
-        $producto->update($request->all());
+        $imagenName = null;
+          if($request->hasFile('productoImagen')){
+            $file = $request->file('productoImagen');
+            $imagenName = time().$file->getClientOriginalName();
+            $file->move(public_path('img/productos/'),$imagenName);
+          }
+        $producto->update([
+          'nombre' => $data['nombre'],
+          'descripcion' => $data['descripcion'], 
+          'tipo_id' => $data['tipo'],
+          'comision' => $data['comision'],
+          'precio_contado' => $data['precio_contado'],
+          'precio_costo' => $data['precio_costo'],
+          'precio_credito'=> $data['precio_credito'],
+          'imagen' => $imagenName
+        ]);
         return $producto;
     }
     public function abastecer(Request $request){
@@ -145,7 +155,7 @@ class ProductosController extends Controller
 
 
     public function getTipos(Request $request){
-      $tipos = TiposProductos::all();
+      $tipos = TipoProducto::all();
 
       return response()->json($tipos);
     }
@@ -155,7 +165,7 @@ class ProductosController extends Controller
       $data = $request->all();
 
       $tipo = TipoProducto::create([
-        'nombre' => $data['nombre'],
+        'label' => $data['nombre'],
         'alias' => str_slug($data['nombre']),
       ]);
 
@@ -163,9 +173,19 @@ class ProductosController extends Controller
 
     }
 
-    public function destroy($id)
-    {
-        return Productos::destroy($id);
+    public function destroy($id){
+
+        try {
+          $producto = Producto::find($id);
+          if($producto){
+              $producto->delete();
+              return response()->json(['response' => true],200);
+          }
+        } catch (\Exception $e) {
+          return response()->json(['response' => $e->getMessage()],422);
+        }
+
+        return response()->json(['response' => false],422);
 
     }
 }
