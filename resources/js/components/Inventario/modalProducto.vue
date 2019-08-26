@@ -59,7 +59,7 @@
       </div>
       <div slot="footer">
         <button type="button" class="btn btn-default" @click="closeTheModal">Cancelar</button>
-        <button type="submit" class="btn btn-primary" @click="send">Guardar</button>
+        <button type="submit" class="btn btn-primary" @click="send" :disabled="sending"><span v-if="!sending">Guardar</span><span v-else><i>Enviando...</i></span></button>
       </div>
     </bootstrap-modal>
   </div>
@@ -75,7 +75,8 @@ export default {
        img:'',
        show: false,
        tipoProductos:[],
-       producto:''
+       producto:'',
+       sending:false
       }
   },
   components: {

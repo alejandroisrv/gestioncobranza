@@ -22,7 +22,7 @@ Route::group(['middleware' => 'auth:api'], function () {
   Route::post('/example','ExampleController@create');
 
   Route::get('/dashboard/all','DashboardController@index');
-  Route::post('/producto','ProductosController@create');
+  Route::post('/producto/add','ProductosController@create');
   Route::get('/productos','ProductosController@index');
   Route::post('/producto/update/{id}','ProductosController@update');
   Route::get('/producto/delete/{id}','ProductosController@destroy');

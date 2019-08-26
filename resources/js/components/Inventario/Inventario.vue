@@ -159,7 +159,7 @@ import Noty from 'noty'
       nuevoProducto() {
         this.productoModal = { nombre: '', descripcion: '', precioContado: '', precioCredito: '', precioCosto: '', comision: '', tipo : undefined,imagen:''}
         this.tituloModal = 'Nuevo producto'
-        this.urlModal = '/api/producto/'
+        this.urlModal = '/api/producto/add'
         this.notificacionModal = 'Producto agregado con éxito!'
         this.openModal()
       },
