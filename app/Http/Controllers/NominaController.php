@@ -86,6 +86,9 @@ class NominaController extends Controller
     }
 
     public function delete($id){
+        if($id == 1){
+            return response()->json(['response'=> 'No se puede eliminar este usuario'],401);
+        }
 
         $usuario=$id;
         $trabajador=User::find($usuario);
