@@ -160,14 +160,22 @@ export default {
       getClientes:'clientes/getClientesFormat'
     }),
     generateVenta() {
+      
       if(this.VentaGeneral.cliente == undefined && this.VentaGeneral.cliente == null ){
         this.$noty.error('Debe seleccionar el cliente');
         return false;
       }
+
       if(this.VentaGeneral.tipo == undefined && this.VentaGeneral.tipo == null ){
         this.$noty.error('Debe seleccionar el tipo de venta');
         return false;
       }
+
+      if(this.VentaGeneral.productosVendidos.length == 0 ){
+        this.$noty.error('Debe agregar al menos un producto');
+        return false;
+      }
+
       
       axios.post(this.url, this.VentaGeneral).then(rs => {
         this.eventHub.$emit("sendVentas");
