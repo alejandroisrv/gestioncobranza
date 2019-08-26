@@ -175,7 +175,7 @@ import Noty from 'noty'
         this.eventHub.$emit('detalleProducto')
 
       },
-      async eliminarProducto(id) {
+      eliminarProducto(id) {
         var n = new Noty({
           text: '¿Estas seguro que deseas eliminar el producto?',
           layout:'center',
@@ -185,9 +185,12 @@ import Noty from 'noty'
                 n.close();
             }),
             Noty.button('Aceptar', 'btn-sm btn btn-primary', function () {
-                await ProductoService.deleteProducto(id);
-                this.notificacion('Producto Eliminado')
-                this.searchProductos(1);
+                ProductoService.deleteProducto(id).then(rs=>{
+                  this.notificacion('Producto Eliminado')
+                  this.searchProductos(1);
+                }).catch(err=>{
+                  this.$noty.error("No se ha podido eliminar el producto");
+                })
                 n.close();
             }.bind(this), {id: 'button1', 'data-status': 'ok'})
           ]

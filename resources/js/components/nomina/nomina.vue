@@ -104,7 +104,7 @@
       },
      async eliminarUsuario(id){
         var n = new Noty({
-        text: '¿Estas seguro que deseas eliminar el producto?',
+        text: '¿Estas seguro que deseas eliminar el trabajador?',
         layout:'center',
         modal:true,
         buttons: [
@@ -112,9 +112,10 @@
               n.close();
           }),
           Noty.button('Aceptar', 'btn-sm btn btn-primary', function () {
-              await NominaService.delete(id);
-              this.$noty.success('Trabajador Eliminado');
-              this.getNomina();
+              NominaService.delete(id).then(rs => {
+                this.$noty.success('Trabajador Eliminado');
+                this.getNomina();
+              }).catch( err => this.$noty.error('Se ha producido un error'));
               n.close();
             }.bind(this), {id: 'button1', 'data-status': 'ok'})
           ]

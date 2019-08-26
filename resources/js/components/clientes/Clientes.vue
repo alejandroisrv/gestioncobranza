@@ -163,7 +163,7 @@ export default {
     verCliente(cliente) {
       this.eventHub.$emit('verCliente',cliente);
     },
-   async eliminarCliente(id) {
+    eliminarCliente(id) {
       var n = new Noty({
       text: '¿Estas seguro que deseas eliminar el cliente?',
       layout:'center',
@@ -173,9 +173,10 @@ export default {
             n.close();
         }),
         Noty.button('Aceptar', 'btn-sm btn btn-primary', function () {
-            await axios.get(`/api/cliente/delete/${id}`);
-            this.getClientes();
-            this.notificacion("Cliente Eliminado");
+            axios.get(`/api/cliente/delete/${id}`).then(rs=>{
+              this.getClientes();
+              this.notificacion("Cliente Eliminado");
+            }).catch(err => this.$noty.error('Se ha producido un error al intentar eliminar el cliente'));
             n.close();
         }.bind(this), {id: 'button1', 'data-status': 'ok'})
         ]

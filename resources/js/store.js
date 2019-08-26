@@ -33,7 +33,7 @@ const store = new Vuex.Store({
     actions: {
         initStore({ dispatch, state }) {
             dispatch('municipios/initMunicipios');
-            console.log("Store running...");
+            //console.log("Store running...");
         }
     },
     strict: false,

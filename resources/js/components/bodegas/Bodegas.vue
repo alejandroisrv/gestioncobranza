@@ -115,15 +115,24 @@ export default {
     },
 
     eliminarBodega(id) {
-      this.$confirm("¿Estas seguro que deseas eliminar la bodega?").then(
-        res => {
-          if (res) {
-            axios.get(`bodega/delete/${id}`);
-            this.getBodegas();
-            this.notificacion("Bodega Eliminado");
-          }
-        }
-      );
+      var n = new Noty({
+      text: "¿Estas seguro que deseas eliminar la bodega?",
+      layout:'center',
+      modal:true,
+      buttons: [
+        Noty.button('Cancelar', 'btn btn-danger mx-2 btn-sm', function () {
+            n.close();
+        }),
+        Noty.button('Aceptar', 'btn-sm btn btn-primary', function () {
+            axios.get(`bodega/delete/${id}`).then(rs =>{
+              this.getBodegas();
+              this.notificacion("Bodega Eliminado");
+            }).catch(err => this.$noty.error('Se ha producido un error al intentar eliminar la bodega'));
+            n.close();
+        }.bind(this), {id: 'button1', 'data-status': 'ok'})
+        ]
+      });
+      n.show();
     },
     notificacion(texto) {
       this.$noty.success(texto);

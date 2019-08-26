@@ -107,15 +107,24 @@ export default {
     },
     verSucursal(sucursal) {},
     eliminarSucursal(id) {
-      this.$confirm("¿Estas seguro que deseas eliminar la sucursal?").then(
-        res => {
-          if (res) {
-            axios.get(`/api/sucursal/delete/${id}`);
-            this.getSucursales();
-            this.notificacion("Sucursal Eliminado");
-          }
-        }
-      );
+      var n = new Noty({
+      text: '¿Estas seguro que deseas eliminar la sucursal?',
+      layout:'center',
+      modal:true,
+      buttons: [
+        Noty.button('Cancelar', 'btn btn-danger mx-2 btn-sm', function () {
+            n.close();
+        }),
+        Noty.button('Aceptar', 'btn-sm btn btn-primary', function () {
+            axios.get(`/api/sucursal/delete/${id}`).then(rs =>{
+              this.getSucursales();
+              this.notificacion("Sucursal Eliminado");
+            }).catch(err => this.$noty.error('Se ha producido un error al intentar eliminar la sucursal'));
+            n.close();
+        }.bind(this), {id: 'button1', 'data-status': 'ok'})
+        ]
+      });
+      n.show();
     },
     notificacion(texto) {
       this.$noty.success(texto);
