@@ -102,7 +102,7 @@
         this.nomina = rs.data.body
         this.loading = false
       },
-      eliminarUsuario(id){
+     async eliminarUsuario(id){
         var n = new Noty({
         text: '¿Estas seguro que deseas eliminar el producto?',
         layout:'center',
@@ -112,7 +112,7 @@
               n.close();
           }),
           Noty.button('Aceptar', 'btn-sm btn btn-primary', function () {
-              NominaService.delete(id);
+              await NominaService.delete(id);
               this.$noty.success('Trabajador Eliminado');
               this.getNomina();
               n.close();

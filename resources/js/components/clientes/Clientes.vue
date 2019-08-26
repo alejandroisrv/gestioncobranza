@@ -163,7 +163,7 @@ export default {
     verCliente(cliente) {
       this.eventHub.$emit('verCliente',cliente);
     },
-    eliminarCliente(id) {
+   async eliminarCliente(id) {
       var n = new Noty({
       text: '¿Estas seguro que deseas eliminar el cliente?',
       layout:'center',
@@ -173,7 +173,7 @@ export default {
             n.close();
         }),
         Noty.button('Aceptar', 'btn-sm btn btn-primary', function () {
-            axios.get(`/api/cliente/delete/${id}`);
+            await axios.get(`/api/cliente/delete/${id}`);
             this.getClientes();
             this.notificacion("Cliente Eliminado");
             n.close();
