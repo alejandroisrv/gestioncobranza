@@ -7,7 +7,8 @@
       <div class="row">
         <div class="col-xs-12">
           <div class="box box-default">
-            <div class="box-body text-left justify-content-end align-items-center">
+            <div class="box-body text-left justify-
+            content-end align-items-center">
               <div class="col-md-12 text-right">
                 <button class="btn btn-primary" @click="nuevoMunicipio()">Añadir municipio</button>
               </div>
@@ -25,16 +26,27 @@
                   <thead>
                     <tr>
                       <th>Municipio</th>
+                      <th>Clientes</th>
+                      <th>Sucursales</th>
+                      <th>Bodegas</th>
                       <th>Fecha</th>
                       <th></th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="item in municipios.data" :key="item.id">
-                      <td>{{ item.municipio }}</td>
+                      <td >{{ item.municipio }}</td>
+                      <td> {{ item.clientes_count }} </td>
+                      <td> {{ item.sucursales_count }} </td>
+                      <td> {{ item.bodegas_count }} </td>
                       <td>{{ item.created_at | moment('DD/MM/YYYY') }}</td>
-                      <td>
-
+                       <td>
+                         <button class="btn btn-primary btn-sm" @click="editMunicipio(item)">
+                              <i class="fa fa-edit"></i>
+                          </button>
+                          <button class="btn btn-danger btn-sm" @click="deleteMunicipio(item.id)" v-if="(item.clientes_count == 0 && item.sucursales_count == 0 && item.bodegas_count == 0)">
+                                <i class="fa fa-trash"></i>
+                          </button>
                       </td>
                     </tr>
                   </tbody>
@@ -64,7 +76,7 @@ export default {
   components: { NuevoMunicipio },
   created() {
     this.getMunicipios();
-    this.eventHub.$on("LoadMunicipios",()=>{
+    this.eventHub.$on("LoadMunicipios",() => {
       this.getMunicipios();
     });
   },
@@ -76,11 +88,30 @@ export default {
       this.loading = false;
     },
     nuevoMunicipio(){
-      this.eventHub.$emit('NuevoMunicipio');
+      this.eventHub.$emit('NuevoMunicipio',null);
     },
-    verMunicipio(item) {
-      this.eventHub.$emit('verCobro',item);
+    editMunicipio(item){
+      this.eventHub.$emit('NuevoMunicipio',item);
     },
+    deleteMunicipio(id){
+      var n = new Noty({
+      text: '¿Estas seguro que deseas eliminar el municipio?',
+      layout:'center',
+      modal:true,
+      buttons: [
+            Noty.button('Cancelar', 'btn btn-danger mx-2 btn-sm', function () {
+            n.close();
+        }),
+        Noty.button('Aceptar', 'btn-sm btn btn-primary', function () {
+            MunicipioService.delete(id);
+            this.$noty.success('Municipio eliminado');
+            this.getMunicipios();
+            n.close();
+          }.bind(this), {id: 'button1', 'data-status': 'ok'})
+        ]
+      });
+      n.show();
+    }
   }
 };
 </script>

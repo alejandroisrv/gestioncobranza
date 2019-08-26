@@ -1,6 +1,6 @@
 <template>
-    <bootstrap-modal ref="NuevoMunicipio" :need-header="true" :need-footer="true" :size="'small'">
-      <div slot="title"> Nuevo municipio</div>
+    <bootstrap-modal ref="NuevoTipo" :need-header="true" :need-footer="true" :size="'small'">
+      <div slot="title"> Nuevo tipo de producto</div>
       <div slot="body">
           <div class="box-body" style="padding-top: 0px;">
                   <div class="row">
@@ -10,11 +10,11 @@
                           <form @submit.prevent="send()">
                             <table class="table col-md-12">
                                 <tr>
-                                  <td class="td-select">Ingresa el nombre del municipio:</td>
+                                  <td class="td-select">Ingresa el tipo de producto:</td>
                                 </tr>
                                 <tr>
                                   <td class="td-select">
-                                    <input type="text" class="form-control" v-model="postData.municipio">
+                                    <input type="text" class="form-control" v-model="postData.tipo">
                                   </td>
                                 </tr>
                           </table>
@@ -31,15 +31,15 @@
     </bootstrap-modal>
 </template>
 <script>
-import MunicipioService from '../../services/municipios';
+import ProductoService from '../../services/productos';
+
 export default {
     data(){
       return{
           error:false,
           postData:{
-            municipio:'',
+            tipo:'',
           },
-          editando:false,
           loading:true
         }
     },
@@ -47,29 +47,24 @@ export default {
         "bootstrap-modal": require("vue2-bootstrap-modal")
     },
     created(){
-        this.eventHub.$on('NuevoMunicipio', municipio =>{
-           console.log(municipio);
-           
-           this.editando = false;
-           this.postData = {
-             municipio:''
-           }
-
-           if(municipio !== null ){
-              this.postData = municipio;
-              this.postData.municipio = municipio.municipio;
+        this.eventHub.$on('NuevoTipo', tipo => {
+            this.editando = false
+            this.postData.tipo = '';
+            if(tipo !== null ){
+              this.postData = tipo;
+              this.postData.tipo = tipo.label;
               this.editando = true;
             }
-            this.$refs.NuevoMunicipio.open();
+            this.$refs.NuevoTipo.open();
         });
     },
     methods:{
         cancel(){
-          this.postData.municipio = '';
-          this.$refs.NuevoMunicipio.close();
+          this.postData.tipo = '';
+          this.$refs.NuevoTipo.close();
         },
-        validateMunicipio(){
-          if(this.postData.municipio.length < 3){
+        validateTipo(){
+          if(this.postData.tipo.length < 3){
             this.error = true;
             return true;
           }
@@ -77,21 +72,20 @@ export default {
           return false;
         },
         async send(){
-          if(!(this.validateMunicipio())){
+          if(!(this.validateTipo())){
             try {
-              const rs = (!this.editando) ? await MunicipioService.add(this.postData) : await MunicipioService.update(this.postData) ;
+              const rs = (!this.editando) ? await ProductoService.addTipos(this.postData) : await ProductoService.editTipos(this.postData) ;
               if(rs.data.response){
-                this.$noty.success((!this.editando) ? 'Se ha creado el municipio con éxito': 'Se ha editado el municipio con éxito');
+                this.$noty.success((!this.editando) ? 'Se ha creado el tipo de producto con exito': 'Se ha editado el tipo de producto con exito');
                 this.error = false;
               }
-              this.eventHub.$emit("LoadMunicipios");
+              this.eventHub.$emit("LoadTipos");
               this.cancel();
-    
-            } catch (error) {
-              this.$noty.error('Se ha producido un erro al intentar cambiar crear');
+            } catch (err) {
+              this.$noty.error('Se ha producido un error');
             }
           }
-        }
+        },
     },
 
 }

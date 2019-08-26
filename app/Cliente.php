@@ -7,7 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Cliente extends Model
 {
     protected $table="clientes";
-    protected $fillable=['sucursal_id','nombre','apellido','direccion','cedula','municipio_id','telefono','email'];
+    protected $fillable=['sucursal_id',
+                          'cod',
+                          'nombre',
+                          'cedula',
+                          'telefono',
+                          'direccion',
+                          'municipio_id',
+                          'email',
+                          'ruta'
+                        ];
 
     public function sucursal(){
       return $this->belongsTo('App\Sucursal');

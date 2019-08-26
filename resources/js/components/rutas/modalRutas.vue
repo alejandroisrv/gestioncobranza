@@ -124,6 +124,7 @@ export default {
                 this.step = 0;
             }
             console.log(this.clientes.data);
+            this.buscarClientes();
             this.openTheModal();
         })
     }, 
@@ -183,7 +184,7 @@ export default {
             if(this.step==2){
                 this.list = []
                 this.clientes.data.forEach(e=>{
-                    if(e.select) this.list.push({id:e.id, nombre: `${e.nombre} ${e.apellido}`, direccion: e.direccion});
+                    if(e.select) this.list.push({id:e.id, nombre: `${e.nombre}`, direccion: e.direccion});
                 });
             }
         },

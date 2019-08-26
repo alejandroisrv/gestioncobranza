@@ -17,7 +17,17 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'sucursal_id','bodega_id','name','cedula','direccion','telefono','email','role','password','api_token',
+        'sucursal_id',
+        'bodega_id',
+        'name',
+        'cedula',
+        'direccion',
+        'telefono',
+        'email',
+        'correo',
+        'role',
+        'password',
+        'api_token',
     ];
     /**
      * The attributes that should be hidden for arrays.
@@ -43,6 +53,10 @@ class User extends Authenticatable
 
     public function sucursal(){
         return $this->belongsTo('App\Sucursal');
+    }
+
+    public function bodega(){
+        return $this->belongsTo('App\Bodega');
     }
 
     public function rol(){

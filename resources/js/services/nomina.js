@@ -6,17 +6,11 @@ export default {
         let query = p.converParamters(params);
         return api().get('nomina/all' + query);
     },
-    getData() {
-
-
-    },
     add(params) {
-
         return api().post('nomina/add', params);
     },
     edit(params) {
-        let query = p.converParamters(params);
-        return api().post('nomina/edit', query);
+        return api().post('nomina/edit', params);
     },
     delete(id) {
         return api().post('nomina/delete/' + id);

@@ -15,14 +15,21 @@ class ClientesController extends Controller
         $municipio = isset($data['municipio']) ? $data['municipio'] : null ;
         $direccion = isset($data['direccion']) ? $data['direccion'] : null ;
         $ruta = isset($data['ruta']) ? $data['ruta'] : null ;
-        $nombre = isset($data['nombre']) ? $data['nombre'] : null ;
+        $nombre = isset($data['buscar']) ? $data['buscar'] : null ;
+        $codigo = isset($data['buscar']) ? $data['buscar'] : null ;
         $sucursal= isset($request->user()->sucursal_id) ? $request->user()->sucursal_id : null ;
-        $clientes = Cliente::with('sucursal','acuerdos_pagos','pagos_clientes')
+        $clientes = Cliente::with(['sucursal','municipio','acuerdos_pagos','pagos_clientes','ruta_items.ruta'])
+        ->where(function($q) use($codigo){
+            return ($codigo !== null) ? $q->where('codigo',$codigo ) : $q ;
+        })
         ->where(function($q) use($direccion){
             return ($direccion!==null) ? $q->where('direccion','like', '%'.$direccion.'%') : $q ;
         })
         ->where(function($q) use($nombre){
-            return ($nombre!=null) ? $q->where('nombre','like', '%'.$nombre.'%') : $q ;
+            return ($nombre != null) ? $q->where('nombre','like', '%'.$nombre.'%') : $q ;
+        })
+        ->where(function($q) use($municipio){
+            return ($municipio != null) ? $q->where('municipio_id', $municipio) : $q ;
         })
         ->where(function($q) use($ruta){
             return ($ruta!=null) ? $q->where('ruta', $ruta) : $q ;
@@ -38,10 +45,30 @@ class ClientesController extends Controller
 
     public function create(Request $request)
     {
-        $cliente = new Cliente($request->all());
-        $cliente->sucursal_id=$request->user()->sucursal_id;
-        $cliente->save();
-        return $cliente;
+        $data = $request->all();
+        $user = auth()->user();
+        try {
+            
+            $cliente = Cliente::create([
+                'sucursal_id' => $user->sucursal_id,
+                'nombre'=> $data['nombre'],
+                'cedula' => $data['cedula'],
+                'telefono'  => $data['telefono'],
+                'direccion'  => $data['direccion'],
+                'email' => $data['email'],
+                'municipio_id'  => $data['municipio_id']
+            ]);
+                    
+            $cliente->cod = "0{$user->sucursal_id}0{$cliente->id}";
+            $cliente->save();
+
+            return response()->json(['response'=>true,'item'=> $cliente]);
+
+        } catch (\Exception $e) {
+
+            return response()->json(['response'=>false, 'error'=> $e->getMessage() ], 422);   
+
+        }
 
     }
 
@@ -68,8 +95,18 @@ class ClientesController extends Controller
 
     public function update(Request $request,$id)
     {
-        $cliente=Cliente::find($id);
-        $cliente->update($request->all());
+        $data = $request->all();
+
+        $cliente=Cliente::find($id)->update([
+            'nombre'=> $data['nombre'],
+            'cedula' => $data['cedula'],
+            'telefono'  => $data['telefono'],
+            'direccion'  => $data['direccion'],
+            'email' => $data['email'],
+            'municipio_id'  => $data['municipio_id']
+        ]);
+
+        return response()->json(['response'=>true,'item' => $cliente ],201);
     }
 
     public function destroy(Request $request,$id)

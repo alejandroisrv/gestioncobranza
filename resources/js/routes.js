@@ -19,7 +19,7 @@ import Acuerdos from './components/cobranza/acuerdos/acuerdos_pagos'
 import Contabilidad from './components/contabilidad/contabilidad';
 import Historial from './components/Inventario/historial';
 import Municipios from './components/generales/Municipios';
-
+import TipoProductos from './components/generales/TipoProductos';
 
 Vue.use(VueRouter)
 const user = JSON.parse(localStorage.getItem('auth'));
@@ -158,8 +158,14 @@ const router = new VueRouter({
             path: '/historial',
             name: 'Historial',
             component: Historial,
-            beforeEnter: isAdmin
+            beforeEnter: isAdminBodega
 
+        },
+        {
+            path: '/tipo-productos',
+            name: 'tipo-productos',
+            component: TipoProductos,
+            beforeEnter: isAdmin
         },
         { path: '*', name: '404', component: NotFoundComponent },
         { path: '/401', name: '401', component: Unauthorized }

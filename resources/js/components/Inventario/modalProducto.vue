@@ -4,7 +4,7 @@
       <div slot="title">{{ titulo }}</div>
       <div slot="body">
         <form @submit.prevent="send()">
-          <div class="box-body">
+          <div class="box-body" v-if="producto!=''">
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label>Nombre</label>
@@ -48,7 +48,7 @@
               </div>
             </div>
             <div class="form-row" v-if="img !== ''">
-              <div class="form-group col-md-4">
+              <div class="form-group form-group text-left col-md-8" style="padding-top:0px!important;">
                   <span class="deleteImg" @click="deleteImg()"> &times; </span>
                   <img class="img-preview" id="preview-img" :src="previewImg" />
               </div>
@@ -75,7 +75,7 @@ export default {
        img:'',
        show: false,
        tipoProductos:[],
-       producto:{}
+       producto:''
       }
   },
   components: {
@@ -88,7 +88,7 @@ export default {
         this.img = this.producto.imagen;
         this.previewImg = 'img/productos/' + this.producto.imagen;
       }
-      this.openTheModal();
+      this.modalPoducto();
       
     });
 
@@ -144,12 +144,13 @@ export default {
       }
       
 
-
+      console.log(this.producto.tipo);
+  
       let formData = new FormData();
       formData.append('nombre', this.producto.nombre);
       formData.append('comision', this.producto.comision);
       formData.append('descripcion', this.producto.descripcion);
-      formData.append('tipo', this.producto.tipo_id.id);
+      formData.append('tipo', this.producto.tipo.id);
       formData.append('precio_costo', this.producto.precio_costo);
       formData.append('precio_contado', this.producto.precio_contado);
       formData.append('precio_credito', this.producto.precio_credito);
@@ -166,7 +167,7 @@ export default {
       }).finally(fl => this.sending = false );
     },
     getTipos(){
-      axios.get('/api/productos/tipos').then(rs=> {
+      axios.get('/api/productos/tipos-list').then(rs=> {
         this.tipoProductos = rs.data;    
       }).catch(err=> {
         this.$noty.error('Se ha producido un error al intentar');
@@ -183,7 +184,7 @@ export default {
     loadImg() {
       this.$refs.inputImg.click();
     },
-    openTheModal() {
+    modalPoducto() {
       this.$refs.NuevoProducto.open();
     },
     closeTheModal() {

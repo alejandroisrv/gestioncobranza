@@ -32,4 +32,24 @@ class MunicipioController extends Controller
         return response()->json($municipio,201);
     }
 
+
+    public function update(Request $request){
+        $data = $request->all();
+        $municipio = Municipio::find($data['id'])->update([
+          'municipio' => $data['municipio']
+        ]);
+
+        return response()->json($municipio,201);
+
+    }
+
+    public function delete($id){
+        $municipio = Municipio::find($id);
+        if($municipio){
+            $municipio->delete();
+            return response()->json(['response'=>true],201);
+        }
+        return response()->json(['response'=> false], 422);
+    }
+
 }

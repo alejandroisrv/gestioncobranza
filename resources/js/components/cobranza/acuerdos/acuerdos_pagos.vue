@@ -25,6 +25,7 @@
               <table v-if=" acuerdo_pagos.data && acuerdo_pagos.data.length > 0 " class="table table-bordered table-striped">
                 <thead>
                   <tr>
+                    <th>Venta</th>
                     <th>Cliente</th>
                     <th>Cuotas</th>
                     <th>Periodo de pago</th>
@@ -36,7 +37,8 @@
                 </thead>
                 <tbody>
                   <tr v-for="item in acuerdo_pagos.data" :key="item.id">
-                    <td>{{ item.cliente.nombre }} {{ item.cliente.apellido  }}  </td>
+                    <th> {{ item.venta.cod }} </th>
+                    <td>{{ item.cliente.nombre }}</td>
                     <td>{{ item.cuotas }}</td>
                     <td>{{ item.periodo_pago  }}</td>
                     <td>{{ item.monto | currency }}</td>
@@ -46,9 +48,9 @@
                       <button class="btn btn-default btn-sm" @click="verDetalle(item)">
                         <i class="fa fa-eye"></i>
                       </button>
-                      <button class="btn btn-danger btn-sm" @click="eliminarCliente(item.id)">
+                      <!-- <button class="btn btn-danger btn-sm" @click="eliminarCliente(item.id)">
                         <i class="fa fa-trash"></i>
-                      </button>
+                      </button> -->
                     </td>
                   </tr>
                 </tbody>

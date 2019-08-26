@@ -34,20 +34,17 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct(){
-    }
     public function login(Request $request){
       $data = $request->all();
       $credentials= ['email'=>$data['email'],'password'=>$data['password']];
       if (auth()->attempt($credentials)) {
-        // Authentication passed...
         $user = auth()->user();
+        $user->load(['sucursal','rol']);
         $user->api_token = str_random(60);
         $user->save();
-        return redirect('/');
-    }
-
-      return back()->withErrors(['email'=> 'Ha ocurrido un error, el usuario o la contraseña son incorrectos']);
+        return response()->json(['response' => true,'user'=> $user]);
+      }
+      return response()->json(['error'=> 'Los datos son incorrectos']);
     }
 
     public function LogOut(Request $request){

@@ -7,7 +7,6 @@
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <meta name="user" content="{{ Auth::user()->with('rol')->first()}}">
   <!-- Bootstrap 3.3.7 -->
   <link rel="stylesheet" href="plugins/bootstrap/dist/css/bootstrap.min.css">
   <!-- Font Awesome -->
@@ -17,6 +16,10 @@
   <link rel="stylesheet" href="plugins/dist/css/AdminLTE.min.css">
   <link rel="stylesheet" href="plugins/dist/css/skins/_all-skins.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  <link rel="stylesheet" href="plugins/dist/css/skins/_all-skins.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/rikmms/progress-bar-4-axios/0a3acf92/dist/nprogress.css" />
+  <link rel="stylesheet" href="{{asset('css/app.css')}}">
+
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
@@ -46,16 +49,17 @@
 <!-- ./wrapper -->
 
 <!-- jQuery 3 -->
-<script src="plugins/jquery/dist/jquery.min.js"></script>
-<!-- Bootstrap 3.3.7 -->
-<script src="plugins/bootstrap/dist/js/bootstrap.min.js"></script>
-<!-- SlimScroll -->
-<script src="plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
-<!-- FastClick -->
-<script src="plugins/fastclick/lib/fastclick.js"></script>
+  <script src="plugins/jquery/dist/jquery.min.js"></script>
+  <!-- Bootstrap 3.3.7 -->
+  <script src="plugins/bootstrap/dist/js/bootstrap.min.js"></script>
+  <!-- SlimScroll -->
+  <script src="plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+  <!-- FastClick -->
+  <script src="plugins/fastclick/lib/fastclick.js"></script>
 
-<script src="plugins/dist/js/adminlte.min.js"></script>
-<script src="{{asset('js/app.js')}}"></script>
-
+  <script src="plugins/dist/js/adminlte.min.js"></script>
+  <script src="/js/manifest.js"></script>
+  <script src="/js/vendor.js"></script>
+  <script src="/js/app.js"></script>
 </body>
 </html>

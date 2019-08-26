@@ -17,6 +17,7 @@ class ProductosController extends Controller
       $data = $request->all();
       $bodega = (isset($data['bodega'])) ? $data['bodega'] : null ;
       $sucursal_id = $request->user()->sucursal_id;
+      $buscar = (isset($data['buscar'])) ? $data['buscar'] : null ;
       $productos = Productos::with(['bodega','tipo'])->where('sucursal_id',$sucursal_id)
       ->where(function($q) use ($bodega,$request){
         if($request->user()->isAdmin()){
@@ -25,8 +26,10 @@ class ProductosController extends Controller
           return $q->where('bodega_id',$request->user()->bodega_id);
         }
       })
-      ->orderBy('cantidad','DESC')
-      ->paginate(30);
+      ->where(function($q) use ($buscar){
+          return ($buscar !== null) ? $q->where('cod','like',$buscar)->orWhere('nombre','like','%'.$buscar.'%') : $q ;
+      })->orderBy('cantidad','DESC')
+      ->paginate(10);
 
       return response()->json($productos);
 
@@ -155,28 +158,52 @@ class ProductosController extends Controller
 
 
     public function getTipos(Request $request){
-      $tipos = TipoProducto::all();
+      $tipos = TipoProducto::withCount('productos')->paginate(10);
+      $tipos->load('productos');
+      return response()->json(['body' => $tipos]);
+    }
 
+    public function getTiposList(){
+      $tipos = TipoProducto::all();
       return response()->json($tipos);
     }
 
 
     public function addTipo(Request $request){
       $data = $request->all();
-
       $tipo = TipoProducto::create([
-        'label' => $data['nombre'],
-        'alias' => str_slug($data['nombre']),
+        'label' => $data['tipo'],
+        'alias' => str_slug($data['tipo']),
       ]);
-
       return response()->json(['response'=> true, 'item'=>$tipo],201);
+    }
+
+    
+    public function editTipo(Request $request){
+      $data = $request->all();
+      $tipo = TipoProducto::find($data['id'])->update([
+        'label' => $data['tipo'],
+        'alias' => str_slug($data['tipo']),
+      ]);
+      return response()->json(['response'=> true, 'item'=>$tipo],201);
+    }
+
+    public function deleteTipos($id){
+
+      $tipo= TipoProducto::find($id);
+
+      if($tipo->delete()){
+        return response()->json(['response'=> true],201);
+      }
+
+      return response()->json(['response'=> false],201);
 
     }
 
     public function destroy($id){
 
         try {
-          $producto = Producto::find($id);
+          $producto = Productos::find($id);
           if($producto){
               $producto->delete();
               return response()->json(['response' => true],200);

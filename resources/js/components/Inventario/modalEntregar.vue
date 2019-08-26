@@ -16,6 +16,9 @@
                 <label for v-if="vendedores && vendedores.length>0">Vendedores</label>
                 <v-select v-if="vendedores && vendedores.length>0" v-model="datosEnviar.vendedores" :options="vendedores" :multiple="true" placeholder="Selecciona a los vendedores"></v-select>
               </div>
+              <div class="col-md-12 my-2" v-else>
+                <p class="text-danger">Esta bodega no tiene vendedores.</p>
+              </div>
             <div class="col-md-12" v-if="productoList && productoList.length>0">
               <label>Productos</label>
                 <div class="row">
@@ -144,7 +147,7 @@
     },
     watch:{
       "datosEnviar.bodega"(){
-        let query= (this.datosEnviar.bodega && this.datosEnviar.bodega.id) ? {bodega: this.datosEnviar.bodega.id} : {}
+        let query= (this.datosEnviar.bodega && this.datosEnviar.bodega.id) ? { bodega: this.datosEnviar.bodega.id, tipo: 4} : {}
         this.$store.dispatch('productos/getProductoFormat', query );
         this.$store.dispatch('users/getUsersFormat', query );
       }

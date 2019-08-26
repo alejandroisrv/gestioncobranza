@@ -16,5 +16,4 @@ class Municipio extends Model
     public function clientes(){
         return $this->hasMany('App\Cliente');
     }
-
 }

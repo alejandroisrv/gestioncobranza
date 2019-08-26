@@ -5,7 +5,8 @@
       <div slot="body">
         <form @submit.prevent="generateVenta" id="ventaFrom">
           <div class="box-body">
-            <p> Vendedor: <small>{{ $store.state.perfilActual.name}}</small></p>
+            <label>Vendedor</label>
+            <input type="text" v-model="$store.state.perfilActual.name" disabled class="form-control" />
             <div class="row">
               <div class="form-group col-md-6">
                 <label>Cliente</label>
@@ -33,7 +34,7 @@
               </template>
               <div class="form-group col-md-2">
                 <label>Descuento</label>
-                <input type="text" name="monto" class="form-control" v-model="VentaGeneral.descuento" placeholder="Descuento">
+                <input type="text" name="monto" class="form-control" v-model.number="VentaGeneral.descuento" placeholder="Descuento">
               </div>
               <div class="col-md-12 mt-3">
                 <label>Productos</label>
@@ -103,13 +104,17 @@ export default {
         periodo:null,
         tipo:null,
         abono: '',
-        descuento:0,
+        descuento:'',
         monto:0,
         total:0,
         subtotal:0,
         productosVendidos: []
       }
     };
+  },
+  watch:{
+    subtotal(){    
+    }
   },
   computed: {
     ...mapGetters({
@@ -126,29 +131,19 @@ export default {
       })
       return list;
     },
-    subtotal: {
-      set(value) {
-        this.VentaGeneral.subtotal = value;
-      },
-      get() {
-        let subtotal = 0;
-        this.VentaGeneral.productosVendidos.forEach(item => {
-          subtotal = parseInt(item.subtotal) + parseInt(subtotal) ;
-        });
-        this.VentaGeneral.subtotal = subtotal;
-        return this.VentaGeneral.subtotal;
-      }
+    subtotal(){
+      let subtotal = 0;
+      this.VentaGeneral.productosVendidos.forEach(item => {
+        subtotal = parseInt(item.subtotal) + parseInt(subtotal) ;
+      });
+      this.VentaGeneral.subtotal = subtotal;
+      return this.VentaGeneral.subtotal;
     },
-    total: {
-      set(value) {
-        this.VentaGeneral.total = value;
-      },
-      get() {
-        let total = this.subtotal - this.VentaGeneral.descuento;
-        this.VentaGeneral.total = total;
-        this.VentaGeneral.cuotas = total / this.VentaGeneral.monto ;
-        return this.VentaGeneral.total;
-      }
+    total() {
+      let descuento = (Number.isInteger(this.VentaGeneral.descuento)) ? parseInt(this.VentaGeneral.descuento) : 0 ;
+      this.VentaGeneral.total = parseInt(this.VentaGeneral.subtotal) - descuento ;
+      this.VentaGeneral.cuotas = this.VentaGeneral.total  / this.VentaGeneral.monto ;
+      return this.VentaGeneral.total;
     }
   },
 
@@ -165,9 +160,19 @@ export default {
       getClientes:'clientes/getClientesFormat'
     }),
     generateVenta() {
+      if(this.VentaGeneral.cliente == undefined && this.VentaGeneral.cliente == null ){
+        this.$noty.error('Debe seleccionar el cliente');
+        return false;
+      }
+      if(this.VentaGeneral.tipo == undefined && this.VentaGeneral.tipo == null ){
+        this.$noty.error('Debe seleccionar el tipo de venta');
+        return false;
+      }
+      
       axios.post(this.url, this.VentaGeneral).then(rs => {
         this.eventHub.$emit("sendVentas");
         this.$noty.success("Nueva venta realizada con exito");
+        this.closeTheModal();
       }).catch(err => {
         this.$noty.error("Ha ocurrido un error al intentar procesar la venta "+err.response.data.message);
       });
@@ -198,6 +203,7 @@ export default {
         this.VentaGeneral.productosVendidos.push(this.item)
         this.item = { producto: '', cantidad: '',subtotal:0 };
       }
+      this.total;
 
     },
     deleteProductoVendido(idx) {
@@ -205,13 +211,16 @@ export default {
     },
     resetModal() {
       this.VentaGeneral = {
-        cliente: "",
-        periodo: "",
-        tipo: "",
-        cuotas: "",
-        total: "",
+        cliente: null,
+        periodo:null,
+        tipo:null,
+        abono: '',
+        descuento:0,
+        monto:0,
+        total:0,
+        subtotal:0,
         productosVendidos: []
-      };
+      }
     },
     loadData() {
       this.getProductos();

@@ -15,7 +15,7 @@
               </div>
               <div class="row justify-content-between">
                 <div class="col-md-6 col-xs-6">
-                  <v-select v-model="item.producto" :options="productoList" placeholder="Selecciona el producto"></v-select>
+                  <v-select v-model="item.producto" :options="productosList" placeholder="Selecciona el producto"></v-select>
                 </div>
                 <div class="col-md-4 col-xs-4">
                   <input type="text" @keyup.enter="addCuadro" v-model.number="item.cantidad" id="cantidad" placeholder="Cantidad" class="form-control">
@@ -71,8 +71,14 @@ export default {
   },
   computed:{
     ...mapGetters({
-      productoList:'productos/productosFormat'
+      productList:'productos/productosFormat'
     }),
+    productosList(){
+      this.productList.forEach(x => {
+        x.label = x.nombre;
+      });
+      return this.productList;
+    }
 
   },
   created() {

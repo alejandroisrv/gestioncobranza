@@ -124,18 +124,6 @@
               </span> -->
             </router-link>
           </li>
-          <li v-if="$isAdmin()">
-            <router-link to="/bodegas">
-              <i class="fa fa-home"></i>
-              <span>Bodegas</span>
-            </router-link>
-          </li>
-          <li v-if="$isAdmin()">
-            <router-link to="/sucursales" >
-              <i class="fa fa-home"></i>
-              <span>Sucursales</span>
-            </router-link>
-          </li>
           <li class="treeview" v-if="$isAdminBodega()">
             <router-link to="/inventario">
               <i class="fa fa-archive"></i>
@@ -238,14 +226,35 @@
               <span>Reportes</span>
             </a>
           </li>
-          <li v-if="$isAdmin()">
-            <router-link to="/municipios">
-              <i class="fa fa-globe"></i>
-              <span>Municipios</span>
+           <li class="treeview" v-if="$isAdmin()">
+            <router-link to="#">
+              <i class="fa fa-cog"></i><span>Generales</span>
+              <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
             </router-link>
+            <ul class="treeview-menu">
+              <li>
+                  <router-link to="/municipios">
+                    <i class="fa fa-globe"></i> Municipios
+                  </router-link>
+              </li>
+              <li>
+                  <router-link to="/tipo-productos">
+                    <i class="fa fa-globe"></i> Tipo de Productos
+                  </router-link>
+              </li>
+              <li v-if="$isAdmin()">
+                <router-link to="/bodegas">
+                  <i class="fa fa-home"></i><span>Bodegas</span>
+                </router-link>
+              </li>
+              <li v-if="$isAdmin()">
+                <router-link to="/sucursales" >
+                  <i class="fa fa-home"></i><span>Sucursales</span>
+                </router-link>
+              </li>
+            </ul>
           </li>
         </ul>
-
       </section>
       <!-- /.sidebar -->
 
@@ -309,31 +318,3 @@ export default {
   }
 };
 </script>
-<style>
-.vs--searchable .vs__dropdown-toggle {
-  border-radius: 0px !important;
-  height: 34px !important;
-  line-height: 34px !important;
-}
-@media (max-width: 500px){
-  .btn{
-    width: 100% !important;
-  }
-
-}
-@media (min-width: 1000px){
-  .fecha-text{
-    position: absolute;
-    top: -15px;
-    right: -100px;
-    font-size: 13px;
-  }
-  .fecha-text2{
-    position: absolute;
-    top: -15px;
-    right: 80px;
-    font-size: 13px;
-  }
-}
-
-</style>

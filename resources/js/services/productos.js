@@ -24,8 +24,14 @@ export default {
     addTipos(params) {
         return api().post('/productos/tipo', params);
     },
-    getTipos(params) {
-        return api().get('/productos/tipos' + p.converParamters(params));
+    editTipos(params) {
+        return api().post('/productos/tipo/update', params);
+    },
+    deleteTipos(id) {
+        return api().post('/productos/tipo/delete/' + id);
+    },
+    getTipos() {
+        return api().get('/productos/tipos');
     },
     entregarProductos(params) {
         if (params == null || params == '' || params.length < 2) return false

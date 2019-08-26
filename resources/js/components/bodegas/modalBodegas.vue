@@ -57,7 +57,7 @@ export default {
     ...mapGetters({encargados:'users/usersFormat',municipios:'municipios/municipiosFormat'})
   },
   created() {
-    this.getEncargados();
+    this.getEncargados({tipo:2});
     this.eventHub.$on("openModal", rs => {
       this.openTheModal();
     });

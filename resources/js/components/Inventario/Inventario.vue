@@ -9,14 +9,13 @@
         <div class="col-xs-12">
           <div class="box box-default">
             <div class="box-body justify-content-end">
-              <div class="row justify-content-end">
-                <div class="col-md-12">
-                  <div class="col-md-5"></div>
-                  <button class="btn btn-default col-md-2 mx-1 col-xs-12 my-1" @click="openEntregar">
-                      <i class="fa fa-truck mr-2"></i>  Entregar productos
-                  </button>
-                  <button class="btn btn-default col-md-2  mx-1 col-xs-12 my-1" @click="openAbastercer">Abastecer inventario</button>
-                  <button class="btn btn-primary col-md-1 mx-1 col-xs-12 my-1" @click="nuevoProducto"><i class="fa fa-plus"></i></button>
+              <div class="row justify-content-end" style="line-height:34px;">
+                <div class="col-md-1" v-if="$isAdmin" style="padding-left:20px;">Bodega:</div>
+                <div class="col-md-3 p-0" v-if="$isAdmin"><v-select v-model="bodega" :options="bodegas" placeholder="Selecciona la bodega" /></div>
+                <div class="col-md-8 text-right">
+                  <button class="btn btn-default mx-1" @click="openEntregar"> <i class="fa fa-truck mr-2"></i>Entregar productos</button>
+                  <button class="btn btn-default mx-1" @click="openAbastercer">Abastecer inventario</button>
+                  <button class="btn btn-primary mx-1" @click="nuevoProducto"><i class="fa fa-plus"></i></button>
                 </div>
               </div>
             </div>
@@ -24,13 +23,21 @@
           <div class="box">
             <div class="box-header">
               <h3 class="box-title">Listado de productos</h3>
+              <div class="box-tools">
+                <div class="input-group input-group-sm hidden-xs" style="width: 250px;margin:5px;">
+                  <input v-model="buscar" @keyup.enter="searchProductos" class="form-control input-buscar" placeholder="Buscar...">
+                  <div class="input-group-btn">
+                    <button type="submit" class="btn btn-default input-buscar"><i class="fa fa-search"></i></button>
+                  </div>
+                </div>
+              </div>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
               <div class="col-md-12" v-if="loading"><i class="fa fa-spinner fa-spin loading-spinner"></i></div>
               <template v-else>
                 <div class="table-responsive">
-                  <table v-if="productos && productos.length > 0 " class="col-md-12 table table-bordered table-striped">
+                  <table v-if="productos.data && productos.data.length > 0 " class="col-md-12 table table-bordered table-striped align-items-center align-selfs-center align-center">
                     <thead>
                       <tr>
                         <th>Imágen</th>
@@ -38,18 +45,18 @@
                         <th>Descripción</th>
                         <th>Categoria</th>
                         <th>Stock</th>
-                        <th>Precio de compra</th>
-                        <th>Precio de venta</th>
+                        <th>Precio de costo</th>
+                        <th>Precio a credito</th>
                         <th>Agregado</th>
                         <th>Acciones</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="item in productos" :key="item.id" >
-                        <td><img :src="'img/productos/'+ item.imagen"  class="img-producto" /></td>
+                      <tr v-for="item in productos.data" :key="item.id">
+                        <td class="text-center"><img :src="item.imagen ? 'img/productos/'+ item.imagen : 'img/imgnofound.png' "  class="img-producto" /></td>
                         <td> <b> {{ item.cod }}</b></td>
                         <td> {{ item.descripcion }} </td>
-                        <td> {{ item.tipo.nombre }} </td>
+                        <td> {{ item.tipo.label }} </td>
                         <td class="text-center"><span v-if="item.cantidad > 15 " class="label stock label-success"> {{item.cantidad}}</span> <span v-else-if="item.cantidad < 5" class="label stock label-danger">{{item.cantidad}}</span> <span v-else-if="item.cantidad > 5 && item.cantidad < 15 " class="label stock label-warning">{{item.cantidad}}</span> </td>
                         <td>{{ item.precio_costo | currency }}</td>
                         <td>{{ item.precio_credito | currency  }}</td>
@@ -72,6 +79,10 @@
                     <p class="py-4">No se han encontrado productos</p>
                   </div>
                 </div>
+                <div class="box-footer clearfix">
+                    <pagination :data="productos" @pagination-change-page="searchProductos"></pagination>
+                </div>
+
             </template>
             </div>
             <!-- /.box-body -->
@@ -89,14 +100,13 @@
 </template>
 <script>
 
-  import modalProducto from './modalProducto'
-  import modalAbastecer from './modalAbastecer'
-  import modalEntregar from './modalEntregar'
-  import producto from './producto'
-  import ProductoService from '../../services/productos.js'
-  import {mapGetters, mapActions} from 'vuex';
-
-  import { log } from 'util'
+import modalProducto from './modalProducto'
+import modalAbastecer from './modalAbastecer'
+import modalEntregar from './modalEntregar'
+import producto from './producto'
+import ProductoService from '../../services/productos.js'
+import {mapGetters, mapActions} from 'vuex';
+import Noty from 'noty'
   export default {
     data() {
       return {
@@ -105,38 +115,53 @@
         tituloModal: '',
         urlModal: '',
         notificacionModal: '',
-        productoDetalle:{}
+        productoDetalle:{},
+        loading:true,
+        productos:[],
+        buscar:'',
+        bodega:'Todas'
+        
       }
     },
-    components: {
-      modalProducto,
-      modalAbastecer,
-      modalEntregar,
-      producto
-    },
-    created() {
-      this.eventHub.$on('initProductos', ()=>{
-        this.initProductos();
-      });
-      this.initProductos();
-    },
-    computed: {
-     ...mapGetters({
-       productos:'productos/productos',
-       loading:'productos/loading'
-      }),
+    computed:{
+        bodegas(){
+          let arr = [{id:'all',label:'Todas'}];
+          this.$store.state.bodegas.bodegasFormat.forEach(x => {
+             arr.push(x)
+           });
+           return arr;
+        },
 
     },
+    watch:{
+      "bodega"(){
+        this.searchProductos();
+      }
+    },
+    components: { modalProducto, modalAbastecer, modalEntregar, producto },
+    created() {
+      this.eventHub.$on('initProductos', ()=>{
+        this.searchProductos();
+      });
+      this.searchProductos();
+      this.getProductoFormat();
+    },
     methods: {
-    ...mapActions({
-      initProductos:'productos/initProduct',
-    }),
+      ...mapActions({getProductoFormat:'productos/getProductoFormat'}),
+      async searchProductos(page = 1){
+        let bodega = (this.bodega.id) ? this.bodega.id :'';
+        let parametros = { bodega:bodega, buscar:this.buscar,page:page}
+        this.loading = true;
+        const rs = await ProductoService.getAll(parametros);
+        this.productos = rs.data;
+        this.loading = false;
+      },
       nuevoProducto() {
-        this.openModal()
-        this.productoModal = { nombre: '', descripcion: '', precioContado: '', precioCredito: '', precioCosto: '', comision: '', tipo : undefined}
+        this.productoModal = { nombre: '', descripcion: '', precioContado: '', precioCredito: '', precioCosto: '', comision: '', tipo : undefined,imagen:''}
         this.tituloModal = 'Nuevo producto'
         this.urlModal = '/api/producto/'
         this.notificacionModal = 'Producto agregado con éxito!'
+        this.openModal()
       },
       editarProducto(producto) {
         this.productoModal = producto
@@ -151,13 +176,23 @@
 
       },
       async eliminarProducto(id) {
-      let borrar = await this.$confirm('¿Estas seguro que deseas eliminar el producto?');
-        if (borrar) {
-          ProductoService.deleteProducto(id);
-          this.notificacion('Producto Eliminado')
-          this.initProductos();
-        }
-
+        var n = new Noty({
+          text: '¿Estas seguro que deseas eliminar el producto?',
+          layout:'center',
+          modal:true,
+          buttons: [
+               Noty.button('Cancelar', 'btn btn-danger mx-2 btn-sm', function () {
+                n.close();
+            }),
+            Noty.button('Aceptar', 'btn-sm btn btn-primary', function () {
+                ProductoService.deleteProducto(id);
+                this.notificacion('Producto Eliminado')
+                this.initProductos();
+                n.close();
+            }.bind(this), {id: 'button1', 'data-status': 'ok'})
+          ]
+        });
+        n.show();
       },
       notificacion(texto) {
         this.$noty.success(texto)
@@ -176,7 +211,12 @@
 
 </script>
 <style>
-.loading-spinner{font-size: 2.5rem;text-align: center;display: block;margin: 20px 0px;}
+
 .stock{font-size:14px!important;}
 .img-producto{ width:70px; height:60px;  }
+.noty_buttons{ text-align:center;}
+.select2-container--default .select2-selection--single{
+  border-radius: 0px !important;
+}
+
 </style>

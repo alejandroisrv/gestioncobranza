@@ -26,6 +26,7 @@
                 <table v-if="ventas.data && ventas.total > 0" class="table table-bordered table-striped" >
                   <thead>
                     <tr>
+                      <th>Nº</th>
                       <th>Vendedor</th>
                       <th>Cliente</th>
                       <th>Tipo de venta</th>
@@ -38,10 +39,12 @@
                   </thead>
                   <tbody>
                     <tr v-for="item in ventas.data" :key="item.id">
+                      <th>{{ item.cod }}</th>
                       <td>{{ item.vendedor.name }}</td>
                       <td>{{item.persona.nombre}}</td>
-                      <td>{{ item.tipos_ventas.descripcion }}</td>
-                      <td>{{ item.acuerdo_pago.periodo_pago}}</td>
+                      <td class="text-capitalize">{{ item.tipos_ventas.descripcion }}</td>
+                      <td v-if="item.tipo_venta == 2">{{ item.acuerdo_pago.periodo_pago}}</td>
+                      <td v-else>No aplica</td>
                       <td>{{ item.total | currency}}</td>
                       <td>{{ item.created_at | moment("DD/MM/YYYY") }}</td>
                       <td>
@@ -58,8 +61,12 @@
                 </div>
 
               </div>
+               
             </div>
             <!-- /.box-body -->
+             <div class="box-footer clearfix">
+                    <pagination :data="ventas" @pagination-change-page="initVentas"></pagination>
+              </div>
           </div>
         </div>
       </div>

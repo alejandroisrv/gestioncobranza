@@ -9,13 +9,21 @@ use Illuminate\Support\Facades\Auth;
 class UsersController extends Controller
 {
     public function getUsers(Request $request){
+      $user = auth()->user();
       $data = $request->all();
       $bodega = (isset($data['bodega'])) ? $data['bodega'] : null;
-      $users = User::with('ventas')
-      ->where('sucursal_id',$request->user()->sucursal_id)
-      ->where(function($q)use($bodega){
+      $tipo = (isset($data['tipo'])) ? $data['tipo'] : null;
+      $users = User::with(['ventas'])
+      ->where(function($q) use($user) {
+          return (!$user->isAdmin()) ? $q->where('sucursal_id',$user->sucursal_id) : $q ;
+      })
+      ->where(function($q) use($tipo) {
+        return ($tipo !== null ) ? $q->where('role',$tipo) : $q ;
+      })
+      ->where(function($q) use($bodega) {
           return ($bodega!==null) ? $q->where('bodega_id',$bodega) : $q ;
-      })->get();
+      })
+      ->get();
 
       return response()->json(['data'=> $users]);
     }

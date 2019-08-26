@@ -133,19 +133,23 @@ export default {
         this.eventHub.$emit("modalRuta",ruta);
     },
     deleteRuta(id){
-      this.$confirm("¿Estas seguro que deseas eliminar esta ruta?").then(
-        res => {
-          if (res) {
-            const rs = RutaService.delete(id);;
-            if (rs){
-              this.notificacion("Ruta eliminada");
+       var n = new Noty({
+        text: "¿Estas seguro que deseas eliminar esta ruta?",
+        layout:'center',
+        modal:true,
+        buttons: [
+              Noty.button('Cancelar', 'btn btn-danger mx-2 btn-sm', function () {
+              n.close();
+          }),
+          Noty.button('Aceptar', 'btn-sm btn btn-primary', function () {
+              RutaService.delete(id);;
+              this.$noty.success('Ruta Eliminado');
               this.getRutas();
-            }else {
-              this.$noty.error("Error al intentar suspender cliente");
-            }
-          }
-      })
-      
+              n.close();
+            }.bind(this), {id: 'button1', 'data-status': 'ok'})
+          ]
+        });
+        n.show();  
     },
     notificacion(texto) {
       this.$noty.success(texto);

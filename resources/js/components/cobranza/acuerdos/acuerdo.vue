@@ -23,9 +23,7 @@
                      </div>
                      <div class="row">
                          <div class="col-md-12">
-                            <p class="col-md-6 px-0 text-muted"> Estado: {{ acuerdo.estado }}  </p>
                             <p class="col-md-6 px-0 text-muted"> Fecha final: {{ acuerdo.finished_at | moment('calendar') }}    </p>
-                            <p>Ver venta</p>
                          </div>
                      </div>
 

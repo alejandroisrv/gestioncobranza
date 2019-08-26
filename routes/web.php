@@ -37,5 +37,6 @@ Route::group(['middleware' => 'auth' ], function() {
     Route::get('/cartera/{ruta}', 'HomeController@index')->name('home');
     Route::get('/historial', 'HomeController@index')->name('home');
     Route::get('/municipios', 'HomeController@index')->name('home');
+    Route::get('/tipo-productos', 'HomeController@index')->name('home');
 
 });

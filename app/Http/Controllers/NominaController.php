@@ -22,9 +22,13 @@ class NominaController extends Controller
 
         $rol     = isset($data['rol']) ? $data['rol'] : null;
         $sucursal= isset($data['sucursal']) ? $data['sucursal'] : null;
-        $limite  = isset($data['limite']) ? $data['limite'] : 20 ;
+        $limite  = isset($data['limite']) ? $data['limite'] : 10 ;
+        $buscar  = isset($data['buscar']) ? $data['buscar'] : null;
 
-        $trabajadores= User::with(['rol','comisiones'])
+        $trabajadores= User::with(['rol','comisiones','sucursal','bodega'])
+        ->where(function($q) use($buscar) {
+            return ($buscar !== null) ? $q->where('name','like','%'.$buscar.'%')->orWhere('email',$buscar) :$q ;
+        })
         ->where(function($q) use($sucursal) {
               return ($sucursal !== null) ? $q->where('sucursal_id',$sucursal) :$q ;
           })
@@ -43,26 +47,26 @@ class NominaController extends Controller
             'cedula' => 'string|required',
             'direccion' => 'string|required',
             'telefono' => 'string|required',
-            'email' => 'string|required',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['response' => $validator->errors()], 422);
         }
 
-        $role = Role::where('slug',$data['rol']['slug'])->first();
         $trabajador = User::create([
-            'sucursal_id'=>$data['sucursal_id']['id'],
-            'bodega_id'=>$data['bodega_id']['id'],
+            'sucursal_id'=>$data['sucursal_id'],
+            'bodega_id'=>$data['bodega_id'],
             'name' => $data['name'],
             'cedula' => $data['cedula'],
             'direccion' =>$data['direccion'],
             'telefono' =>$data['telefono'],
             'email' => $data['email'],
-            'role' =>$data['rol']['id'],
+            'correo' => @$data['correo'],
+            'role' =>$data['role'],
             'password' => bcrypt('123456'),
             'api_token'=>0
         ]);
+
         return response()->json(['response'=> 'ok']);
 
 
@@ -71,24 +75,24 @@ class NominaController extends Controller
 
     public function edit(Request $request)
     {
+
         $data=$request->all();
+
         $usuario=$data['id'];
         $trabajador=User::find($usuario)->update($data);
-        $trabajador->roles()->detach();
-        $trabajador->roles()->attach($rol);
 
         return response()->json(['response'=> 'ok']);
-
 
     }
 
     public function delete($id){
+
         $usuario=$id;
         $trabajador=User::find($usuario);
-        $trabajador->roles()->detach();
         $trabajador->delete();
-
         return response()->json(['response'=> 'ok']);
+
+
     }
 
     public function roles(){

@@ -31,7 +31,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 
   Route::post('/productos/tipo','ProductosController@addTipo');
   Route::get('/productos/tipos','ProductosController@getTipos');
-
+  Route::get('/productos/tipos-list','ProductosController@getTiposList');
+  Route::post('/productos/tipo/update','ProductosController@editTipo');
+  Route::post('/productos/tipo/delete/{id}','ProductosController@deleteTipos');
 
   Route::get('/clientes','ClientesController@index');
   Route::post('/cliente/add','ClientesController@create');
@@ -80,6 +82,10 @@ Route::group(['middleware' => 'auth:api'], function () {
 
   Route::get('/municipios','MunicipioController@index');
   Route::post('/municipio','MunicipioController@create');
+  Route::post('/municipio/update','MunicipioController@update');
+  Route::post('/municipio/delete/{id}','MunicipioController@delete');
+  
+  
   Route::get('users/all', 'UsersController@getUsers');
 
 

@@ -5,19 +5,30 @@
       <div slot="title">Detalle del producto</div>
       <div slot="body">
         <div class="box-body">
+          <div class="row" v-if="producto.imagen != null ">
+            <div class="col-md-12">
+              <img :src="'img/productos/' + producto.imagen" class="img-producto-detalle img-thumbnail img-responsive">
+            </div>
+          </div>
           <div class="row">
-            <div class="col-md-4"> <p class="title-producto"> {{producto.nombre}}</p> </div>
-            <div class="col-md-8"> <p class="descripcion-producto">{{producto.descripcion}} </p></div>
+            <div class="col-md-4"> <p class="title-detalle mb-0"> {{producto.nombre}}</p> </div>
+            <div class="col-md-8"> <p class="descripcion-detalle mb-0">{{producto.descripcion}} </p></div>
+          </div>
+          <div class="row">
+            <div class="col-md-12" v-if="producto.bodega != null">
+              <p class="mb-2 mt-1 descripcion-detalle">{{ producto.tipo.label }}</p>
+            </div>
           </div>
           <div class="row" v-if="$isAdmin()">
-            <div class="col-md-12" v-if="producto.bodega != null"> Bodega: {{producto.bodega.direccion}} </p></div>
+            <div class="col-md-12" v-if="producto.bodega != null"> Bodega: {{producto.bodega.direccion}}</div>
           </div>
           <div class="row">
-            <div class="col-md-4"> Disponibilidad: {{producto.cantidad}} </div>
+            <div class="col-md-4"> Cantidad: {{producto.cantidad}} </div>
             <div class="col-md-4"> Comisión: {{producto.comision  | currency}}</div>
           </div>
           <div class="row">
-            <div class="col-md-4"> Precio a contado: {{ producto.precio_contado | currency }} </div>
+            <div class="col-md-4">Precio de costo: {{ producto.precio_costo | currency }} </div>
+            <div class="col-md-4">Precio de contado  {{producto.precio_contado | currency}} </div>
             <div class="col-md-4">Precio a crédito {{producto.precio_credito | currency}} </div>
           </div>
         </div>
@@ -51,15 +62,3 @@
     },
 }
 </script>
-
-<style scoped>
-  .title-producto {
-    font-size:18px !important;
-    font-weight:600;
-  }
-  .descripcion-producto {
-    font-size:16px !important;
-    font-weight:400;
-  }
-
-</style>

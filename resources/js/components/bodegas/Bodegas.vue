@@ -96,7 +96,7 @@ export default {
     nuevoBodega() {
 
       this.bodegaModal = {
-        encargado_id: undefined,
+        encargado: undefined,
         direccion: "",
         minicipio: undefined,
         telefono: ""
