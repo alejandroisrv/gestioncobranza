@@ -187,7 +187,7 @@ import Noty from 'noty'
             Noty.button('Aceptar', 'btn-sm btn btn-primary', function () {
                 ProductoService.deleteProducto(id);
                 this.notificacion('Producto Eliminado')
-                this.initProductos();
+                this.searchProductos();
                 n.close();
             }.bind(this), {id: 'button1', 'data-status': 'ok'})
           ]
