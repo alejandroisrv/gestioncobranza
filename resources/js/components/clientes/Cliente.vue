@@ -13,7 +13,6 @@
         <div class="col-md-4 col-lg-12">
           <p class="mb-1 descripcion-detalle">{{ cliente.direccion}} - {{ cliente.municipio.municipio }}. </p>
         </div>
-        
       </div>
       <div class="row">
         <div class="col-md-4 col-lg-4"><p class="mb-1">C.I {{ cliente.cedula }}</p></div>
@@ -28,33 +27,6 @@
         <div class="col-md-6 col-lg-6">
           <p class="mb-1" v-if="calcularDeuda(cliente.acuerdos_pagos) > 0 ">Deuda actual :{{ calcularDeuda(cliente.acuerdos_pagos) | currency }}</p>
           <p class="mb-1" v-else>No posee deuda actualmente.</p>
-        </div>
-        
-      </div>
-      <div class="row">
-        <div class="col-md-12 col-lg-12" v-if="ventas.data && ventas.data.length > 0">
-          <h4>Últimas compras</h4>
-          <table class="table table-condensed ">
-            <thead>
-              <tr>
-                <th>Vendedor</th>
-                <th>Tipo de venta</th>
-                <th>Perido de pago</th>
-                <th>Total</th>
-                <th>Fecha</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in ventas.data" :key="item.id">
-                <td>{{ item.vendedor.name }}</td>
-                <td>{{ item.tipos_ventas.descripcion }}</td>
-                <td>{{ item.acuerdo_pago.periodo_pago}}</td>
-                <td>{{ item.total }}</td>
-                <td>{{ item.created_at }}</td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
       </div>
