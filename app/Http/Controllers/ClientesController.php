@@ -18,7 +18,7 @@ class ClientesController extends Controller
         $nombre = isset($data['buscar']) ? $data['buscar'] : null ;
         $codigo = isset($data['buscar']) ? $data['buscar'] : null ;
         $sucursal= isset($request->user()->sucursal_id) ? $request->user()->sucursal_id : null ;
-        $clientes = Cliente::with(['sucursal','municipio','acuerdos_pagos','pagos_clientes','ruta_items.ruta'])
+        $clientes = Cliente::with(['sucursal','municipio','acuerdos_pagos','pagos_clientes','ruta_items.ruta','ventas'])
         ->where(function($q) use($codigo){
             return ($codigo !== null) ? $q->where('codigo',$codigo ) : $q ;
         })

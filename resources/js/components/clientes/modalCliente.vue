@@ -74,7 +74,6 @@ export default {
     this.eventHub.$on("openModal", rs => {
       this.cliente = rs;
       console.log(rs);
-      
       this.openTheModal();
     });
   },

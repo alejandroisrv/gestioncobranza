@@ -22,7 +22,7 @@ class Cliente extends Model
       return $this->belongsTo('App\Sucursal');
     }
     
-    public function venta() {
+    public function ventas() {
         return $this->hasMany('App\Venta');
     }
 
