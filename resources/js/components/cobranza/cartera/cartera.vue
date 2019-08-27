@@ -25,7 +25,7 @@
                       <th>Cliente</th>
                       <th>Abonado</th>
                       <th>Total</th>
-                      <th></th>
+                      <!-- <th></th> -->
                     </tr>
                   </thead>
                   <tbody>
@@ -33,7 +33,7 @@
                       <td>{{ item.nombre }} {{ item.apellido  }}  </td>
                       <td>{{ CalcularAbonado(item.pagos_clientes) | currency }}</td>
                       <td>{{ CalcularTotal(item) | currency }}</td>
-                      <td>  <button class="btn btn-primary" @click="VerDetalle(item)"><i class="fa fa-eye"></i></button> </td>
+                      <!-- <td>  <button class="btn btn-primary" @click="VerDetalle(item)"><i class="fa fa-eye"></i></button> </td> -->
                     </tr>
                   </tbody>
                 </table>
