@@ -47,6 +47,12 @@
                         </tr>
                     </tbody>
                 </table>
+                <div v-else>
+                  <p class="py-4">No se han encontrado productos</p>
+                </div>
+                </div>
+                <div class="box-footer clearfix">
+                    <pagination :data="productos" @pagination-change-page="searchProductos"></pagination>
                 </div>
               </template>
             </div>
