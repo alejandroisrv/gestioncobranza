@@ -35,6 +35,7 @@ class ClientesController extends Controller
             return ($ruta!=null) ? $q->where('ruta', $ruta) : $q ;
         })
         ->where('sucursal_id',$sucursal)
+        ->orderByRaw("ruta ASC,nombre DESC")
         ->paginate(25);
         $clientes->map(function($item){
             $item['select']=false;

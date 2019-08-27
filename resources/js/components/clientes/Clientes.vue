@@ -53,7 +53,8 @@
                       <td>{{ item.direccion }}</td>
                       <td>{{ item.telefono}}</td>
                       <td>{{ item.email }}</td>
-                      <td> </td>
+                      <td class="font-weight-bold" v-if="item.ruta != 0">{{ item.ruta_items.ruta.nombre }}</td>
+                      <td class="font-weight-bold" v-else>Sin ruta</td>
                       <td>
                         <button class="btn btn-default btn-sm" @click="verCliente(item)">
                           <i class="fa fa-eye"></i>

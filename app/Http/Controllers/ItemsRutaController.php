@@ -80,9 +80,12 @@ class ItemsRutaController extends Controller
 
         $id = $data['id'];
         $ruta = Ruta::where('id', $id)->update([ 'municipio_id' => $data['municipio']['id'], 'nombre' =>  $data['nombre']]);
-        DB::table('ruta_items')->where('ruta_id',$id)->delete();
+        $rutaItems = RutaItem::where('ruta_id',$id)->get();
+        foreach ($rutaItems as $rutaItem) {
+            Cliente::where('id',$rutaItem->cliente_id)->update(['ruta'=> 0]);
+            $rutaItem->delete();
+        }
         $status = 0 ;
-
         for ($i=0; $i < count($data['seleccionados']); $i++) {
             Cliente::where('id',$data['seleccionados'][$i]['id'])->update(['ruta' => $id]);
             $ruta_item = RutaItem::create(['ruta_id'=> $id, 'cliente_id' => $data['seleccionados'][$i]['id'], 'orden' => $i+1 ]);
