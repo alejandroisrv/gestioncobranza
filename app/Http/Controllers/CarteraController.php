@@ -14,7 +14,7 @@ class CarteraController extends Controller
         $data = $request->all();
         $ruta = $data['ruta'];
         $rutaName = DB::table('rutas')->select('nombre')->where('id',$ruta)->first();
-        $cartera = Cliente::with(['municipio','pagos_clientes','venta','venta.acuerdo_pago','venta.productos_venta'])
+        $cartera = Cliente::with(['municipio','pagos_clientes','ventas','ventas.acuerdo_pago','ventas.productos_venta'])
         ->where('ruta',$ruta)
         ->paginate(25);
 
