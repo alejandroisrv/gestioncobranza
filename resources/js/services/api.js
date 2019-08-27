@@ -1,23 +1,25 @@
 import axios from 'axios'
 import { loadProgressBar } from 'axios-progress-bar'
+let auth = JSON.parse(localStorage.getItem('auth'));
+
+const api = axios.create({
+    baseURL: `/api/`,
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + auth.api_token
+    }
+});
+
+api.interceptors.response.use(response => {
+    return response;
+}, error => {
+    if (error.response.status === 401) {
+        window.location.href = "/auth/logout";
+    }
+    return error;
+});
 
 export default () => {
-    let auth = JSON.parse(localStorage.getItem('auth'));
-
-    return axios.create({
-        baseURL: `/api/`,
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + auth.api_token
-        }
-    }).interceptors.response.use(function(response) {
-        return response
-    }, function(error) {
-        console.log(error.response.data)
-        if (error.response.data.error.statusCode === 401) {
-            window.location.href = "/login";
-        }
-        return Promise.reject(error)
-    })
+    return api
 }
