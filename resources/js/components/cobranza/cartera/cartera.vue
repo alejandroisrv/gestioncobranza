@@ -99,7 +99,7 @@ export default {
     CalcularTotal(item){
       let total = 0;
       let abonos = 0;
-      item.venta.forEach(v=>{
+      item.ventas.forEach(v=>{
         total += v.total
       })
       abonos = this.CalcularAbonado(item.pagos_clientes);
