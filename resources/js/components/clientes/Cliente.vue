@@ -23,7 +23,7 @@
       <div class="row">
         <div class="col-md-6 col-lg-6">
             <p class="mb-1" v-if="cliente.ruta == 0">No tiene ninguna ruta asignada.</p>
-            <p class="mb-1" v-else>Pertenece a la ruta :{{ cliente.ruta_item.ruta.nombre }}</p>
+            <p class="mb-1" v-else>Pertenece a la ruta :{{ cliente.ruta_items.ruta.nombre }}</p>
         </div>
         <div class="col-md-6 col-lg-6">
           <p class="mb-1" v-if="calcularDeuda(cliente.acuerdos_pagos) > 0 ">Deuda actual :{{ calcularDeuda(cliente.acuerdos_pagos) | currency }}</p>

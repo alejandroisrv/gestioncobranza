@@ -15,7 +15,9 @@ api.interceptors.response.use(response => {
     return response;
 }, error => {
     if (error.response.status === 401) {
-        window.location.href = "/auth/logout";
+        setTimeout(() => {
+            window.location.href = "/auth/logout";
+        }, 3000);
     }
     return error;
 });
