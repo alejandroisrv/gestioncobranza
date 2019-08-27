@@ -23,8 +23,8 @@ class DashboardController extends Controller
         $sucursal_id = $this->user->sucursal_id;
         $trabajadores = User::where('sucursal_id',$sucursal_id )->count();
         $clientes =  Cliente::where('sucursal_id',$sucursal_id )->count();
-        $rutas = Ruta::where('sucursal_id')->count();
-        $productos = Productos::where('sucursal_id')->count();
+        $rutas = Ruta::where('sucursal_id',$sucursal_id)->count();
+        $productos = Productos::where('sucursal_id',$sucursal_id)->count();
         $bodegas= Bodega::where('sucursal_id',$sucursal_id)->count();
         $cartera = AcuerdoPago::whereHas('cliente',function($q)use($sucursal_id){ return $q->where('sucursal_id',$sucursal_id); })
                   ->where('cuotas','>','cuotas_pagadas')
