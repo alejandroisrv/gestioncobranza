@@ -20,7 +20,7 @@ class ClientesController extends Controller
         $sucursal= isset($request->user()->sucursal_id) ? $request->user()->sucursal_id : null ;
         $clientes = Cliente::with(['sucursal','municipio','acuerdos_pagos','pagos_clientes','ruta_items.ruta','ventas'])
         ->where(function($q) use($codigo){
-            return ($codigo !== null) ? $q->where('codigo',$codigo ) : $q ;
+            return ($codigo !== null) ? $q->where('cod',$codigo ) : $q ;
         })
         ->where(function($q) use($direccion){
             return ($direccion!==null) ? $q->where('direccion','like', '%'.$direccion.'%') : $q ;
