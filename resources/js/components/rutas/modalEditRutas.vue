@@ -157,12 +157,6 @@ export default {
         },
         next(){
             this.step++;
-            if(this.step==2){
-                this.list = []
-                this.clientes.data.forEach(e=>{
-                    if(e.select) this.list.push({id:e.id, nombre: `${e.nombre} ${e.apellido}`, direccion: e.direccion});
-                });
-            }
         },
         async save(){
             this.ruta.seleccionados = this.list;
