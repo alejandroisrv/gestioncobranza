@@ -11,7 +11,7 @@ class RutaItem extends Model
 
     
     public function ruta(){
-        return $this->belongsTo('App\Ruta');
+        return $this->belongsTo('App\Ruta','ruta_id');
     }
 
     public function cliente(){
