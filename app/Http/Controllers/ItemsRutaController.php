@@ -53,7 +53,7 @@ class ItemsRutaController extends Controller
                               'nombre' =>  $data['nombre']]);
 
         for ($i=0; $i < count($data['seleccionados']); $i++) {
-            $cliente = Cliente::where($data['seleccionados'][$i]['id'])->update(['ruta' => $ruta->id]);
+            $cliente = Cliente::where('id',$data['seleccionados'][$i]['id'])->update(['ruta' => $ruta->id]);
             RutaItem::create(['ruta_id'=> $ruta->id, 'cliente_id' => $data['seleccionados'][$i]['id'], 'orden' => $i+1 ]);
         }
     
@@ -80,7 +80,7 @@ class ItemsRutaController extends Controller
         $ruta = Ruta::where('id', $id)->update([ 'municipio_id' => $data['municipio']['id'], 'nombre' =>  $data['nombre']]);
         $rutaItems = RutaItem::where('ruta_id',$id)->get();
         foreach ($rutaItems as $rutaItem) {
-            Cliente::where('id',$rutaItem->cliente_id)->update(['ruta'=> 0]);
+            Cliente::where('id',$rutaItem->cliente_id)->update(['ruta' => 0]);
             $rutaItem->delete();
         }
         $status = 0 ;
@@ -111,7 +111,7 @@ class ItemsRutaController extends Controller
     {
         $ruta = Ruta::find($id);
         $clientes = Cliente::where('ruta',$id)->update(['ruta' => 0]);
-        
+
         if($ruta->delete()){
             return response()->json(['message' =>'ok']);
         }else{
