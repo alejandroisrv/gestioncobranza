@@ -47,15 +47,17 @@ class ItemsRutaController extends Controller
         if ($validator->fails()) {
             return response()->json(['response' => $validator->errors()], 422);
         }
-        DB::beginTransaction();
-            $ruta = Ruta::create([ 'sucursal_id' => $sucursal,'municipio_id' => $data['municipio']['id'], 'nombre' =>  $data['nombre']]);
-            for ($i=0; $i < count($data['seleccionados']); $i++) {
-                $cliente = Cliente::where($data['seleccionados'][$i]['id'])->update(['ruta',$ruta->id]);
-                RutaItem::create(['ruta_id'=> $ruta->id, 'cliente_id' => $data['seleccionados'][$i]['id'], 'orden' => $i+1 ]);
-            }
-        DB::commit();
-        return response()->json(['response'=>'ok']);
+    
+        $ruta = Ruta::create(['sucursal_id' => $sucursal,
+                              'municipio_id' => $data['municipio']['id'], 
+                              'nombre' =>  $data['nombre']]);
 
+        for ($i=0; $i < count($data['seleccionados']); $i++) {
+            $cliente = Cliente::where($data['seleccionados'][$i]['id'])->update(['ruta' => $ruta->id]);
+            RutaItem::create(['ruta_id'=> $ruta->id, 'cliente_id' => $data['seleccionados'][$i]['id'], 'orden' => $i+1 ]);
+        }
+    
+        return response()->json(['response'=>'ok']);
     }
 
 
@@ -108,6 +110,8 @@ class ItemsRutaController extends Controller
     public function destroy(Request $request,$id)
     {
         $ruta = Ruta::find($id);
+        $clientes = Cliente::where('ruta',$id)->update(['ruta' => 0]);
+        
         if($ruta->delete()){
             return response()->json(['message' =>'ok']);
         }else{
