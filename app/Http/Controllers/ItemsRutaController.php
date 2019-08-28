@@ -110,7 +110,8 @@ class ItemsRutaController extends Controller
     public function destroy(Request $request,$id)
     {
         $ruta = Ruta::find($id);
-        $clientes = Cliente::where('ruta',$id)->update(['ruta' => 0]);
+        RutaItem::where('ruta_id',$id)->delete();
+        Cliente::where('ruta',$id)->update(['ruta' => 0]);
 
         if($ruta->delete()){
             return response()->json(['message' =>'ok']);
