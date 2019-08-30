@@ -166,17 +166,12 @@ export default {
       
         },
 
-        async buscarClientes(){
-            
-            let query = { direccion:this.direccion, ruta:0 };
-            try {
-                const rs = await ClienteService.getAll(query);
+        buscarClientes(){
+            ClienteService.getAll({direccion:this.direccion, ruta:0 }).then(rs=>{
                 this.clientes.data = rs.data.body.data;
-            } catch (error) {
-                this.$noty.error(error.message);
-            }
-            
-            
+            }).catch(rs=>{
+                this.$noty.error('Error al intentar encontrar clientes');
+            })
         },
         next(){
             this.step++;
@@ -188,9 +183,6 @@ export default {
                     });
                 }
             }
-
-            console.log(this.list);
-
         },
         async save(){
             this.ruta.seleccionados = this.list;

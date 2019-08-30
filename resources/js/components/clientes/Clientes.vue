@@ -47,7 +47,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="item in clientes.data" :key="item.id">
+                    <tr v-for="item in clientes.data" :key="item.id" :style="item.ruta == 0 ? 'border: 3px solid #ff00004d':''">
                       <th>{{ item.cod }}  </th>
                       <td>{{ item.nombre }}</td>
                       <td>{{ item.direccion }}</td>
