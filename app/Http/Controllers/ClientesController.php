@@ -26,7 +26,7 @@ class ClientesController extends Controller
             return ($direccion!==null) ? $q->where('direccion','like', '%'.$direccion.'%') : $q ;
         })
         ->where(function($q) use($nombre){
-            return ($nombre != null) ? $q->where('nombre','like', '%'.$nombre.'%')-orWhere('cod',$nombre ) : $q ;
+            return ($nombre != null) ? $q->where('nombre','like', '%'.$nombre.'%')->orWhere('cod',$nombre ) : $q ;
         })
         ->where(function($q) use($municipio){
             return ($municipio != null) ? $q->where('municipio_id', $municipio) : $q ;
