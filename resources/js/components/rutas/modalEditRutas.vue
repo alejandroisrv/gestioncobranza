@@ -1,7 +1,7 @@
 
 <template>
     <div>
-        <bootstrap-modal ref="NuevaRuta" :need-header="true" :need-footer="true" :size="'medium'" :opened="myOpenFunc">
+        <bootstrap-modal ref="NuevaRuta" :need-header="true" :need-footer="true" :size="'medium'">
             <div slot="title">{{ titulo }}</div>
             <div slot="body">
                 <div class="box-body">
@@ -165,22 +165,6 @@ export default {
             this.eventHub.$emit('sendRuta');
             this.closeTheModal();
             
-        },
-        myOpenFunc() {
-
-            this.direccion=''
-            this.municipio=''
-            this.step=0
-            this.list=[]
-            this.rutas=[]
-            this.ruta={
-                nombre:'',
-                direccion:'',
-                municipio:'',
-                seleccionados:{}
-            }
-   
-        
         },
         openTheModal() {
 

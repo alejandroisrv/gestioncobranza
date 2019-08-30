@@ -123,7 +123,6 @@ export default {
                 this.editando = true;
                 this.step = 0;
             }
-            console.log(this.clientes.data);
             this.buscarClientes();
             this.openTheModal();
         })
@@ -182,11 +181,16 @@ export default {
         next(){
             this.step++;
             if(this.step==2){
-                this.list = []
-                this.clientes.data.forEach(e=>{
-                    if(e.select) this.list.push({id:e.id, nombre: `${e.nombre}`, direccion: e.direccion});
-                });
+                if(!this.editando){
+                    this.list = []
+                    this.clientes.data.forEach(e=>{
+                        if(e.select) this.list.push({id:e.id, nombre: `${e.nombre}`, direccion: e.direccion});
+                    });
+                }
             }
+
+            console.log(this.list);
+
         },
         async save(){
             this.ruta.seleccionados = this.list;
@@ -204,7 +208,8 @@ export default {
                     mensaje  = 'Ruta editada con exito';
                 }
             } catch (error) {
-                return this.$noty.error("Ha ocurrido un error: "+error.response);
+                this.$noty.error("Ha ocurrido un error: "+error.response);
+                return false;
             }
            
             this.$noty.success(mensaje);
@@ -227,7 +232,6 @@ export default {
         },
         endMove({ event, newIndex, oldIndex, collection }){
             console.log({ event, newIndex, oldIndex, collection });
-            
         },
         closeTheModal() {
             this.$refs.NuevaRuta.close();
