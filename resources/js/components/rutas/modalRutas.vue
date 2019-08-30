@@ -111,19 +111,20 @@ export default {
         this.getMunicipios();
         this.eventHub.$on('modalRuta', ruta => {
             this.reset();
+            this.buscarClientes();
+
             if(ruta !== undefined){
                 this.ruta.id = ruta.id;
                 this.ruta.nombre = ruta.nombre
                 this.ruta.municipio = ruta.municipio;
                 this.ruta.municipio.label=ruta.municipio.municipio;
-                ruta.items.forEach(c=>{
+                ruta.items.forEach(c => {
                     this.clientes.data.push(c.cliente);
                     this.list.push(c.cliente)
                 });
                 this.editando = true;
                 this.step = 0;
             }
-            this.buscarClientes();
             this.openTheModal();
         })
     }, 
