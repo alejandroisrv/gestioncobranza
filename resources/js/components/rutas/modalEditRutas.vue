@@ -156,6 +156,13 @@ export default {
             this.clientes.data = rs.data.body.data;
         },
         next(){
+            if(this.step == 0){
+                if(this.ruta.municipio == ''){
+                    this.$noty.error('Debe seleccionar el municipio');
+                    return false;
+                }
+            }
+
             this.step++;
         },
         async save(){

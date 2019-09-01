@@ -50,7 +50,7 @@
                         <div class="form-row" v-if="list.length>0">
                             <div class="col-md-12 mt-2">
                                 <SortableList v-model="list" lockAxis="y" :hideSortableGhost="true">
-                                    <SortableItem v-for="(item, index) in list" :index="index" :key="index" :item="item" />
+                                    <SortableItem v-for="(item, index) in list" :index="index" :key="index" :item="item"/>
                                 </SortableList>
                             </div>
                         </div>
@@ -112,7 +112,6 @@ export default {
         this.eventHub.$on('modalRuta', ruta => {
             this.reset();
             this.buscarClientes();
-
             if(ruta !== undefined){
                 this.ruta.id = ruta.id;
                 this.ruta.nombre = ruta.nombre
@@ -164,17 +163,23 @@ export default {
                     this.list.splice(i,1);
                 })
             }
-      
         },
-
         buscarClientes(){
-            ClienteService.getAll({direccion:this.direccion, ruta:0 }).then(rs=>{
+            let municipio = (this.ruta.municipio !='' && this.ruta.municipio.id) ? this.ruta.municipio.id : '' ;
+            ClienteService.getAll({direccion:this.direccion, ruta:0,municipio:municipio }).then(rs=>{
                 this.clientes.data = rs.data.body.data;
             }).catch(rs=>{
                 this.$noty.error('Error al intentar encontrar clientes');
             })
         },
         next(){
+            if(this.step == 0){
+                if(this.ruta.municipio == ''){
+                    this.$noty.error('Debe seleccionar un municipio');
+                    return false;
+                }
+            }
+
             this.step++;
             if(this.step==2){
                 if(!this.editando){
@@ -233,7 +238,6 @@ export default {
 }
 </script>
 <style>
-
 td{
     padding: 5px 10px;
 }
@@ -242,7 +246,6 @@ td{
 }
 .list-item{
     font-size: 14px !important;
-    
     box-shadow: 0px 0px 1px #c1c1c1c1;
     cursor:pointer;
     z-index:9999;
@@ -251,8 +254,6 @@ td{
     padding: 10px;
 }
 .lista-clientes{
-
     margin-top: 12px;
-
 }
 </style>
