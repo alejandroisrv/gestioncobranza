@@ -177,6 +177,8 @@ export default {
                 if(this.ruta.municipio == ''){
                     this.$noty.error('Debe seleccionar un municipio');
                     return false;
+                }else{
+                    this.buscarClientes();
                 }
             }
 
