@@ -24,10 +24,14 @@
               <input required v-model="cliente.direccion" type="text" class="form-control">
             </div>
             <div class="form-group col-md-4">
+              <label> Información adicional </label>
+              <input required v-model="cliente.adicional" type="text" class="form-control">
+            </div>
+            <div class="form-row">
+            <div class="form-group col-md-4">
               <label>Municipio</label>
               <v-select :options="listMunicipios" v-model="cliente.municipio" placeholder="Seleccione el municipio" />
             </div>
-            <div class="form-row">
               <div class="form-group col-md-6">
                 <label>E-mail</label>
                 <input required v-model="cliente.email" type="text" class="form-control">
@@ -72,8 +76,12 @@ export default {
   },
   created() {
     this.eventHub.$on("openModal", rs => {
+
+      if(rs.municipio !== ''){
+        rs.municipio.label = rs.municipio.municipio;
+      }
+
       this.cliente = rs;
-      console.log(rs);
       this.openTheModal();
     });
   },

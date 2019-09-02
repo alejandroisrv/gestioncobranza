@@ -10,8 +10,8 @@
           </div>
         </div>
         <div class="row">
-        <div class="col-md-4 col-lg-12">
-          <p class="mb-1 descripcion-detalle">{{ cliente.direccion}} - {{ cliente.municipio.municipio }}. </p>
+        <div class="col-md-12 col-lg-12">
+          <p class="mb-1 descripcion-detalle">{{ cliente.direccion}} - {{ cliente.municipio.municipio }} <small> {{ cliente.adicional }} </small>. </p>
         </div>
       </div>
       <div class="row">

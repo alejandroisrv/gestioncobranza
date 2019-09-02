@@ -19,10 +19,10 @@ class BodegaController extends Controller
     public function index(Request $request)
     {
 
-      $bodega_id = $request->user()->sucursal_id;
+      $sucursal_id = $request->user()->sucursal_id;
 
       $bodegas=Bodega::with(['sucursal','municipio'])
-      ->where('id',$bodega_id)
+      ->where('sucursal_id',$sucursal_id)
       ->paginate(20);
 
       return response()->json(['body'=> $bodegas]);

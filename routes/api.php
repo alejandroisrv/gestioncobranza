@@ -40,7 +40,7 @@ Route::group(['middleware' => 'auth:api'], function () {
   Route::post('/clientes/update/{id}','ClientesController@update');
   Route::get('/cliente/delete/{id}','ClientesController@destroy');
 
-  Route::post('/bodega','BodegaController@create');
+  Route::post('/bodega/add','BodegaController@create');
   Route::get('/bodegas','BodegaController@index');
   Route::post('/bodegas/update/{id}','BodegaController@update');
   Route::get('/bodega/delete/{id}','BodegaController@destroy');
@@ -50,7 +50,7 @@ Route::group(['middleware' => 'auth:api'], function () {
   Route::post('/ventas','VentasController@create');
 
   Route::get('/sucursales','SucursalController@index');
-  Route::post('/sucursal','SucursalController@create');
+  Route::post('/sucursal/add','SucursalController@create');
   Route::post('/sucursales/update/{id}','SucursalController@update');
   Route::get('/sucursal/delete/{id}','SucursalController@destroy');
 

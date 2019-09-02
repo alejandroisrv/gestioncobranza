@@ -13,6 +13,7 @@ class Cliente extends Model
                           'cedula',
                           'telefono',
                           'direccion',
+                          'adicional',
                           'municipio_id',
                           'email',
                           'ruta'

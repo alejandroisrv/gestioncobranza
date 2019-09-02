@@ -98,11 +98,11 @@ export default {
       this.bodegaModal = {
         encargado: undefined,
         direccion: "",
-        minicipio: undefined,
+        minicipio_id: undefined,
         telefono: ""
       };
       this.tituloModal = "Nueva bodega";
-      this.urlModal = "bodega/";
+      this.urlModal = "bodega/add";
       this.notificacionModal = "Bodega agregada con éxito!";
       this.openModal();
     },
@@ -124,7 +124,7 @@ export default {
             n.close();
         }),
         Noty.button('Aceptar', 'btn-sm btn btn-primary', function () {
-            axios.get(`bodega/delete/${id}`).then(rs =>{
+            axios.get(`/api/bodega/delete/${id}`).then(rs =>{
               this.getBodegas();
               this.notificacion("Bodega Eliminado");
             }).catch(err => this.$noty.error('Se ha producido un error al intentar eliminar la bodega'));

@@ -144,8 +144,9 @@ export default {
         nombre: "",
         apellido: "",
         direccion: "",
+        adicional:'',
         cedula: "",
-        minicipio: "0",
+        municipio: "",
         telefono: "",
         email: ""
       };

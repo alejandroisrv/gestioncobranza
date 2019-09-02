@@ -222,7 +222,7 @@
           </li>
           <li v-if="$isAdmin()">
             <a href="#" @click="reportes">
-              <i class="fa fa-pie-chart"></i>
+              <i class="fa fa-file-excel-o"></i>
               <span>Reportes</span>
             </a>
           </li>
@@ -239,7 +239,7 @@
               </li>
               <li>
                   <router-link to="/tipo-productos">
-                    <i class="fa fa-globe"></i> Tipo de Productos
+                    <i class="fa fa-barcode"></i> Tipo de Productos
                   </router-link>
               </li>
               <li v-if="$isAdmin()">
@@ -249,7 +249,7 @@
               </li>
               <li v-if="$isAdmin()">
                 <router-link to="/sucursales" >
-                  <i class="fa fa-home"></i><span>Sucursales</span>
+                  <i class="fa fa-industry"></i><span>Sucursales</span>
                 </router-link>
               </li>
             </ul>

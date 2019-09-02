@@ -95,7 +95,7 @@ export default {
     nuevoSucursal() {
       this.openModal({encargado: "",direccion: "", minicipio: "",telefono: ""});
       this.tituloModal = "Nueva sucursal";
-      this.urlModal = "/api/sucursal/";
+      this.urlModal = "/api/sucursal/add";
       this.notificacionModal = "Sucursal agregada con éxito!";
     },
     editarSucursal(sucursal) {

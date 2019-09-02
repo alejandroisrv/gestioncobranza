@@ -50,7 +50,7 @@
                         <div class="form-row" v-if="list.length>0">
                             <div class="col-md-12 mt-2">
                                 <SortableList v-model="list" lockAxis="y" :hideSortableGhost="true">
-                                    <SortableItem v-for="(item, index) in list" :index="index" :key="index" :item="item"/>
+                                    <SortableItem :index="index" :key="index" :item="item"  v-for="(item, index) in list"  />                                    
                                 </SortableList>
                             </div>
                         </div>
@@ -142,6 +142,9 @@ export default {
         ...mapActions({
             getMunicipios:'municipios/municipiosFormat'
         }),
+        deleteCliente(i,item){
+            console.log(i);
+        },
         marcar(){
             this.clientes.data.forEach( x => {
                 this.list.forEach( y => {
@@ -187,7 +190,9 @@ export default {
                 if(!this.editando){
                     this.list = []
                     this.clientes.data.forEach(e=>{
-                        if(e.select) this.list.push({id:e.id, nombre: `${e.nombre}`, direccion: e.direccion});
+                        if(e.select) {
+                            this.list.push({id:e.id, nombre: `${e.nombre}`, direccion: e.direccion});
+                        }
                     });
                 }
             }
@@ -227,7 +232,6 @@ export default {
             this.editando=false;
         },
         openTheModal() {
-
             this.$refs.NuevaRuta.open();
         },
         endMove({ event, newIndex, oldIndex, collection }){

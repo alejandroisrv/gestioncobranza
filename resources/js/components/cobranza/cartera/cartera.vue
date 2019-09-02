@@ -38,7 +38,7 @@
                   </tbody>
                 </table>
                 <div v-else>
-                  <p class="py-4">No se han encontrado informacion</p>
+                  y-4">No se han encontrado informacion</p>
                 </div>
               </template>
             </div>

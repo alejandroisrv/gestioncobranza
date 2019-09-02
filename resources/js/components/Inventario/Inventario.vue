@@ -45,8 +45,8 @@
                         <th>Descripción</th>
                         <th>Categoria</th>
                         <th>Stock</th>
-                        <th>Precio de costo</th>
-                        <th>Precio a credito</th>
+                        <th>Precio de contado</th>
+                        <th>Precio a crédito</th>
                         <th>Agregado</th>
                         <th>Acciones</th>
                       </tr>
@@ -58,7 +58,7 @@
                         <td> {{ item.descripcion }} </td>
                         <td> {{ item.tipo.label }} </td>
                         <td class="text-center"><span v-if="item.cantidad > 15 " class="label stock label-success"> {{item.cantidad}}</span> <span v-else-if="item.cantidad < 5" class="label stock label-danger">{{item.cantidad}}</span> <span v-else-if="item.cantidad > 5 && item.cantidad < 15 " class="label stock label-warning">{{item.cantidad}}</span> </td>
-                        <td>{{ item.precio_costo | currency }}</td>
+                        <td>{{ item.precio_contado | currency }}</td>
                         <td>{{ item.precio_credito | currency  }}</td>
                         <td> {{ item.created_at | moment('DD/MM/YYYY h:m a') }}</td>
                         <td>

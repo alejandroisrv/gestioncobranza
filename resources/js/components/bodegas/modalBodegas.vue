@@ -8,7 +8,7 @@
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label>Encargado</label>
-                <v-select v-model="bodega.encargado" :options="encargados"></v-select>
+                <v-select v-model="bodega.encargado" :options="encargados" placeholder="Selecciona el encargado de esta bodega"></v-select>
               </div>
               <div class="form-group col-md-6">
                 <label>Telefono</label>
@@ -22,7 +22,7 @@
             <div class="form-group col-md-4">
               <label>Municipio</label>
               <select name="mi" class="form-control" v-model="bodega.municipio_id">
-                <option value="">Selecione el minucipio</option>
+                <option  selected value="">Selecione el minucipio</option>
                 <option  v-if="muni.id !='all'"  v-for="(muni,idx) in municipios" :key="idx+'municipio'" :value="muni.id">{{muni.label}}</option>
               </select>
             </div>
@@ -65,6 +65,17 @@ export default {
   methods: {
     ...mapActions({getEncargados:'users/getUsersFormat'}),
     send() {
+
+      if(this.bodega.direccion == ''){
+        this.$noty.error('Debes agregar una direccion para esta bodega');
+        return false;
+      }
+
+      if(this.bodega.municipio_id == ''){
+        this.$noty.error('Debes agregar una direccion para esta bodega');
+        return false;
+      }
+
       api().post(this.url, this.bodega).then(rs => {
         this.closeTheModal();
         this.eventHub.$emit("sendBodegas");

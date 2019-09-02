@@ -56,6 +56,7 @@ class ClientesController extends Controller
                 'cedula' => $data['cedula'],
                 'telefono'  => $data['telefono'],
                 'direccion'  => $data['direccion'],
+                'adicional' => $data['adicional'],
                 'email' => $data['email'],
                 'municipio_id'  => $data['municipio_id']
             ]);
@@ -103,6 +104,7 @@ class ClientesController extends Controller
             'cedula' => $data['cedula'],
             'telefono'  => $data['telefono'],
             'direccion'  => $data['direccion'],
+            'adicional' => $data['adicional'],
             'email' => $data['email'],
             'municipio_id'  => $data['municipio_id']
         ]);
