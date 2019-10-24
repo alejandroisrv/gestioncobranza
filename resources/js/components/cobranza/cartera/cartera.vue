@@ -50,7 +50,6 @@
   </div>
 </template>
 <script>
-import modalAcuerdoPago from "../acuerdos/modalAcuerdo";
 import CarteraService from '../../../services/cartera'
 
 export default {

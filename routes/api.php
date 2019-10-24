@@ -58,7 +58,7 @@ Route::group(['middleware' => 'auth:api'], function () {
   Route::get('/acuerdos_pagos','AcuerdosPagoController@index');
   Route::post('/acuerdos_pagos','AcuerdosPagoController@create');
   Route::get('/acuerdo_pago/{id}','AcuerdosPagoController@get');
-
+  Route::post('/acuerdos_pagos/nuevo-pago','AcuerdosPagoController@nuevoPago');
   Route::post('/pagos_clientes','PagoClienteController@index');
   Route::post('/pagos_clientes','PagoClienteController@create');
 

@@ -26,7 +26,16 @@
                             <p class="col-md-6 px-0 text-muted"> Fecha final: {{ acuerdo.finished_at | moment('calendar') }}    </p>
                          </div>
                      </div>
-
+                     <div class="row">
+                         <div class="col-md-12">
+                            <p class="col-md-12 mb-1 px-0" style="font-size:18px"> Abonos </p>
+                            <table>
+                                <tr v-for="abono in acuerdo.abonos">
+                                    <td class="px-0 pb-0"> Monto: {{ abono.monto | currency  }}</td><td>  {{ abono.created_at | moment('DD/MM/YYYY')  }} </td> 
+                                </tr>
+                            </table>
+                         </div>
+                     </div>
                 </div>
             </div>
             <div slot="footer">

@@ -20,4 +20,9 @@ class AcuerdoPago extends Model
         public function cliente(){
                 return $this->belongsTo('App\Cliente');
         }
+
+
+        public function abonos(){
+                return $this->hasMany('App\PagoCliente');
+        }
 }

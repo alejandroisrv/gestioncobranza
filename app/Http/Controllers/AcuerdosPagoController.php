@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\AcuerdoPago;
+use App\PagoCliente;
+
 use Illuminate\Http\Request;
 
 class AcuerdosPagoController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * D
+     * isplay a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -18,7 +21,7 @@ class AcuerdosPagoController extends Controller
         $cliente = (isset($data['cliente'])) ? $data['cliente']: null ;
         $venta = (isset($data['venta'])) ? $data['venta']: null ;
         $limite = (isset($data['limite'])) ? $data['limite'] : 20 ;
-        $acuerdos_pagos= AcuerdoPago::with(['cliente','venta.vendedor','venta.tipos_ventas'])
+        $acuerdos_pagos= AcuerdoPago::with(['cliente','venta.vendedor','venta.tipos_ventas','abonos'])
         ->where(function($q) use ($cliente) {
             return ($cliente!=null) ? $q->where('cliente_id',$cliente): $q; 
         })
@@ -27,6 +30,34 @@ class AcuerdosPagoController extends Controller
         })->paginate($limite);
 
         return response()->json(['body'=> $acuerdos_pagos ]);
+    }
+
+    public function nuevoPago(Request $request){
+        $data = $request->all();
+
+
+
+        $pago = PagoCliente::create([
+            'cliente_id'=> $data['user_id'],
+            'venta_id'=> $data['venta_id'],
+            'acuerdo_pago_id' => $data['acuerdo_id'],
+            'monto'=> $data['monto']
+        ]);
+
+        if($pago){
+            $acuerdo = AcuerdoPago::find($data['acuerdo_id']);
+            $acuerdo->cuotas_pagadas++;
+            if($acuerdo->save()){
+                return response()->json(['response'=>true],201);
+            }
+        }
+
+        return response()->json(['response'=>false],201);
+    }
+
+    public function getAbonos(Request $request){
+
+
     }
 
     /**

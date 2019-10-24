@@ -9,9 +9,9 @@
         <div class="col-xs-12">
           <div class="box box-default">
             <div class="box-body text-right">
-              <!-- <button class="btn btn-primary" @click="PagoCliente()">
-                <i class="fa fa-plus mr-2"></i> Registrar nuevo pago
-              </button> -->
+              <button class="btn btn-primary" @click="PagoCliente()">
+                <i class="fa fa-plus mr-2"></i> Nuevo pago
+              </button>
             </div>
           </div>
           <div class="box">
@@ -37,13 +37,13 @@
                 </thead>
                 <tbody>
                   <tr v-for="item in acuerdo_pagos.data" :key="item.id">
-                    <th> {{ item.venta.cod }} </th>
+                    <th>{{ item.venta.cod }} </th>
                     <td>{{ item.cliente.nombre }}</td>
                     <td>{{ item.cuotas }}</td>
                     <td>{{ item.periodo_pago  }}</td>
                     <td>{{ item.monto | currency }}</td>
                     <td>{{ item.estado  }} </td>
-                    <td> {{ item.created_at | moment('DD/MM/YYYY')  }} </td>
+                    <td>{{ item.created_at | moment('DD/MM/YYYY')  }} </td>
                     <td>
                       <button class="btn btn-default btn-sm" @click="verDetalle(item)">
                         <i class="fa fa-eye"></i>
@@ -67,11 +67,12 @@
       <!-- <modal-acuerdo :acuerdo="acuerdo"></modal-acuerdo> -->
 
       <acuerdo/>
+      <pago-cliente />
     </section>
   </div>
 </template>
 <script>
-import modalAcuerdoPago from "./modalAcuerdo";
+import PagoCliente from './ModalPago';
 import Acuerdo from "./acuerdo";
 import AcuerdoService from '../../../services/acuerdos_pagos'
 import { log } from "util";
@@ -83,7 +84,7 @@ export default {
     };
   },
   components: {
-    modalAcuerdoPago,Acuerdo
+    Acuerdo,PagoCliente
   },
   created() {
     this.getAcuerdos();
