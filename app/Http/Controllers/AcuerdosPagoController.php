@@ -55,9 +55,15 @@ class AcuerdosPagoController extends Controller
         return response()->json(['response'=>false],201);
     }
 
-    public function getAbonos(Request $request){
+    public function getPagos(Request $request){
+        
+        $data = $request->all();
+        $cliente = isset($data['cliente']) ? $data['cliente'] : null  ;
+        $pagos = PagoCliente::with(['cliente','venta'])->where(function($q) use($cliente){
+            return $cliente != null ? $q->where('cliente_id',$cliente) : $q ; 
+        })->paginate(10);
 
-
+        return response()->json(['body'=> $pagos]);
     }
 
     /**

@@ -16,6 +16,7 @@ import NotFoundComponent from './errors/NotFoundComponent'
 import Unauthorized from './errors/Unauthorized'
 import Cartera from './components/cobranza/cartera/cartera';
 import Acuerdos from './components/cobranza/acuerdos/acuerdos_pagos'
+import Pagos from './components/cobranza/pagos/pagos'
 import Contabilidad from './components/contabilidad/contabilidad';
 import Historial from './components/Inventario/historial';
 import Municipios from './components/generales/Municipios';
@@ -146,6 +147,12 @@ const router = new VueRouter({
             path: '/acuerdos',
             name: 'Acuerdos',
             component: Acuerdos,
+            beforeEnter: isCobrador
+        },
+        {
+            path: '/pagos',
+            name: 'Pagos',
+            component: Pagos,
             beforeEnter: isCobrador
         },
         {

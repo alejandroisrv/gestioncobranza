@@ -192,6 +192,11 @@
                 </router-link>
               </li>
               <li>
+                <router-link to="pagos">
+                  <i class="fa fa-circle-o"></i> Pagos
+                </router-link>
+              </li>
+              <li>
                 <a href="#" @click="selectCartera">
                   <i class="fa fa-circle-o"></i> Cartera
                 </a>
