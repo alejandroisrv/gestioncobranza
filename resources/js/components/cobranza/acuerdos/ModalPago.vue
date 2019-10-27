@@ -94,6 +94,7 @@ export default {
 
             if(rs.data.response){
                 this.close();   
+                this.eventHub.$emit('getPagos');
             }
         },
         open(){

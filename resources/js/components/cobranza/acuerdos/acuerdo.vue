@@ -15,11 +15,15 @@
                      </div>
                      <div class="row">
                          <div class="col-md-12">
-                            <p class="col-md-3 px-0 text-muted"> Monto total: {{ acuerdo.monto }}  </p>
                             <p class="col-md-4 px-0 text-muted"> Periodo de Pago: {{ acuerdo.periodo_pago }}  </p>
                             <p class="col-md-2 px-0 text-muted"> Cuotas: {{ acuerdo.cuotas }}  </p>
                             <p class="col-md-3 px-0 text-muted"> Cuotas pagas: {{ acuerdo.cuotas_pagadas }}  </p>
                          </div>
+                     </div>
+                     <div class="row">
+                        <div class="col-md-12">
+                            <p class="col-md-12 px-0 text-muted"> Monto total: {{ acuerdo.monto | currency }}  </p>
+                        </div>
                      </div>
                      <div class="row">
                          <div class="col-md-12">
@@ -29,9 +33,10 @@
                      <div class="row">
                          <div class="col-md-12">
                             <p class="col-md-12 mb-1 px-0" style="font-size:18px"> Abonos </p>
-                            <table>
+                            <table class="table table-condensed">
+                                <tr><td class="px-0 pb-0"> Monto</td> <td >Fecha </td> </tr>
                                 <tr v-for="abono in acuerdo.abonos">
-                                    <td class="px-0 pb-0"> Monto: {{ abono.monto | currency  }}</td><td>  {{ abono.created_at | moment('DD/MM/YYYY')  }} </td> 
+                                    <td class="px-0 pb-0">{{ abono.monto | currency  }}</td><td>  {{ abono.created_at | moment('DD/MM/YYYY')  }} </td> 
                                 </tr>
                             </table>
                          </div>

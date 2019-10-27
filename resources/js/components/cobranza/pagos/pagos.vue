@@ -79,6 +79,9 @@ export default {
   components: { PagoCliente },
   created() {
     this.getPagos();
+    this.eventHub.$on('getPagos', () => {
+        this.getPagos();
+    });
     this.getClientes();
   },
   methods: {

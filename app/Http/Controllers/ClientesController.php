@@ -18,6 +18,7 @@ class ClientesController extends Controller
         $nombre = isset($data['buscar']) ? $data['buscar'] : null ;
         $codigo = isset($data['buscar']) ? $data['buscar'] : null ;
         $sucursal= isset($request->user()->sucursal_id) ? $request->user()->sucursal_id : null ;
+        
         $clientes = Cliente::with(['sucursal','municipio','acuerdos_pagos','pagos_clientes','ruta_items.ruta','ventas'])
         ->where(function($q) use($codigo){
             return ($codigo !== null) ? $q->where('cod','like','%'.$codigo.'%')->orWhere('nombre','like', '%'.$codigo.'%') : $q ;
@@ -37,10 +38,14 @@ class ClientesController extends Controller
         ->where('sucursal_id',$sucursal)
         ->orderByRaw("ruta ASC,nombre DESC")
         ->paginate(25);
+        
         $clientes->map(function($item){
-            $item['select']=false;
+            $item['select'] = false;
+            $item['nombre'] = ucwords(strtolower($item->nombre));  
         });
+        
         $datos_buscados =[];
+        
         return response()->json(['body'=>$clientes,'datos_buscados'=> $datos_buscados]);
     }
 
@@ -52,10 +57,10 @@ class ClientesController extends Controller
             
             $cliente = Cliente::create([
                 'sucursal_id' => $user->sucursal_id,
-                'nombre'=> $data['nombre'],
+                'nombre'=> ucwords(strtolower($data['nombre'])),
                 'cedula' => $data['cedula'],
                 'telefono'  => $data['telefono'],
-                'direccion'  => $data['direccion'],
+                'direccion'  => ucfirst(strtolower($data['direccion'])),
                 'adicional' => $data['adicional'],
                 'email' => $data['email'],
                 'municipio_id'  => $data['municipio_id']

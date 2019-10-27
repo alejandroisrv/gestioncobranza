@@ -6,7 +6,7 @@
       <div class="box-body" v-if="cliente!=''">
         <div class="row">
           <div class="col-md-12">
-            <h4 style="margin-top:0px;" class="title-detalle">{{ cliente.nombre}} <i style="font-size:11px; margin-left:10px;" class="text-muted">Cliente desde hace {{ cliente.created_at | moment("from", "now", true)}}</i></h4>
+            <h4 style="margin-top:0px;" class="title-detalle">{{ cliente.nombre}} C.I {{ cliente.cedula }} <i style="font-size:11px; margin-left:10px;" class="text-muted">Cliente desde hace {{ cliente.created_at | moment("from", "now", true)}}</i></h4>
           </div>
         </div>
         <div class="row">
@@ -15,9 +15,8 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-4 col-lg-4"><p class="mb-1">C.I {{ cliente.cedula }}</p></div>
         <div class="col-md-4 col-lg-4"><p class="mb-1">Teléfono: {{ cliente.telefono }}</p></div>
-        <div class="col-md-4 col-lg-4"><p class="mb-1">E-mail: {{ cliente.email}}</p></div>
+        <div class="col-md-6 col-lg-6"><p class="mb-1">E-mail: {{ cliente.email}}</p></div>
       </div>
       <div class="row">
         <div class="col-md-6 col-lg-6">
