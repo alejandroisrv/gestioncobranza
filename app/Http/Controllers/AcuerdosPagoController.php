@@ -21,7 +21,7 @@ class AcuerdosPagoController extends Controller
         $cliente = (isset($data['cliente'])) ? $data['cliente']: null ;
         $venta = (isset($data['venta'])) ? $data['venta']: null ;
         $limite = (isset($data['limite'])) ? $data['limite'] : 20 ;
-        $acuerdos_pagos= AcuerdoPago::with(['cliente','venta.vendedor','venta.tipos_ventas','abonos'])
+        $acuerdos_pagos= AcuerdoPago::with(['cliente','venta.vendedor','venta.tipos_ventas','abonos'=> function($q) { $q->orderBy('venta_id','ASC')->orderBy('created_at','desc'); }])
         ->where(function($q) use ($cliente) {
             return ($cliente!=null) ? $q->where('cliente_id',$cliente): $q; 
         })
@@ -29,24 +29,36 @@ class AcuerdosPagoController extends Controller
             return ($venta!=null) ? $q->where('venta_id',$venta): $q; 
         })->paginate($limite);
 
+        $acuerdos_pagos->map(function($acuerdo){
+            $acuerdo['saldo'] = round(($acuerdo->monto / $acuerdo->cuotas) * ( $acuerdo->cuotas - $acuerdo->cuotas_pagadas  ),2);
+        });
+
         return response()->json(['body'=> $acuerdos_pagos ]);
     }
 
     public function nuevoPago(Request $request){
         $data = $request->all();
+        $acuerdo = AcuerdoPago::find($data['acuerdo_id']);
+        if(!$acuerdo){
+            return response()->json(['response'=> false , 'message'=> "No se ha encontrado el acuerdo de pago"]);
+        }
 
-
+        $deuda = ($acuerdo->monto / $acuerdo->cuotas) * ( $acuerdo->cuotas - $acuerdo->cuotas_pagadas  );
+        $saldo = $deuda - $data['monto'];
 
         $pago = PagoCliente::create([
             'cliente_id'=> $data['user_id'],
             'venta_id'=> $data['venta_id'],
             'acuerdo_pago_id' => $data['acuerdo_id'],
+            'saldo' => $saldo,
             'monto'=> $data['monto']
         ]);
 
         if($pago){
-            $acuerdo = AcuerdoPago::find($data['acuerdo_id']);
-            $acuerdo->cuotas_pagadas++;
+            
+            $acuerdo->cuotas_pagadas = ($saldo > 0) ? $acuerdo->cuotas_pagadas++ : $acuerdo->cuotas ;
+            $acuerdo->estado  =  ($saldo > 0) ? 0 : 1;
+        
             if($acuerdo->save()){
                 return response()->json(['response'=>true],201);
             }
@@ -59,9 +71,16 @@ class AcuerdosPagoController extends Controller
         
         $data = $request->all();
         $cliente = isset($data['cliente']) ? $data['cliente'] : null  ;
-        $pagos = PagoCliente::with(['cliente','venta'])->where(function($q) use($cliente){
+        $venta = isset($data['venta']) ? $data['venta']  : null ;
+        $pagos = PagoCliente::with(['cliente','venta'])
+        ->where(function($q) use($cliente){
             return $cliente != null ? $q->where('cliente_id',$cliente) : $q ; 
-        })->paginate(10);
+        })
+        ->whereHas('venta',function($q) use($venta){
+            return $venta != null ? $q->where('cod','like',"%".$venta."%") : $q ; 
+        })
+        ->orderBy('created_at','DESC')
+        ->paginate(10);
 
         return response()->json(['body'=> $pagos]);
     }

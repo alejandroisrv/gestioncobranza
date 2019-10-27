@@ -41,4 +41,7 @@ class Cliente extends Model
     public function ruta_items(){
       return $this->hasOne('App\RutaItem');
     }
+    public function pagos(){
+      return $this->hasMany("App\PagoCliente");
+    }
 }

@@ -21,6 +21,14 @@
           <div class="box">
             <div class="box-header">
               <h3 class="box-title">Listado de pagos</h3>
+              <div class="box-tools">
+                <div class="input-group input-group-sm hidden-xs" style="width: 250px;margin:5px;">
+                  <input v-model="parametros.venta" @keyup.enter="getPagos()" class="form-control input-buscar" placeholder="Introduce el código de la venta">
+                  <div class="input-group-btn">
+                    <button type="submit" class="btn btn-default input-buscar"><i class="fa fa-search"></i></button>
+                  </div>
+                </div>
+              </div>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -47,6 +55,9 @@
               <div v-else>
                 <p class="py-4">No se han encontrado pagos</p>
               </div>
+                <div class="box-footer clearfix">
+                  <pagination :data="pagos" @pagination-change-page="getPagos"></pagination>
+                </div>
               </template>
             </div>
             <!-- /.box-body -->
@@ -72,7 +83,8 @@ export default {
       loading:false,
       clientes:[],
       parametros:{
-          cliente:''
+          cliente:'',
+          venta:''
       }
     };
   },
@@ -85,9 +97,9 @@ export default {
     this.getClientes();
   },
   methods: {
-    async getPagos(){
+    async getPagos(page = 1){
       this.loading = true;
-      const rs = await AcuerdoService.getPagos({ cliente: this.parametros.cliente != '' ?  this.parametros.cliente.id : ''});
+      const rs = await AcuerdoService.getPagos({ venta:this.parametros.venta ,cliente: this.parametros.cliente != '' ?  this.parametros.cliente.id : '', page});
       console.log(rs);
       this.pagos = rs.data.body;
       this.loading = false;

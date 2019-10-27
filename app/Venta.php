@@ -15,6 +15,10 @@ class Venta extends Model
     
     }
 
+    public function abonos(){
+        return $this->hasMany('App\PagoCliente', 'venta_id');
+    }
+
     public function acuerdo_pago(){
         return $this->hasOne('App\AcuerdoPago');
 

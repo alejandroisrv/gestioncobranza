@@ -31,10 +31,10 @@
                          </div>
                      </div>
                      <div class="row">
-                         <div class="col-md-12">
+                         <div class="col-md-8">
                             <p class="col-md-12 mb-1 px-0" style="font-size:18px"> Abonos </p>
-                            <table class="table table-condensed">
-                                <tr><td class="px-0 pb-0"> Monto</td> <td >Fecha </td> </tr>
+                            <table class="table table-condensed table-bordered table-active">
+                                <tr><th class="px-0 pb-0"> Monto</th> <th >Fecha </th> </tr>
                                 <tr v-for="abono in acuerdo.abonos">
                                     <td class="px-0 pb-0">{{ abono.monto | currency  }}</td><td>  {{ abono.created_at | moment('DD/MM/YYYY')  }} </td> 
                                 </tr>

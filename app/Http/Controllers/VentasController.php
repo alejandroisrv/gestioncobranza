@@ -50,7 +50,7 @@ class VentasController extends Controller
         $comision = 0 ;
 
 
-         if ($data['periodo'] =='Semanal'){
+        if ($data['periodo'] =='Semanal'){
              $periodo = 7;
         }else if($data['periodo'] =='Quincenal'){
             $periodo = 15;

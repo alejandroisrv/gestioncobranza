@@ -17,7 +17,7 @@
                             </div>
                             <div class="col-md-6 my-2">
                                 <label for="">Acuerdo de pago:</label>
-                                <v-select v-model="pago.acuerdo_id" :options="acuerdos" placeholder="Selecciona el acuerdo de pago"></v-select>
+                                <v-select v-model="pago.acuerdo_id" :options="acuerdos" placeholder="Selecciona el acuerdo de pago" style="font-size:12px!important;"></v-select>
                             </div>
                         </div>
                         <div class="form-row">
@@ -75,15 +75,25 @@ export default {
             console.log(rs.data.body);
             this.acuerdos = [];
             rs.data.body.data.forEach(element => {
-                this.acuerdos.push({
-                    id:element.id,
-                    venta_id:element.venta_id,
-                    label: `${element.venta.cod} - ${element.periodo_pago} - Monto: ${element.monto} ` 
+                if(!element.estado){
+                    this.acuerdos.push({
+                        id:element.id,
+                        saldo:element.saldo,
+                        venta_id:element.venta_id,
+                        label: `${element.venta.cod} - ${element.periodo_pago} - Deuda: ${element.saldo} ` 
                     });
+                }
+                
             });
         },
        async send(){
             console.log(this.pago);
+            
+            if(this.pago.monto > this.pago.acuerdo_id.saldo){
+                this.$noty.error('El pago no puede ser mayor al monto total');
+                return false;
+            }
+            
             let pago = {
                 user_id:this.pago.user_id.id,
                 acuerdo_id:this.pago.acuerdo_id.id,
