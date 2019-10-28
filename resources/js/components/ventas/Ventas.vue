@@ -74,10 +74,6 @@
               </div>
                
             </div>
-            <!-- /.box-body -->
-             <div class="box-footer clearfix">
-                    <pagination :data="ventas" @pagination-change-page="initVentas"></pagination>
-              </div>
           </div>
         </div>
       </div>

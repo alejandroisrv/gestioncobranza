@@ -30,7 +30,8 @@ class AcuerdosPagoController extends Controller
         })->paginate($limite);
 
         $acuerdos_pagos->map(function($acuerdo){
-            $acuerdo['saldo'] = round(($acuerdo->monto / $acuerdo->cuotas) * ( $acuerdo->cuotas - $acuerdo->cuotas_pagadas  ),2);
+            $saldo = @$acuerdo['abonos'][0]['saldo'];
+            $acuerdo['saldo'] = $saldo !== null ? $saldo : $acuerdo->monto;
         });
 
         return response()->json(['body'=> $acuerdos_pagos ]);
@@ -38,12 +39,21 @@ class AcuerdosPagoController extends Controller
 
     public function nuevoPago(Request $request){
         $data = $request->all();
+
         $acuerdo = AcuerdoPago::find($data['acuerdo_id']);
+        $acuerdo->load('abonos');
         if(!$acuerdo){
             return response()->json(['response'=> false , 'message'=> "No se ha encontrado el acuerdo de pago"]);
         }
 
-        $deuda = ($acuerdo->monto / $acuerdo->cuotas) * ( $acuerdo->cuotas - $acuerdo->cuotas_pagadas  );
+        $montosPagados = 0;
+
+        foreach ($acuerdo->abonos as $abono) {
+            $montosPagados += $abono->monto;            
+        }
+        
+        $deuda = $acuerdo->monto - $montosPagados;
+
         $saldo = $deuda - $data['monto'];
 
         $pago = PagoCliente::create([
@@ -56,7 +66,7 @@ class AcuerdosPagoController extends Controller
 
         if($pago){
             
-            $acuerdo->cuotas_pagadas = ($saldo > 0) ? $acuerdo->cuotas_pagadas++ : $acuerdo->cuotas ;
+            $acuerdo->cuotas_pagadas++;
             $acuerdo->estado  =  ($saldo > 0) ? 0 : 1;
         
             if($acuerdo->save()){
@@ -64,7 +74,7 @@ class AcuerdosPagoController extends Controller
             }
         }
 
-        return response()->json(['response'=>false],201);
+        return response()->json(['response'=>false],422);
     }
 
     public function getPagos(Request $request){

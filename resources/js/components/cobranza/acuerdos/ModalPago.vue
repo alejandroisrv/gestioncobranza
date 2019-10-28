@@ -89,10 +89,18 @@ export default {
        async send(){
             console.log(this.pago);
             
-            if(this.pago.monto > this.pago.acuerdo_id.saldo){
+            if(this.pago.monto == ""){
+                this.$noty.error('Debe introducir el monto');
+                return false;
+            }
+
+
+            if(parseFloat(this.pago.monto) > parseFloat(this.pago.acuerdo_id.saldo)){
                 this.$noty.error('El pago no puede ser mayor al monto total');
                 return false;
             }
+
+            
             
             let pago = {
                 user_id:this.pago.user_id.id,
@@ -103,9 +111,18 @@ export default {
             const rs = await  AcuerdoService.nuevoPago(pago);
 
             if(rs.data.response){
+                this.resetModal();
                 this.close();   
                 this.eventHub.$emit('getPagos');
             }
+        },
+        resetModal(){
+                this.acuerdos = [];
+                this.pago = {
+                    user_id:'',
+                    acuerdo_id:'',
+                    monto:'',
+                }
         },
         open(){
             this.$refs.PagoCliente.open();
