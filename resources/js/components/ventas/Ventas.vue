@@ -18,6 +18,14 @@
               <h3 class="box-title">
                 Listado de ventas
               </h3>
+               <div class="box-tools">
+                <div class="input-group input-group-sm hidden-xs" style="width: 250px;margin:5px;">
+                  <input v-model="buscar" @keyup.enter="getVentas()" class="form-control input-buscar" placeholder="Buscar por código de venta">
+                  <div class="input-group-btn">
+                    <button type="submit" class="btn btn-default input-buscar"><i class="fa fa-search"></i></button>
+                  </div>
+                </div>
+              </div>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -87,7 +95,8 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
   data() {
     return {
-      ventaDetalle: ""
+      ventaDetalle: "",
+      buscar:''
     };
   },
   computed:{
@@ -111,13 +120,13 @@ export default {
   methods: {
     ...mapActions({
       initVentas:'ventas/initVentas',
-      getAll:'ventas/getAll'
+      getVentasAll:'ventas/getVentasAll'
     }),
     nuevaVenta() {
       this.openModal();
     },
     getVentas(page = 1){
-      this.getAll({ page });
+      this.getVentasAll({ page,buscar:this.buscar });
     },
     verVenta(venta) {
       this.openVenta(venta);

@@ -23,17 +23,21 @@ class VentasController extends Controller
     public function index(Request $request)
     {
         $data=$request->all();
-        $limite = (isset($data['limite'])) ? $data['limite'] : 20 ;
+        $limite = (isset($data['limite'])) ? $data['limite'] : 10 ;
         $sucursal=(isset($data['sucursal'])) ? $data['sucursal']: $request->user()->sucursal_id ;
         $tipoventa = (isset($data['tipoventa'])) ? $data['tipoventa'] : null ;
         $acuerdoPago = (isset($data['acuerdo_pago'])) ? $data['acuerdo_pago'] : null ;
         $cliente=(isset($data['cliente'])) ?  $data['cliente'] : null ;
         $vendedor = (isset($data['vendedor'])) ? $data['vendedor'] : null  ;
+        $buscar = (isset($data['buscar'])) ? $data['buscar'] : null  ;
         $desde = (isset($data['desde'])) ? $data['desde'] : null ;
         $hasta = (isset($data['hasta'])) ? $data['hasta'] : null ;
 
-
-        $ventas = Venta::with(['tipos_ventas','vendedor','acuerdo_pago','persona','productos_venta'])->paginate($limite);
+        $ventas = Venta::with(['tipos_ventas','vendedor','acuerdo_pago','persona','productos_venta'])
+        ->where(function($q)use($buscar){
+            return $buscar != null ? $q->where('cod','like','%'.$buscar.'%') : $q ;
+        })
+        ->paginate($limite);
         return response()->json(['body'=>$ventas]);
     }
 
