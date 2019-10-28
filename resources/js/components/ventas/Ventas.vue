@@ -59,6 +59,9 @@
                 <div v-else>
                   <p class="py-4">No se han encontrado ventass</p>
                 </div>
+                 <div class="box-footer clearfix">
+                    <pagination :data="ventas" @pagination-change-page="getVentas"></pagination>
+                </div>
 
               </div>
                
@@ -107,10 +110,14 @@ export default {
   },
   methods: {
     ...mapActions({
-      initVentas:'ventas/initVentas'
+      initVentas:'ventas/initVentas',
+      getAll:'ventas/getAll'
     }),
     nuevaVenta() {
       this.openModal();
+    },
+    getVentas(page = 1){
+      this.getAll({ page });
     },
     verVenta(venta) {
       this.openVenta(venta);
