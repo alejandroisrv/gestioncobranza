@@ -19,7 +19,7 @@ class ClientesController extends Controller
         $codigo = isset($data['buscar']) ? $data['buscar'] : null ;
         $sucursal= isset($request->user()->sucursal_id) ? $request->user()->sucursal_id : null ;
         
-        $clientes = Cliente::with(['sucursal','municipio','acuerdos_pagos','pagos_clientes','ruta_items.ruta','ventas.abonos' => function($q) { $q->orderBy('venta_id','desc')->orderBy('created_at','desc'); }])
+        $clientes = Cliente::withCount('pagos_clientes')->with(['sucursal','municipio','acuerdos_pagos','ruta_items.ruta','ventas.abonos' => function($q) { $q->orderBy('venta_id','desc')->orderBy('created_at','desc'); }])
         ->where(function($q) use($codigo){
             return ($codigo !== null) ? $q->where('cod','like','%'.$codigo.'%')->orWhere('nombre','like', '%'.$codigo.'%') : $q ;
         })
