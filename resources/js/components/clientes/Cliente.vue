@@ -45,7 +45,7 @@
                     <tr v-for="abono in venta.abonos">
                       <td>{{ abono.monto | currency  }}</td> 
                       <td>{{ abono.saldo | currency  }}</td> 
-                      <td>  {{ abono.created_at | moment('HH:m - DD/MM/YYYY ')  }} </td> 
+                      <td>{{ abono.fecha | moment('DD/MM/YYYY ')  }} </td> 
                     </tr>
                   </tbody>
                 </table>

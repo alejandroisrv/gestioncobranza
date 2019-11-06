@@ -48,7 +48,7 @@
                     <th>{{ item.venta.cod }} </th>
                     <td>{{ item.cliente.nombre }}</td>
                     <td>{{ item.monto | currency }}</td>
-                    <td>{{ item.created_at | moment('DD/MM/YYYY')  }} </td>
+                    <td>{{ item.fecha | moment('DD/MM/YYYY')  }} </td>
                   </tr>
                 </tbody>
               </table>

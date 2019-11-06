@@ -25,6 +25,10 @@
                                 <label for="">Monto</label>
                                 <input type="text" v-model="pago.monto" class="form-control" placeholder="Introduce el monto">
                             </div>
+                            <div class="col-md-6 my-2">
+                                <label for="">Fecha:</label><br>
+                                <date-picker v-model="pago.fecha" :lang="'es'" type="date" format="DD/MM/YYYY" ></date-picker>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -37,6 +41,7 @@
 
 </template>
 <script>
+import moment from 'moment'
 import AcuerdoService from '../../../services/acuerdos_pagos'
 import ClienteService from '../../../services/clientes';
 export default {
@@ -50,6 +55,7 @@ export default {
                 user_id:'',
                 acuerdo_id:'',
                 monto:'',
+                fecha:'',
             }
         }
     },
@@ -106,7 +112,8 @@ export default {
                 user_id:this.pago.user_id.id,
                 acuerdo_id:this.pago.acuerdo_id.id,
                 monto:this.pago.monto,
-                venta_id:this.pago.acuerdo_id.venta_id
+                venta_id:this.pago.acuerdo_id.venta_id,
+                fecha : moment(this.pago.fecha).format('YYYY-MM-DD')
             }
             const rs = await  AcuerdoService.nuevoPago(pago);
 
@@ -122,6 +129,7 @@ export default {
                     user_id:'',
                     acuerdo_id:'',
                     monto:'',
+                    fecha:''
                 }
         },
         open(){

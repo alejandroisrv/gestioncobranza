@@ -61,7 +61,8 @@ class AcuerdosPagoController extends Controller
             'venta_id'=> $data['venta_id'],
             'acuerdo_pago_id' => $data['acuerdo_id'],
             'saldo' => $saldo,
-            'monto'=> $data['monto']
+            'monto'=> $data['monto'],
+            'fecha' => $data['fecha']
         ]);
 
         if($pago){
@@ -89,7 +90,7 @@ class AcuerdosPagoController extends Controller
         ->whereHas('venta',function($q) use($venta){
             return $venta != null ? $q->where('cod','like',"%".$venta."%") : $q ; 
         })
-        ->orderBy('created_at','DESC')
+        ->orderBy('fecha','DESC')
         ->paginate(10);
 
         return response()->json(['body'=> $pagos]);
