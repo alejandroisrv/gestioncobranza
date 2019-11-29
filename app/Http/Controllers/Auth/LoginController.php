@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
@@ -40,7 +41,7 @@ class LoginController extends Controller
       if (auth()->attempt($credentials)) {
         $user = auth()->user();
         $user->load(['sucursal','rol']);
-        $user->api_token = str_random(60);
+        $user->api_token = Str::random(60);
         $user->save();
         return response()->json(['response' => true,'user'=> $user]);
       }

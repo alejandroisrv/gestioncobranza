@@ -46,15 +46,15 @@ class ProductosController extends Controller
           $imagenName = null;
           if($request->hasFile('productoImagen')){
             $file = $request->file('productoImagen');
-            $imagenName = time().$file->getClientOriginalName();
+            $imagenName = strtoupper(md5($file->getClientOriginalName().str_random(5))).'_'.time();
             $file->move(public_path('img/productos/'),$imagenName);
           }
 
-          $producto = Productos::create([
+            $producto = Productos::create([
               'bodega_id' => $user->bodega_id,
               'sucursal_id'=> $user->sucursal_id,
               'nombre' => $data['nombre'],
-              'descripcion' => $data['descripcion'], 
+              'descripcion' => $data['descripcion'],
               'tipo_id' => $data['tipo'],
               'comision' => $data['comision'],
               'precio_contado' => $data['precio_contado'],
@@ -65,7 +65,7 @@ class ProductosController extends Controller
 
           $producto->cod = "0{$producto->tipo_id}0{$producto->id}";
           $producto->save();
-  
+
           return response()->json([$producto],201);
 
           } catch (\Exception $e) {
@@ -83,14 +83,15 @@ class ProductosController extends Controller
         $data = $request->all();
         $producto = Productos::find($id);
         $imagenName = null;
-          if($request->hasFile('productoImagen')){
+        if($request->hasFile('productoImagen')){
             $file = $request->file('productoImagen');
-            $imagenName = time().$file->getClientOriginalName();
+            $imagenName = strtoupper(md5($file->getClientOriginalName().str_random(5))).'_'.time();
             $file->move(public_path('img/productos/'),$imagenName);
-          }
+        }
+
         $producto->update([
           'nombre' => $data['nombre'],
-          'descripcion' => $data['descripcion'], 
+          'descripcion' => $data['descripcion'],
           'tipo_id' => $data['tipo'],
           'comision' => $data['comision'],
           'precio_contado' => $data['precio_contado'],
@@ -178,7 +179,7 @@ class ProductosController extends Controller
       return response()->json(['response'=> true, 'item'=>$tipo],201);
     }
 
-    
+
     public function editTipo(Request $request){
       $data = $request->all();
       $tipo = TipoProducto::find($data['id'])->update([

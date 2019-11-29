@@ -34,6 +34,9 @@ class VentasController extends Controller
         $hasta = (isset($data['hasta'])) ? $data['hasta'] : null ;
 
         $ventas = Venta::with(['tipos_ventas','vendedor','acuerdo_pago','persona','productos_venta'])
+        ->whereHas('vendedor',function($q) use ($sucursal) {
+                return $q->where('sucursal_id',$sucursal);
+        })
         ->where(function($q)use($buscar){
             return $buscar != null ? $q->where('cod','like','%'.$buscar.'%') : $q ;
         })
@@ -80,13 +83,13 @@ class VentasController extends Controller
                 'abono' => $abono,
                 'descuento' => $descuento
             ]);
-    
+
             $venta->cod = "0{$user->sucursal_id}0{$venta->cliente_id}{$venta->tipo_venta}{$venta->id}";
             $venta->save();
                 if($abono > 0){
                     Contabilidad::create(['descripcion' => 'Abono de venta', 'tipo' => 1, 'monto' => $abono, 'user_id'=> auth()->user()->id]);
                 }
-    
+
             if($venta->tipo_venta == 2){
                 $acuerdoPago=AcuerdoPago::create(['venta_id' => $venta->id,
                     'cliente_id' =>  $data['cliente']['id'],
@@ -96,7 +99,7 @@ class VentasController extends Controller
                     'finished_at' => $now->add($ciclo,'day')->toDateTimeString()
                 ]);
             }
-    
+
             for($i=0; $i<count($data['productosVendidos']);$i++){
                 $data['productosVendidos'][$i]['venta_id']=$venta->id;
                 $producto=Productos::findOrFail($data['productosVendidos'][$i]['producto']['id']);
@@ -104,23 +107,23 @@ class VentasController extends Controller
                 $producto->save();
                 $comisionProducto=$producto->comision*$data['productosVendidos'][$i]['cantidad'];
                 $comision+=$comisionProducto;
-    
+
                 $precio = ($venta->tipo_venta == 1 ) ? $producto->precio_contado : $producto->precio_credito ;
                 $total+=$data['productosVendidos'][$i]['cantidad']*$precio;
-    
+
                 ComisionVenta::create(['item_id'=> $venta->id, 'user_id'=> $vendedor, 'tipo'=>1 , 'monto'=>$comisionProducto, 'estado'=> 'No pagada' ]);
                 $productoVenta=['venta_id' => $venta->id,
                                 'producto_id'=> $data['productosVendidos'][$i]['producto']['id'],
                                 'producto' => $data['productosVendidos'][$i]['producto']['nombre'],
                                 'cantidad'=> $data['productosVendidos'][$i]['cantidad']
                             ];
-    
+
                 ProductosVenta::create($productoVenta);
             }
             Contabilidad::create(['descripcion' => 'Comision generada en venta', 'tipo' => 2 , 'monto' => $comision, 'user_id'=> auth()->user()->id ]);
-            
+
             DB::commit();
-            
+
             return response()->json(['response'=>'ok','producto'=>$productoVenta]);
 
         } catch (\Exception $e) {
