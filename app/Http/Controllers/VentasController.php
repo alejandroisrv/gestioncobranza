@@ -65,7 +65,14 @@ class VentasController extends Controller
             $periodo = 30;
         }
 
-        $ciclo = $periodo*$data['cuotas'];
+	$cuotas = isset($data['cuotas']) ? $data['cuotas'] : null;
+
+	if($cuotas == null){
+		$cuotas = $data['total'] / $data['monto'];
+	}
+	        
+
+	$ciclo = $periodo*$cuotas;
 
         $abono = isset($data['abono']) ? $data['abono'] : 0 ;
         $descuento = isset($data['descuento']) ? $data['descuento'] : 0 ;
