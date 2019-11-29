@@ -8,7 +8,7 @@ class ProductosVenta extends Model
 {
     protected $table="productos_ventas";
 
-    protected $fillable=['venta_id','producto_id','producto','cantidad'];
+    protected $fillable=['venta_id','producto_id','producto','precio','cantidad'];
 
     public function venta(){
         return $this->belongsTo('App\Venta');

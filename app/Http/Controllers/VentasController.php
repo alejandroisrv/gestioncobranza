@@ -65,14 +65,14 @@ class VentasController extends Controller
             $periodo = 30;
         }
 
-	$cuotas = isset($data['cuotas']) ? $data['cuotas'] : null;
+        $cuotas = isset($data['cuotas']) ? $data['cuotas'] : null;
 
-	if($cuotas == null){
-		$cuotas = $data['total'] / $data['monto'];
-	}
-	        
+        if($cuotas == null){
+            $cuotas = $data['total'] / $data['monto'];
+        }
+                
 
-	$ciclo = $periodo*$cuotas;
+        $ciclo = $periodo*$cuotas;
 
         $abono = isset($data['abono']) ? $data['abono'] : 0 ;
         $descuento = isset($data['descuento']) ? $data['descuento'] : 0 ;
@@ -93,9 +93,9 @@ class VentasController extends Controller
 
             $venta->cod = "0{$user->sucursal_id}0{$venta->cliente_id}{$venta->tipo_venta}{$venta->id}";
             $venta->save();
-                if($abono > 0){
-                    Contabilidad::create(['descripcion' => 'Abono de venta', 'tipo' => 1, 'monto' => $abono, 'user_id'=> auth()->user()->id]);
-                }
+            if($abono > 0){
+                Contabilidad::create(['descripcion' => 'Abono de venta', 'tipo' => 1, 'monto' => $abono, 'user_id'=> auth()->user()->id]);
+            }
 
             if($venta->tipo_venta == 2){
                 $acuerdoPago=AcuerdoPago::create(['venta_id' => $venta->id,
@@ -122,6 +122,7 @@ class VentasController extends Controller
                 $productoVenta=['venta_id' => $venta->id,
                                 'producto_id'=> $data['productosVendidos'][$i]['producto']['id'],
                                 'producto' => $data['productosVendidos'][$i]['producto']['nombre'],
+                                'precio' =>  $venta->tipo_venta == 1 ? $data['productosVendidos'][$i]['producto']['precioContado'] : $data['productosVendidos'][$i]['producto']['precioCredito'],
                                 'cantidad'=> $data['productosVendidos'][$i]['cantidad']
                             ];
 
