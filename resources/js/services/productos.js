@@ -6,6 +6,10 @@ export default {
         let query = p.converParamters(params);
         return api().get('productos' + query);
     },
+    getList(params = null) {
+        let query = p.converParamters(params);
+        return api().get('productos/list' + query);
+    },
     editarProducto(id) {
         return api().get('producto/update/' + id);
     },

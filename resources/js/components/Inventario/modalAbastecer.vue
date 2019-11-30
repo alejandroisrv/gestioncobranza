@@ -65,14 +65,12 @@ export default {
   },
   data() {
     return {
+      productList:[],
       item: { producto:'',cantidad:'',total:0},
       new_items: []
     };
   },
   computed:{
-    ...mapGetters({
-      productList:'productos/productosFormat'
-    }),
     productosList(){
       this.productList.forEach(x => {
         x.label = x.nombre;
@@ -82,11 +80,16 @@ export default {
 
   },
   created() {
+    this.getProductos();
     this.eventHub.$on("openAbastercer", () => {
       this.openAbastercer();
     });
   },
   methods: {
+    async getProductos(){
+      const rs = await ProductoService.getList()
+      this.productList = rs.data
+    },
     send() {
       const e = ProductoService.abastecerProductos(this.new_items);
       this.closeAbastecer();
@@ -94,7 +97,6 @@ export default {
       this.eventHub.$emit("initProductos");
       this.item={};
       this.new_items=[];
-
     },
     quitCuadro(idx){
         this.new_items.splice(idx, 1)
