@@ -12,8 +12,8 @@ use App\TipoProducto;
 class ProductosController extends Controller
 {
 
-    public function index(Request $request)
-    {
+    public function index(Request $request){
+
       $data = $request->all();
       $bodega = (isset($data['bodega'])) ? $data['bodega'] : null ;
       $sucursal_id = $request->user()->sucursal_id;
@@ -35,6 +35,27 @@ class ProductosController extends Controller
 
     }
 
+    public function getList(Request $request){
+
+      $data = $request->all();
+      $sucursal_id = $request->user()->sucursal_id;
+      $bodega = (isset($data['bodega'])) ? $data['bodega'] : null ;
+
+      $productos = Productos::where('sucursal_id',$sucursal_id)
+      ->where(function($q) use ($bodega,$request){
+
+        if($request->user()->isAdmin()){
+          return ($bodega !== null) ? $q->where('bodega_id',$bodega) : $q ;
+        }else{
+          return $q->where('bodega_id',$request->user()->bodega_id);
+        }
+
+      })
+      ->orderBy('cantidad','DESC')
+      ->get();
+
+      return response()->json($productos);
+    }
 
     public function create(Request $request){
       $data = $request->all();

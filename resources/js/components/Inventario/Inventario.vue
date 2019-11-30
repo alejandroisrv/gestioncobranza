@@ -89,10 +89,10 @@
           </div>
         </div>
       </div>
-      <modal-producto :titulo="tituloModal" :url="urlModal" :notificacion="notificacionModal"></modal-producto>
-      <modal-entregar></modal-entregar>
-      <modal-abastecer :productoList="productList"></modal-abastecer>
-      <producto :producto="productoDetalle"></producto>
+      <modal-producto :titulo="tituloModal" :url="urlModal" :notificacion="notificacionModal" />
+      <modal-entregar />
+      <modal-abastecer />
+      <producto :producto="productoDetalle" />
       <div></div>
     </section>
   </div>
@@ -120,7 +120,7 @@ import Noty from 'noty'
         productos:[],
         buscar:'',
         bodega:'Todas'
-        
+
       }
     },
     computed:{
@@ -131,11 +131,10 @@ import Noty from 'noty'
            });
            return arr;
         },
-
     },
     watch:{
       "bodega"(){
-        this.searchProductos();
+          this.searchProductos();
       }
     },
     components: { modalProducto, modalAbastecer, modalEntregar, producto },
@@ -149,7 +148,7 @@ import Noty from 'noty'
     methods: {
       ...mapActions({getProductoFormat:'productos/getProductoFormat'}),
       async searchProductos(page = 1){
-        let bodega = (this.bodega.id) ? this.bodega.id :'';
+        let bodega = (this.bodega != null || this.bodega != 'all') ? this.bodega.id :'';
         let parametros = { bodega:bodega, buscar:this.buscar,page:page}
         this.loading = true;
         const rs = await ProductoService.getAll(parametros);

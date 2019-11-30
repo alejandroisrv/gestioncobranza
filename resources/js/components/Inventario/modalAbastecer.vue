@@ -1,29 +1,41 @@
 <template>
   <div>
-    <bootstrap-modal
-      ref="abastecerModal"
-      :need-header="true"
-      :need-footer="true"
-      :size="'medium'"
-    >
+    <bootstrap-modal ref="abastecerModal" :need-header="true" :need-footer="true" :size="'medium'">
       <div slot="title">Abastecer inventario</div>
-
       <div slot="body">
           <div class="box-body">
               <div class="row">
-                <div class="col-md-12 col-xs-12"><p>Selecciona la bodega para cargar sus productos y vendedores</p></div>
+                <div class="col-md-12 col-xs-12"><p v-if="$isAdmin">Selecciona la bodega para cargar los productos </p> <p v-else> Selecciona los productos para abastecer </p></div>
               </div>
-              <div class="row justify-content-between">
-                <div class="col-md-6 col-xs-6">
-                  <v-select v-model="item.producto" :options="productosList" placeholder="Selecciona el producto"></v-select>
-                </div>
-                <div class="col-md-4 col-xs-4">
-                  <input type="text" @keyup.enter="addCuadro" v-model.number="item.cantidad" id="cantidad" placeholder="Cantidad" class="form-control">
-                </div>
-                <div class="col-md-2 col-xs-2">
-                  <button @click="addCuadro" class="btn btn-primary"><i class="fa fa-plus"></i></button>
-                </div>
-              </div>
+              <template  v-if="$isAdmin">
+                  <div class="row">
+                      <div class="col-md-8 col-xs-8 mt-2 mb-4"><v-select v-model="params.bodega" :options="bodegas" placeholder="Selecciona la bodega" /> </div>
+                  </div>
+                  <div class="row justify-content-between" v-if="params.bodega != null">
+                      <div class="col-md-6 col-xs-6" >
+                          <v-select v-model="item.producto" :options="productosList" placeholder="Selecciona el producto"></v-select>
+                      </div>
+                      <div class="col-md-4 col-xs-4">
+                          <input type="text" @keyup.enter="addCuadro" v-model.number="item.cantidad" id="cantidad" placeholder="Cantidad" class="form-control">
+                      </div>
+                      <div class="col-md-2 col-xs-2">
+                          <button @click="addCuadro" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+                      </div>
+                  </div>
+              </template>
+              <template v-else>
+                  <div class="row justify-content-between">
+                      <div class="col-md-6 col-xs-6" >
+                          <v-select v-model="item.producto" :options="productosList" placeholder="Selecciona el producto"></v-select>
+                      </div>
+                      <div class="col-md-4 col-xs-4">
+                          <input type="text" @keyup.enter="addCuadro" v-model.number="item.cantidad" placeholder="Cantidad" class="form-control">
+                      </div>
+                      <div class="col-md-2 col-xs-2">
+                          <button @click="addCuadro" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+                      </div>
+                  </div>
+              </template>
               <div class="row" v-if="new_items.length>0">
                   <div class="col-md-12 col-xs-12 mt-4">
                     <table class="table table-condensed ">
@@ -65,29 +77,43 @@ export default {
   },
   data() {
     return {
-      productList:[],
-      item: { producto:'',cantidad:'',total:0},
-      new_items: []
-    };
-  },
-  computed:{
-    productosList(){
-      this.productList.forEach(x => {
-        x.label = x.nombre;
-      });
-      return this.productList;
-    }
-
-  },
-  created() {
-    this.getProductos();
-    this.eventHub.$on("openAbastercer", () => {
-      this.openAbastercer();
-    });
-  },
+        params:{
+            bodega: null
+        },
+        productList:[],
+        item: { producto:'',cantidad:'',total:0},
+        new_items: []
+      };
+    },
+    computed:{
+        productosList(){
+          this.productList.forEach(x => {
+            x.label = x.nombre;
+          });
+          return this.productList;
+        },
+        bodegas(){
+            let arr = [];
+            this.$store.state.bodegas.bodegasFormat.forEach(x => {
+                arr.push(x)
+            });
+            return arr;
+        },
+    },
+    watch:{
+      "params.bodega"(){
+          this.getProductos(this.params.bodega ? this.params.bodega.id : '')
+      }
+    },
+    created() {
+        this.getProductos();
+        this.eventHub.$on("openAbastercer", () => {
+          this.openAbastercer();
+        });
+    },
   methods: {
-    async getProductos(){
-      const rs = await ProductoService.getList()
+    async getProductos(bodega){
+      const rs = await ProductoService.getList({bodega})
       this.productList = rs.data
     },
     send() {
@@ -95,6 +121,7 @@ export default {
       this.closeAbastecer();
       this.$noty.success("Abastecer producto con exito");
       this.eventHub.$emit("initProductos");
+      this.params.bodega = null
       this.item={};
       this.new_items=[];
     },
