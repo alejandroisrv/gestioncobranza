@@ -36,9 +36,8 @@ class cleanMovimientos extends Command
      *
      * @return mixed
      */
-    public function handle()
-    {
-        
+    public function handle(){
+
         $ids = DB::table('productos')->pluck('id');
         $delete = DB::table('movimientos')->whereNotIn('producto_id',$ids)->delete();
 

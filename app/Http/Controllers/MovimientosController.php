@@ -27,13 +27,16 @@ class MovimientosController extends Controller
                 $desde = explode('/', $desde);
                 $desde = $desde[2].'-'.$desde[1].'-'.$desde[0];
             }
-    
+
             if($hasta != null) {
                 $hasta = explode('/', $hasta);
                 $hasta = $hasta[2].'-'.$hasta[1].'-'.$hasta[0];
             }
-            
+
             $movimientos = Movimiento::with('producto')
+            ->whereHas('producto', function($q) use($request) {
+                return $q->where('bodega_id',$request->user()->bodega_id);
+            })
             ->where(function($q) use($tipo) {
                 return ($tipo !== null) ? $q->where('operacion',$tipo) : $q ;
             })
@@ -54,7 +57,7 @@ class MovimientosController extends Controller
         } catch (\Exception $e) {
 
             return response()->json(['error'=> $e->getMessage()], 422);
-        
+
         }
 
     }
