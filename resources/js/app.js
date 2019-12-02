@@ -13,6 +13,7 @@ import VueCurrencyFilter from 'vue-currency-filter'
 import Vuetify from 'vuetify'
 import VueNoty from 'vuejs-noty'
 import Select2 from 'v-select2-component';
+import money from 'v-money'
 
 Vue.component('Select2', Select2);
 const moment = require('moment')
@@ -35,6 +36,8 @@ require('moment/locale/es')
 Vue.use(require('vue-moment'), {
     moment
 })
+
+Vue.use(money, { decimal: ',', thousands: '.',prefix: ' ',suffix: '',precision: 2, masked: false})
 Vue.component('pagination', require('laravel-vue-pagination'));
 Vue.component('v-select', vSelect)
 Vue.component('date-picker', DatePicker);

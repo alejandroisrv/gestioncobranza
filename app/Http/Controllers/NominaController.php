@@ -55,7 +55,7 @@ class NominaController extends Controller
 
         $trabajador = User::create([
             'sucursal_id'=>$data['sucursal_id'],
-            'bodega_id'=>$data['bodega_id'],
+            'bodega_id'=> $request->user()->bodega_id,
             'name' => $data['name'],
             'cedula' => $data['cedula'],
             'direccion' =>$data['direccion'],

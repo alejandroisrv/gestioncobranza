@@ -34,10 +34,10 @@
             <label>Sucursal</label>
             <v-select v-model="trabajador.sucursal" :options="sucursales" placeholder="Seleccione una sucursal para este usuario"></v-select>
           </div>
-          <div class="form-group col-md-4 col-lg-4">
+          <!--<div class="form-group col-md-4 col-lg-4">
             <label>Bodega</label>
             <v-select v-model="trabajador.bodega" :options="bodegas" placeholder="Seleccione una bodega para este usuario"></v-select>
-          </div>
+          </div>-->
           <div class="form-group col-md-4 col-lg-4">
             <label>Rol</label>
             <v-select v-model="trabajador.rol" :options="roles" placeholder="Seleccione un rol para este usuario"></v-select>
@@ -94,7 +94,7 @@ export default {
       if(editando){
         item.rol.label = item.rol.name;
         item.sucursal.label  = item.sucursal.direccion;
-        item.bodega.label  = item.bodega.direccion;  
+        item.bodega.label  = item.bodega.direccion;
       }
       this.trabajador = item;
       this.open();
@@ -128,7 +128,7 @@ export default {
       this.sucursales = rs.data.body.data;
     },
     async send() {
-  
+
       if(this.trabajador.nombre == ''){
         this.$noty.error('Debe colocarle un nombre al trabajador');
         return false;
@@ -143,7 +143,7 @@ export default {
         this.$noty.error('Debe ingresar la cedula del trabajador');
         return false;
       }
-      
+
       if(this.trabajador.telefono == ''){
         this.$noty.error('Debe ingresar el telefono del trabajador');
         return false;
@@ -158,19 +158,19 @@ export default {
         this.$noty.error('Debe seleccionar una sucursal para el trabajador');
         return false;
       }
-      
-      if(this.trabajador.bodega == undefined && this.trabajador.bodega == null ){
+
+      /*if(this.trabajador.bodega == undefined && this.trabajador.bodega == null ){
         this.$noty.error('Debe seleccionar una bodega para el trabajador');
         return false;
-      }
-      
+      }*/
+
       if(this.trabajador.rol == undefined && this.trabajador.rol == null ){
         this.$noty.error('Debe seleccionar un rol para el trabajador');
         return false;
       }
 
       this.trabajador.sucursal_id = this.trabajador.sucursal.id;
-      this.trabajador.bodega_id = this.trabajador.bodega.id;
+      //this.trabajador.bodega_id = this.trabajador.bodega.id;
       this.trabajador.role = this.trabajador.rol.id;
       try {
         const rs = (this.editando) ? await NominaService.edit(this.trabajador) : await NominaService.add(this.trabajador);
@@ -182,8 +182,8 @@ export default {
       } catch (error) {
         this.$noty.error("Se ha producido un error" + rs.data.response);
       }
-      
-    
+
+
     },
     open() {
       this.$refs.addtrabajador.open();

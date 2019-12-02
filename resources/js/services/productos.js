@@ -3,8 +3,12 @@ import api from './api.js'
 
 export default {
     getAll(params = null) {
-        let query = p.converParamters(params);
-        return api().get('productos' + query);
+        console.log(params, "aaaa");
+        return api().get('productos' + p.converParamters(params)  );
+    },
+    getProductos(params = null){
+        let query =  p.converParamters(params) ;
+        return api().get('productos' + query )
     },
     getList(params = null) {
         let query = p.converParamters(params);

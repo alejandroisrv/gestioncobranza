@@ -47,9 +47,12 @@ class BodegaController extends Controller
 
     public function update(Request $request,$id)
     {
-        $bodega = Bodega::find($id);
-        $bodega->update($request->all());
-        $bodega->save();
+        $bodega = Bodega::find($id)->update([
+            'encargado_id'=> $request->encargado_id,
+            'telefono' => $request->telefono,
+            'direccion' => $request->direccion,
+            'municipio_id' => $request->municipio_id
+        ]);
         return $bodega;
     }
 

@@ -8,7 +8,7 @@ class Productos extends Model
 {
 
     protected $table = "productos";
-    protected $fillable=['cod','sucursal_id','bodega_id','nombre','descripcion','tipo_id','precio_costo','precio_contado','precio_credito','comision','cantidad','imagen'];
+    protected $fillable=['cod','sucursal_id','bodega_id','nombre','descripcion','inicial','tipo_id','precio_costo','precio_contado','precio_credito','precio_credicontado','comision','cantidad','imagen'];
 
 
     public function bodega(){

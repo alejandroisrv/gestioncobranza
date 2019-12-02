@@ -21,7 +21,7 @@
             </div>
             <div class="form-group col-md-4">
               <label>Municipio</label>
-              <select name="mi" class="form-control" v-model="bodega.municipio_id">
+              <select class="form-control" v-model="bodega.municipio_id">
                 <option  selected value="">Selecione el minucipio</option>
                 <option  v-if="muni.id !='all'"  v-for="(muni,idx) in municipios" :key="idx+'municipio'" :value="muni.id">{{muni.label}}</option>
               </select>
@@ -66,21 +66,28 @@ export default {
     ...mapActions({getEncargados:'users/getUsersFormat'}),
     send() {
 
-      if(this.bodega.direccion == ''){
-        this.$noty.error('Debes agregar una direccion para esta bodega');
-        return false;
-      }
+        if(this.bodega.encargado == undefined && this.bodega.encargado == null ){
+            this.$noty.error('Debe seleccionar un encargado para esta bodega');
+            return false;
+        }
 
-      if(this.bodega.municipio_id == ''){
-        this.$noty.error('Debes agregar una direccion para esta bodega');
-        return false;
-      }
+        if(this.bodega.direccion == ''){
+            this.$noty.error('Debes agregar una direccion para esta bodega');
+            return false;
+        }
 
-      api().post(this.url, this.bodega).then(rs => {
-        this.closeTheModal();
-        this.eventHub.$emit("sendBodegas");
-        this.$noty.success(this.notificacion);
-      });
+        if(this.bodega.municipio_id == ''){
+            this.$noty.error('Debes agregar una direccion para esta bodega');
+            return false;
+        }
+
+        this.bodega.encargado_id = this.bodega.encargado.id
+
+          api().post(this.url, this.bodega).then(rs => {
+            this.closeTheModal();
+            this.eventHub.$emit("sendBodegas");
+            this.$noty.success(this.notificacion);
+          });
     },
     openTheModal() {
       this.$refs.NuevaBodega.open();

@@ -5,8 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 class Bodega extends Model
-{   
-    protected $fillable = ['telefono','direccion','municipio_id'];
+{
+    protected $fillable = ['encargado_id','sucursal_id','telefono','direccion','municipio_id'];
 
     public function sucursal(){
         return $this->belongsTo('App\Sucursal');
@@ -14,8 +14,8 @@ class Bodega extends Model
 
     public function productos(){
             return $this->hasMany('App\Productos');
-    }    
-    
+    }
+
     public function municipio(){
         return $this->belongsTo('App\Municipio');
     }

@@ -75,12 +75,14 @@ class ProductosController extends Controller
               'bodega_id' => $user->bodega_id,
               'sucursal_id'=> $user->sucursal_id,
               'nombre' => $data['nombre'],
+              'inicial' => $data['inicial'],
               'descripcion' => $data['descripcion'],
               'tipo_id' => $data['tipo'],
               'comision' => $data['comision'],
               'precio_contado' => $data['precio_contado'],
               'precio_costo' => $data['precio_costo'],
               'precio_credito'=> $data['precio_credito'],
+              'precio_credicontado' => $data['precio_credicontado'],
               'imagen' => $imagenName
           ]);
 

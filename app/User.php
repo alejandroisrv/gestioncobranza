@@ -6,7 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable { 
+class User extends Authenticatable {
     use Notifiable;
 
     /**
@@ -35,6 +35,8 @@ class User extends Authenticatable {
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    protected $appends = ['enlazado'];
 
     /**
      * The attributes that should be cast to native types.
@@ -67,6 +69,15 @@ class User extends Authenticatable {
 
     public function cobros(){
         return $this->hasMany('App\Cobro');
+    }
+
+    public function getEnlazadoAttribute(){
+
+        if (!Bodega::where('encargado_id',$this->id)->exists()){
+            return false;
+        }
+
+        return true;
     }
 
     public function isAdmin (){

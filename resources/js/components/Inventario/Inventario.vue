@@ -146,17 +146,17 @@ import Noty from 'noty'
       this.getProductoFormat();
     },
     methods: {
-      ...mapActions({getProductoFormat:'productos/getProductoFormat'}),
+      ...mapActions({getProductoFormat:'productos/getProductoFormat',getProductos:'productos/getProductosAll'}),
+
       async searchProductos(page = 1){
         let bodega = (this.bodega != null || this.bodega != 'all') ? this.bodega.id :'';
-        let parametros = { bodega:bodega, buscar:this.buscar,page:page}
         this.loading = true;
-        const rs = await ProductoService.getAll(parametros);
+        const rs = await ProductoService.getAll({ buscar: this.buscar, bodega:bodega, page: page});
         this.productos = rs.data;
         this.loading = false;
       },
       nuevoProducto() {
-        this.productoModal = { nombre: '', descripcion: '', precioContado: '', precioCredito: '', precioCosto: '', comision: '', tipo : undefined,imagen:''}
+        this.productoModal = { nombre: '', descripcion: '',inicial:'', precioContado: '', precioCredito: '', precioCrediContado:'', precioCosto: '', comision: '', tipo : undefined,imagen:''}
         this.tituloModal = 'Nuevo producto'
         this.urlModal = '/api/producto/add'
         this.notificacionModal = 'Producto agregado con éxito!'

@@ -12,32 +12,40 @@
               </div>
               <div class="form-group col-md-6">
                 <label>Comision</label>
-                <input required v-model="producto.comision" type="text" class="form-control">
+                  <money v-model="producto.comision"></money>
               </div>
             </div>
             <div class="form-row">
-              <div class="form-group col-md-7">
-                <label>Descripción</label>
-                <input required v-model="producto.descripcion" type="text" class="form-control">  
-              </div>
               <div class="form-group col-md-5">
+                <label>Descripción</label>
+                <input required v-model="producto.descripcion" type="text" class="form-control">
+              </div>
+                <div class="form-group col-md-3">
+                    <label>Inicial</label>
+                    <money v-model="producto.inicial"></money>
+                </div>
+              <div class="form-group col-md-4">
                 <label>Tipo de producto</label>
                 <v-select v-model="producto.tipo" :options="tipoProductos" placeholder="Selecciona el tipo de producto"></v-select>
               </div>
             </div>
             <div class="form-row">
-              <div class="form-group col-md-4">
+              <div class="form-group col-md-3">
                 <label>Precio de costo</label>
-                <input required v-model="producto.precio_costo" type="text" class="form-control">
+                  <money v-model="producto.precio_costo"></money>
               </div>
-              <div class="form-group col-md-4">
+              <div class="form-group col-md-3">
                 <label>Precio de contado</label>
-                <input required v-model="producto.precio_contado" type="text" class="form-control">
+                  <money v-model="producto.precio_contado"></money>
               </div>
-              <div class="form-group col-md-4">
+              <div class="form-group col-md-3">
                 <label>Precio a credito</label>
-                <input required v-model="producto.precio_credito" type="text" class="form-control">
+                  <money v-model="producto.precio_credito"></money>
               </div>
+                <div class="form-group col-md-3">
+                    <label>Precio credicontado</label>
+                    <money v-model="producto.precio_credicontado"></money>
+                </div>
             </div>
             <div class="form-row">
               <div class="form-group col-md-6">
@@ -90,7 +98,7 @@ export default {
         this.previewImg = 'img/productos/' + this.producto.imagen;
       }
       this.modalPoducto();
-      
+
     });
 
     this.getTipos();
@@ -128,33 +136,23 @@ export default {
         this.$noty.error('Debes introducir el precio de costo del producto');
         return false;
       }
-      
-      if(this.producto.precio_credito == ''){
-        this.$noty.error('Debes introducir el precio del producto a credito');
-        return false;
-      }
 
       if(this.producto.precio_credito == ''){
         this.$noty.error('Debes introducir el precio del producto a credito');
         return false;
       }
+      console.log(this.producto);
 
-      if(this.producto.precio_credito == ''){
-        this.$noty.error('Debes introducir el precio del producto a credito');
-        return false;
-      }
-      
-
-      console.log(this.producto.tipo);
-  
       let formData = new FormData();
       formData.append('nombre', this.producto.nombre);
       formData.append('comision', this.producto.comision);
       formData.append('descripcion', this.producto.descripcion);
       formData.append('tipo', this.producto.tipo.id);
+      formData.append('inicial', this.producto.inicial);
       formData.append('precio_costo', this.producto.precio_costo);
       formData.append('precio_contado', this.producto.precio_contado);
       formData.append('precio_credito', this.producto.precio_credito);
+      formData.append('precio_credicontado', this.producto.precio_credito)
       formData.append('productoImagen', this.img);
       this.sending = true;
 
@@ -169,7 +167,7 @@ export default {
     },
     getTipos(){
       axios.get('/api/productos/tipos-list').then(rs=> {
-        this.tipoProductos = rs.data;    
+        this.tipoProductos = rs.data;
       }).catch(err=> {
         this.$noty.error('Se ha producido un error al intentar');
       })
