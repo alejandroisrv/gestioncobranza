@@ -38,8 +38,12 @@ class cleanMovimientos extends Command
      */
     public function handle(){
 
-        $ids = DB::table('productos')->pluck('id');
-        $delete = DB::table('movimientos')->whereNotIn('producto_id',$ids)->delete();
+        $ids = DB::table('productos')->pluck('descripcion');
+
+        foreach ($ids as $id){
+            $position = strrpos($id, "inicial");
+            $this->info($position);        }
+
 
     }
 }

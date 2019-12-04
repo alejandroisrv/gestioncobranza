@@ -18,7 +18,7 @@
               </div>
             </div>
             <div class="row">
-              <template v-if="VentaGeneral.tipo && VentaGeneral.tipo.id   == 2 ">
+              <template v-if="VentaGeneral.tipo && (VentaGeneral.tipo.id == 2 || VentaGeneral.tipo.id == 3 ) ">
                 <div class="form-group col-md-4">
                   <label>Periodo de pago</label>
                   <v-select v-model="VentaGeneral.periodo" :options="['Semanal','Quincenal','Mensual']" placeholder="Seleciona el periodo de pago"></v-select>
@@ -113,7 +113,7 @@ export default {
     };
   },
   watch:{
-    subtotal(){    
+    subtotal(){
     }
   },
   computed: {
@@ -160,7 +160,7 @@ export default {
       getClientes:'clientes/getClientesFormat'
     }),
     generateVenta() {
-      
+
       if(this.VentaGeneral.cliente == undefined && this.VentaGeneral.cliente == null ){
         this.$noty.error('Debe seleccionar el cliente');
         return false;
@@ -176,7 +176,7 @@ export default {
         return false;
       }
 
-      
+
       axios.post(this.url, this.VentaGeneral).then(rs => {
         this.eventHub.$emit("sendVentas");
         this.$noty.success("Nueva venta realizada con exito");
@@ -189,7 +189,8 @@ export default {
       if(!Number.isInteger(this.item.cantidad) || this.item.cantidad < 0 ) return this.$noty.error('Cantidad no válida');
       if(parseInt(this.item.producto.cantidad) < parseInt(this.item.cantidad)) return  this.$noty.error('No hay stock suficiente');
 
-      let precio = (this.VentaGeneral.tipo == 1 )? this.item.producto.precioContado : this.item.producto.precioCredito;
+      let precio = (this.VentaGeneral.tipo == 1 ) ? this.item.producto.precioContado : this.item.producto.precioCredito;
+      precio = (this.VentaGeneral.tipo == 3 ) ? this.item.producto.precioCredicontado : precio ;
       this.item.subtotal = this.item.cantidad * precio;
       this.VentaGeneral.productosVendidos.forEach(e=>{
         if(e.producto && e.producto.id===this.item.producto.id){

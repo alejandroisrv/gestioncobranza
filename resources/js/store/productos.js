@@ -58,7 +58,8 @@ const actions = {
                 cantidad: parseInt(datos[i].cantidad),
                 nombre: datos[i].nombre,
                 precioCredito: datos[i].precio_credito,
-                precioContado: datos[i].precio_contado
+                precioContado: datos[i].precio_contado,
+                precioCredicontado : datos[i].precio_credicontado,
             })
         }
         commit('SET_PRODUCTOS_FORMAT', productos);
