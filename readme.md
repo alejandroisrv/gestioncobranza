@@ -10,7 +10,7 @@ El sistema de credito y cobranza, es el encargado de administrar los clientes,ru
 
 - Servidor local (`https://www.apachefriends.org/es/index.html`)
 - Composer (`https://getcomposer.org/download/`)
-- NodeJS (VersiÃ³n utilizada `https://nodejs.org/download/release/v8.7.0/`)
+- NodeJS (Versión utilizada `https://nodejs.org/download/release/v8.7.0/`)
 - Git (`https://git-scm.com/downloads`)
 
 ## Requerimientos del proyecto (Laravel)
@@ -22,7 +22,7 @@ El sistema de credito y cobranza, es el encargado de administrar los clientes,ru
 - Tokenizer PHP Extension
 - XML PHP Extension
 
-## InstalaciÃ³n
+## Instalación
 
 Nos ubicamos en `C:\xampp\htdocs` (esto es si usas un servidor local como xampp server) o en cualquier zona en la que desee colocar el proyecto desde la terminal. Clonar el repositorio usando el siguiente comando.
 
@@ -30,7 +30,7 @@ Nos ubicamos en `C:\xampp\htdocs` (esto es si usas un servidor local como xampp 
 
 ## Ejecutamos composer
 
-Ubicados en la raiz del proyecto, por ejemplo: `C:\xampp\htdocs\institut_siip` desde la terminal, ejecutamos composer para la instalaciÃ³n de todas las depencias del proyecto.
+Ubicados en la raiz del proyecto, por ejemplo: `C:\xampp\htdocs\institut_siip` desde la terminal, ejecutamos composer para la instalación de todas las depencias del proyecto.
 
 `composer install`
 
