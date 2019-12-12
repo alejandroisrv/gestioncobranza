@@ -30,7 +30,7 @@ Nos ubicamos en `C:\xampp\htdocs` (esto es si usas un servidor local como xampp 
 
 ## Ejecutamos composer
 
-Ubicados en la raiz del proyecto, por ejemplo: `C:\xampp\htdocs\institut_siip` desde la terminal, ejecutamos composer para la instalación de todas las depencias del proyecto.
+Ubicados en la raiz del proyecto, por ejemplo: `C:\xampp\htdocs\gestioncobranza` desde la terminal, ejecutamos composer para la instalación de todas las depencias del proyecto.
 
 `composer install`
 
