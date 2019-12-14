@@ -152,7 +152,7 @@ export default {
       formData.append('precio_costo', this.producto.precio_costo);
       formData.append('precio_contado', this.producto.precio_contado);
       formData.append('precio_credito', this.producto.precio_credito);
-      formData.append('precio_credicontado', this.producto.precio_credito)
+      formData.append('precio_credicontado', this.producto.precio_credicontado)
       formData.append('productoImagen', this.img);
       this.sending = true;
 
