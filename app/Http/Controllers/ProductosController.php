@@ -115,11 +115,13 @@ class ProductosController extends Controller
         $producto->update([
           'nombre' => $data['nombre'],
           'descripcion' => $data['descripcion'],
+          'inicial' => $data['inicial'],
           'tipo_id' => $data['tipo'],
           'comision' => $data['comision'],
           'precio_contado' => $data['precio_contado'],
           'precio_costo' => $data['precio_costo'],
           'precio_credito'=> $data['precio_credito'],
+          'precio_credicontado' => $data['precio_credicontado'],
           'imagen' => $imagenName
         ]);
         return $producto;
