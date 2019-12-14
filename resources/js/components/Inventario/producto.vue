@@ -30,7 +30,7 @@
           <div class="row">
             <div class="col-md-4 pr-0">Precio de costo: {{ producto.precio_costo | currency }} </div>
             <div class="col-md-4 p-0">Precio de contado:  {{producto.precio_contado | currency}} </div>
-             <div class="col-md-4 p-0">Precio a credito: {{ producto.precio_costo | currency }} </div>
+             <div class="col-md-4 p-0">Precio a credito: {{ producto.precio_credito | currency }} </div>
           </div>
             <div class="row">
                 <div class="col-md-6" v-if="producto.precio_credicontado != null" >Precio a credicontado: {{ producto.precio_credicontado | currency }} </div>
