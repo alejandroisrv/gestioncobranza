@@ -48,8 +48,8 @@
                   <tbody>
                     <tr v-for="item in ventas.data" :key="item.id">
                       <th>{{ item.cod }}</th>
-                      <td>{{ item.vendedor.name }}</td>
-                      <td>{{item.persona.nombre}}</td>
+                      <td> <span v-if="item.vendedor != null">{{ item.vendedor.name }}</span></td>
+                      <td> <span v-if="item.persona  != null">{{item.persona.nombre}}</span></td>
                       <td class="text-capitalize">{{ item.tipos_ventas.descripcion }}</td>
                       <td v-if="item.tipo_venta == 2">{{ item.acuerdo_pago.periodo_pago}}</td>
                       <td v-else>No aplica</td>
