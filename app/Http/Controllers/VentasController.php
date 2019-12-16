@@ -65,14 +65,7 @@ class VentasController extends Controller
             $periodo = 30;
         }
 
-        $cuotas = isset($data['cuotas']) ? $data['cuotas'] : null;
-
-        if($cuotas == null){
-            $cuotas = $data['total'] / $data['monto'];
-        }
-                
-
-        $ciclo = $periodo*$cuotas;
+        $cuotas = isset($data['cuotas']) ? $data['cuotas'] : null;    
 
         $abono = isset($data['abono']) ? $data['abono'] : 0 ;
         $descuento = isset($data['descuento']) ? $data['descuento'] : 0 ;
@@ -98,6 +91,10 @@ class VentasController extends Controller
             }
 
             if($venta->tipo_venta == 2){
+                
+                $cuotas = $data['total'] / $data['monto'];
+                $ciclo = $periodo*$cuotas;
+
                 $acuerdoPago=AcuerdoPago::create(['venta_id' => $venta->id,
                     'cliente_id' =>  $data['cliente']['id'],
                     'cuotas'=> $data['cuotas'],
@@ -105,6 +102,7 @@ class VentasController extends Controller
                     'monto'=> $data['total'],
                     'finished_at' => $now->add($ciclo,'day')->toDateTimeString()
                 ]);
+
             }
 
             for($i=0; $i<count($data['productosVendidos']);$i++){
